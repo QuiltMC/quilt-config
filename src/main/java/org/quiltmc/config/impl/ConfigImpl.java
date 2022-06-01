@@ -101,11 +101,11 @@ public final class ConfigImpl extends AbstractMetadataContainer implements Confi
 	}
 
 	public Iterable<TrackedValue<?>> values() {
-		return new Iterable<>() {
+		return new Iterable<TrackedValue<?>>() {
 			@NotNull
 			@Override
 			public Iterator<TrackedValue<?>> iterator() {
-				return new Iterator<>() {
+				return new Iterator<TrackedValue<?>>() {
 					private final Iterator<ValueTreeNode> itr = ConfigImpl.this.values.leaves().iterator();
 					private ValueTreeNode next;
 
