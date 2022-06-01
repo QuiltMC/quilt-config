@@ -1,0 +1,67 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id "com.diffplug.spotless" version "5.8.2"
+}
+
+group 'org.quiltmc'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'Quilt'
+        url = 'https://maven.quiltmc.org/repository/release'
+    }
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation 'com.electronwill.night-config:core:3.6.5'
+    testImplementation 'com.electronwill.night-config:toml:3.6.5'
+    testImplementation 'org.quiltmc:quilt-json5:1.0.0'
+
+    implementation 'org.jetbrains:annotations:23.0.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jar {
+    from ('.') {
+        include 'LICENSE'
+    }
+}
+
+spotless {
+    java {
+        // Use comma separator for openjdk like license headers
+        licenseHeaderFile(file("codeformat/HEADER")).yearSeparator(", ")
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+
+    // TODO: We should probably put this on central
+    repositories {
+        def ENV = System.getenv()
+
+        if (ENV.MAVEN_URL) {
+            repositories.maven {
+                url = ENV.MAVEN_URL
+
+                credentials {
+                    username = ENV.MAVEN_USERNAME
+                    password = ENV.MAVEN_PASSWORD
+                }
+            }
+        }
+    }
+}
