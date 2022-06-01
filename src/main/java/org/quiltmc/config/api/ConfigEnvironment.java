@@ -53,8 +53,8 @@ public final class ConfigEnvironment {
 		return globalSerializer;
 	}
 
-	public Serializer registerSerializer(String fileType, Serializer serializer) {
-		return serializers.put(fileType, serializer);
+	public Serializer registerSerializer(Serializer serializer) {
+		return serializers.put(serializer.getFileExtension(), serializer);
 	}
 
 	public Serializer getActualSerializer(String fileType) {
