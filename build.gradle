@@ -54,6 +54,8 @@ publishing {
         def ENV = System.getenv()
 
         if (ENV.MAVEN_URL) {
+            project.logger.info("Publishing to " + ENV.MAVEN_URL)
+
             repositories.maven {
                 url = ENV.MAVEN_URL
 
@@ -62,6 +64,8 @@ publishing {
                     password = ENV.MAVEN_PASSWORD
                 }
             }
+        } else {
+            project.logger.info("No Maven destination configured.")
         }
     }
 }
