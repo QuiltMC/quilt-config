@@ -24,19 +24,18 @@ import org.junit.jupiter.api.io.TempDir;
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.ConfigEnvironment;
 import org.quiltmc.config.api.Constraint;
-import org.quiltmc.config.api.metadata.Comments;
-import org.quiltmc.config.api.metadata.MetadataType;
-import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.api.exceptions.TrackedValueException;
+import org.quiltmc.config.api.metadata.Comments;
+import org.quiltmc.config.api.metadata.MetadataType;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.impl.CommentsImpl;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -314,7 +313,7 @@ public class ConfigTester {
 			}
 		}, Comment.Builder::new);
 
-		Config config = Config.create(ENV, "testmod", "testConfig4", builder -> {
+		Config config = Config.create(ENV, "testmod", "testConfig400", builder -> {
 			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> {
 				creator.metadata(TYPE, comments -> comments.add(
 						"Comment one",
