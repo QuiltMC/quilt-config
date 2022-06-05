@@ -16,8 +16,8 @@
 package org.quiltmc.config.impl.builders;
 
 import org.quiltmc.config.api.Config;
-import org.quiltmc.config.api.MetadataType;
-import org.quiltmc.config.api.TrackedValue;
+import org.quiltmc.config.api.metadata.MetadataType;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueKey;
 import org.quiltmc.config.impl.tree.TrackedValueImpl;
 

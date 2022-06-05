@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.quiltmc.config.api;
+package org.quiltmc.config.api.metadata;
+
+import org.quiltmc.config.api.Config;
+import org.quiltmc.config.api.values.TrackedValue;
 
 /**
  * A list of strings that is used by {@link org.quiltmc.config.api.annotations.Comment} as a container for any

@@ -16,6 +16,7 @@
 package org.quiltmc.config.api;
 
 import org.quiltmc.config.api.values.CompoundConfigValue;
+import org.quiltmc.config.api.values.TrackedValue;
 
 import java.util.Comparator;
 import java.util.Optional;

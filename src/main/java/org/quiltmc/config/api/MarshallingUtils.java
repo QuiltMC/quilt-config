@@ -17,6 +17,7 @@ package org.quiltmc.config.api;
 
 import org.quiltmc.config.api.exceptions.ConfigParseException;
 import org.quiltmc.config.api.values.ConfigSerializableObject;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 

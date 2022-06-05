@@ -13,17 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.quiltmc.config.api;
+package org.quiltmc.config.api.metadata;
 
-import java.util.function.Consumer;
+public interface MetadataContainer {
+    /**
+     * @return the metadata attached to this value for the specified type
+     */
+    <M> M metadata(MetadataType<M, ?> type);
 
-public interface MetadataContainerBuilder<SELF extends MetadataContainerBuilder<SELF>> {
-	/**
-	 * Create or configure a piece of metadata
-	 *
-	 * @param type the type of metadata to configure
-	 * @param builderConsumer the modifications to be made to the piece of metadata
-	 * @return this
-	 */
-	<M, B extends MetadataType.Builder<M>> SELF metadata(MetadataType<M, B> type, Consumer<B> builderConsumer);
+    /**
+     * @return whether or not this value has any metadata of the specified type
+     */
+    <M> boolean hasMetadata(MetadataType<M, ?> type);
 }

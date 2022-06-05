@@ -17,8 +17,8 @@ package org.quiltmc.config.impl.tree;
 
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.config.api.Constraint;
-import org.quiltmc.config.api.MetadataType;
-import org.quiltmc.config.api.TrackedValue;
+import org.quiltmc.config.api.metadata.MetadataType;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.exceptions.TrackedValueException;
 import org.quiltmc.config.api.values.ComplexConfigValue;
 import org.quiltmc.config.api.values.ValueKey;

@@ -15,7 +15,7 @@
  */
 package org.quiltmc.config.impl;
 
-import org.quiltmc.config.api.MetadataContainerBuilder;
+import org.quiltmc.config.api.metadata.MetadataContainerBuilder;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.annotations.ConfigFieldAnnotationProcessor;
 

@@ -16,7 +16,7 @@
 package org.quiltmc.config.impl.builders;
 
 import org.quiltmc.config.api.Config;
-import org.quiltmc.config.api.TrackedValue;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.annotations.ConfigFieldAnnotationProcessors;
 import org.quiltmc.config.api.exceptions.ConfigCreationException;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;

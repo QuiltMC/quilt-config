@@ -17,6 +17,8 @@ package org.quiltmc.config.impl;
 
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.config.api.*;
+import org.quiltmc.config.api.metadata.MetadataType;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.builders.ConfigBuilderImpl;
 import org.quiltmc.config.impl.builders.ReflectiveConfigCreator;

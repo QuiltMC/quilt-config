@@ -15,8 +15,6 @@
  */
 package org.quiltmc.config.api.values;
 
-import org.quiltmc.config.api.TrackedValue;
-
 /**
  * Some config value that may need to be aware that it's being tracked
  */

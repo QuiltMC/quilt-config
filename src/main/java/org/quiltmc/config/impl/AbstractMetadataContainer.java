@@ -15,12 +15,13 @@
  */
 package org.quiltmc.config.impl;
 
-import org.quiltmc.config.api.MetadataType;
+import org.quiltmc.config.api.metadata.MetadataContainer;
+import org.quiltmc.config.api.metadata.MetadataType;
 
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class AbstractMetadataContainer {
+public abstract class AbstractMetadataContainer implements MetadataContainer {
 	protected final Map<MetadataType<?, ?>, Object> metadata;
 
 	protected AbstractMetadataContainer(Map<MetadataType<?, ?>, Object> metadata) {
@@ -32,7 +33,7 @@ public abstract class AbstractMetadataContainer {
 		if (this.metadata.containsKey(type)) {
 			return (M) this.metadata.get(type);
 		} else {
-			Optional<M> defaultValue = type.getDefaultValue();
+			Optional<M> defaultValue = type.getDefaultValue(this);
 
 			if (defaultValue.isPresent()) {
 				this.metadata.put(type, defaultValue.get());
@@ -44,6 +45,6 @@ public abstract class AbstractMetadataContainer {
 	}
 
 	public <M> boolean hasMetadata(MetadataType<M, ?> type) {
-		return this.metadata.containsKey(type) || type.getDefaultValue().isPresent();
+		return this.metadata.containsKey(type) || type.getDefaultValue(this).isPresent();
 	}
 }

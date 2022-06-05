@@ -16,7 +16,7 @@
 package org.quiltmc.config.impl;
 
 import org.jetbrains.annotations.NotNull;
-import org.quiltmc.config.api.Comments;
+import org.quiltmc.config.api.metadata.Comments;
 import org.quiltmc.config.impl.util.ImmutableIterable;
 
 import java.util.ArrayList;
