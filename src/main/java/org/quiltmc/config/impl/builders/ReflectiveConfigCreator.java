@@ -16,6 +16,7 @@
 package org.quiltmc.config.impl.builders;
 
 import org.quiltmc.config.api.Config;
+import org.quiltmc.config.api.annotations.Processor;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.annotations.ConfigFieldAnnotationProcessors;
 import org.quiltmc.config.api.exceptions.ConfigCreationException;
@@ -24,6 +25,8 @@ import org.quiltmc.config.impl.util.ConfigUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 public class ReflectiveConfigCreator<C> implements Config.Creator {
@@ -56,6 +59,20 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 
 					for (Annotation annotation : field.getAnnotations()) {
 						ConfigFieldAnnotationProcessors.applyAnnotationProcessors(annotation, valueBuilder);
+					}
+
+					if (field.isAnnotationPresent(Processor.class)) {
+						Processor processor = field.getAnnotation(Processor.class);
+
+						try {
+							Method method = field.getDeclaringClass().getMethod(processor.value(), TrackedValue.Builder.class);
+
+							method.invoke(object, valueBuilder);
+						} catch (NoSuchMethodException e) {
+							throw new ConfigCreationException("Processor method '" + processor.value() + "' not found.");
+						} catch (InvocationTargetException | IllegalAccessException e) {
+							throw new ConfigCreationException("Exception invoking processor method '" + processor.value() + "': " + e.getLocalizedMessage());
+						}
 					}
 				});
 
@@ -91,12 +108,25 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 		}
 
 		try {
-			this.instance = creatorClass.newInstance();
+			this.instance = this.creatorClass.newInstance();
 
 			for (Field field : this.creatorClass.getDeclaredFields()) {
 				this.createField(builder, this.instance, field);
 			}
-		} catch (InstantiationException | IllegalAccessException e) {
+
+			if (this.creatorClass.isAnnotationPresent(Processor.class)) {
+				Processor processor = this.creatorClass.getAnnotation(Processor.class);
+
+				try {
+					Method method = this.creatorClass.getMethod(processor.value(), Config.Builder.class);
+
+					method.invoke(this.instance, builder);
+				} catch (NoSuchMethodException e) {
+					throw new ConfigCreationException("Processor method '" + processor.value() + "' not found.");
+				} catch (InvocationTargetException | IllegalAccessException e) {
+					throw new ConfigCreationException("Exception invoking processor method '" + processor.value() + "': " + e.getLocalizedMessage());
+				}
+			}		} catch (InstantiationException | IllegalAccessException e) {
 			throw new ConfigCreationException(e);
 		}
 	}

@@ -20,9 +20,12 @@ import org.quiltmc.config.api.WrappedConfig;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.annotations.IntegerRange;
 import org.quiltmc.config.api.annotations.Matches;
+import org.quiltmc.config.api.annotations.Processor;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 
+@Processor("processConfig")
 public final class TestReflectiveConfig extends WrappedConfig {
 	@Comment({"Comment one", "Comment two"})
 	public final int a = 0;
@@ -40,6 +43,8 @@ public final class TestReflectiveConfig extends WrappedConfig {
 	public final String whatever = "Riesling";
 	public final Nested nested1 = new Nested(10, 11, 12, 13);
 	public final Nested nested3 = new Nested(20, 21, 22, 23);
+
+	@Processor("processField")
 	public final ValueList<Vec3i> vecs = ValueList.create(new Vec3i(0, 0, 0),
 			new Vec3i(1, 2, 3),
 			new Vec3i(4, 5, 6),
@@ -60,6 +65,14 @@ public final class TestReflectiveConfig extends WrappedConfig {
 			ValueMap.builder(0).put("a", 1).put("b", 2).put("c", 3).put("d", 4).build(),
 			ValueMap.builder(0).put("a", 1).put("b", 2).put("c", 3).put("d", 4).build()
 	);
+
+	public void processConfig(Config.Builder builder) {
+		System.out.println("Processing config!");
+	}
+
+	public void processField(TrackedValue.Builder<Vec3i> process) {
+		System.out.println("Processing field!");
+	}
 
 	public static final class Nested implements Config.Section {
 		public final int a;
