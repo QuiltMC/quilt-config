@@ -15,10 +15,10 @@
  */
 package org.quiltmc.config.api.annotations;
 
-import org.quiltmc.config.api.Comments;
+import org.quiltmc.config.api.metadata.Comments;
 import org.quiltmc.config.api.Config;
-import org.quiltmc.config.api.MetadataContainerBuilder;
-import org.quiltmc.config.api.MetadataType;
+import org.quiltmc.config.api.metadata.MetadataContainerBuilder;
+import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.impl.CommentsImpl;
 
 import java.lang.annotation.*;

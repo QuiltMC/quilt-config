@@ -16,7 +16,7 @@
 package org.quiltmc.config.impl.tree;
 
 import org.jetbrains.annotations.NotNull;
-import org.quiltmc.config.api.TrackedValue;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueKey;
 import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.builders.SectionBuilderImpl;

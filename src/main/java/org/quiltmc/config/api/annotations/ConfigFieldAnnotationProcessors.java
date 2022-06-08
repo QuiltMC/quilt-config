@@ -16,7 +16,7 @@
 package org.quiltmc.config.api.annotations;
 
 import org.jetbrains.annotations.ApiStatus;
-import org.quiltmc.config.api.MetadataContainerBuilder;
+import org.quiltmc.config.api.metadata.MetadataContainerBuilder;
 import org.quiltmc.config.impl.Comments;
 
 import java.lang.annotation.Annotation;

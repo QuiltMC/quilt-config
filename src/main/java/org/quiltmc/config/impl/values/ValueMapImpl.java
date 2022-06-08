@@ -17,7 +17,7 @@ package org.quiltmc.config.impl.values;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.config.api.TrackedValue;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ComplexConfigValue;
 import org.quiltmc.config.api.values.CompoundConfigValue;
 import org.quiltmc.config.api.values.ValueMap;

@@ -15,8 +15,6 @@
  */
 package org.quiltmc.config.api.values;
 
-import org.quiltmc.config.api.TrackedValue;
-
 /**
  * An object that can be represented as a basic or complex type for serialization purposes
  */

@@ -16,6 +16,8 @@
 package org.quiltmc.config.api;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.quiltmc.config.api.metadata.MetadataType;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueTreeNode;
 
 import java.nio.file.Path;

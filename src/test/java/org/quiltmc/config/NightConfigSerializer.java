@@ -23,7 +23,7 @@ import com.electronwill.nightconfig.core.io.ConfigWriter;
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.MarshallingUtils;
 import org.quiltmc.config.api.Serializer;
-import org.quiltmc.config.api.TrackedValue;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.values.*;
 

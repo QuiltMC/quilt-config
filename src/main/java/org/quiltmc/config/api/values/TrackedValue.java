@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.quiltmc.config.api;
+package org.quiltmc.config.api.values;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.quiltmc.config.api.values.ValueKey;
-import org.quiltmc.config.api.values.ValueList;
-import org.quiltmc.config.api.values.ValueMap;
-import org.quiltmc.config.api.values.ValueTreeNode;
+import org.quiltmc.config.api.Constraint;
+import org.quiltmc.config.api.metadata.MetadataContainerBuilder;
+import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.impl.builders.TrackedValueBuilderImpl;
 import org.quiltmc.config.impl.tree.TrackedValueImpl;
 import org.quiltmc.config.impl.util.ConfigUtils;

@@ -16,15 +16,15 @@
 package org.quiltmc.config.api.values;
 
 import org.jetbrains.annotations.ApiStatus;
-import org.quiltmc.config.api.MetadataType;
-import org.quiltmc.config.api.TrackedValue;
+import org.quiltmc.config.api.metadata.MetadataContainer;
+import org.quiltmc.config.api.metadata.MetadataType;
 
 /**
  * An element in a configs value tree.
  *
  * <p>Will be either a {@link TrackedValue} or {@link Section}
  */
-public interface ValueTreeNode {
+public interface ValueTreeNode extends MetadataContainer {
 	ValueKey key();
 
 	/**

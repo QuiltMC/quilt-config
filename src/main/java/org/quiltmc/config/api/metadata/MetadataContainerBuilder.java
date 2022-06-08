@@ -13,27 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.quiltmc.config.api.values;
+package org.quiltmc.config.api.metadata;
 
-import org.jetbrains.annotations.ApiStatus;
-import org.quiltmc.config.api.Config;
+import java.util.function.Consumer;
 
-/**
- * A key that fully describes the location of a {@link TrackedValue} within a {@link Config}.
- */
-@ApiStatus.NonExtendable
-public interface ValueKey extends Iterable<String> {
-	int length();
-
-	String getKeyComponent(int i);
-
-	ValueKey child(String key);
-
-	boolean startsWith(ValueKey key);
-
-	boolean isSibling(ValueKey key);
-
-    String getLastComponent();
-
-	ValueKey child(ValueKey key);
+public interface MetadataContainerBuilder<SELF extends MetadataContainerBuilder<SELF>> {
+	/**
+	 * Create or configure a piece of metadata
+	 *
+	 * @param type the type of metadata to configure
+	 * @param builderConsumer the modifications to be made to the piece of metadata
+	 * @return this
+	 */
+	<M, B extends MetadataType.Builder<M>> SELF metadata(MetadataType<M, B> type, Consumer<B> builderConsumer);
 }

@@ -18,10 +18,10 @@ package org.quiltmc.config.api;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.config.api.annotations.ConfigFieldAnnotationProcessor;
 import org.quiltmc.config.api.annotations.ConfigFieldAnnotationProcessors;
-import org.quiltmc.config.api.values.ValueKey;
-import org.quiltmc.config.api.values.ValueList;
-import org.quiltmc.config.api.values.ValueMap;
-import org.quiltmc.config.api.values.ValueTreeNode;
+import org.quiltmc.config.api.metadata.MetadataContainer;
+import org.quiltmc.config.api.metadata.MetadataContainerBuilder;
+import org.quiltmc.config.api.metadata.MetadataType;
+import org.quiltmc.config.api.values.*;
 import org.quiltmc.config.impl.ConfigImpl;
 
 import java.nio.file.Path;
@@ -29,7 +29,7 @@ import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 @ApiStatus.NonExtendable
-public interface Config {
+public interface Config extends MetadataContainer {
 	/**
 	 * The ID of the config family this config file belongs to, also the folder the resulting file will be saved in.
 	 */

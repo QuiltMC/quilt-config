@@ -24,15 +24,20 @@ import org.junit.jupiter.api.io.TempDir;
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.ConfigEnvironment;
 import org.quiltmc.config.api.Constraint;
-import org.quiltmc.config.api.TrackedValue;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.api.exceptions.TrackedValueException;
+import org.quiltmc.config.api.metadata.Comments;
+import org.quiltmc.config.api.metadata.MetadataType;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
+import org.quiltmc.config.impl.CommentsImpl;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Optional;
 
 public class ConfigTester {
 	@TempDir
@@ -296,5 +301,34 @@ public class ConfigTester {
 		TestValueListConfig c = Config.create(ENV, "testmod", "testConfig14", TestValueListConfig.class);
 
 		c.strings.add(c.strings.size() + "");
+	}
+
+	@Test
+	public void testInferredMetadataType() {
+		MetadataType<Comments, Comment.Builder> TYPE = MetadataType.create(() -> Optional.of(new CommentsImpl(Collections.emptyList())), type -> {
+			if (type == String.class) {
+				return Optional.of(new CommentsImpl(Collections.singletonList("marinara")));
+			} else {
+				return Optional.of(new CommentsImpl(Collections.emptyList()));
+			}
+		}, Comment.Builder::new);
+
+		Config config = Config.create(ENV, "testmod", "testConfig400", builder -> {
+			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> {
+				creator.metadata(TYPE, comments -> comments.add(
+						"Comment one",
+						"Comment two",
+						"Comment three"
+				));
+			}));
+			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
+			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
+		});
+
+		for (TrackedValue<?> value : config.values()) {
+			for (String comment : value.metadata(TYPE)) {
+				System.out.printf("%s: %s%n", value.key(), comment);
+			}
+		}
 	}
 }

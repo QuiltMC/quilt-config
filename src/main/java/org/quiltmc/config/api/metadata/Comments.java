@@ -13,22 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.quiltmc.config.api.annotations;
+package org.quiltmc.config.api.metadata;
 
-import org.quiltmc.config.api.metadata.MetadataContainerBuilder;
+import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.values.TrackedValue;
 
-import java.lang.annotation.Annotation;
-
 /**
- * Converts data in an annotation on a field to metadata on a {@link TrackedValue}.
- *
- * <p>See {@link Comment}
+ * A list of strings that is used by {@link org.quiltmc.config.api.annotations.Comment} as a container for any
+ * number of comments that might be associated with a given {@link TrackedValue} or {@link Config}
  */
-public interface ConfigFieldAnnotationProcessor<T extends Annotation> {
-	void process(T annotation, MetadataContainerBuilder<?> builder);
-
-	static <T extends Annotation> void register(Class<T> annotationClass, ConfigFieldAnnotationProcessor<T> processor) {
-		ConfigFieldAnnotationProcessors.register(annotationClass, processor);
-	}
+public interface Comments extends Iterable<String> {
 }

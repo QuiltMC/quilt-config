@@ -17,6 +17,8 @@ package org.quiltmc.config.impl.builders;
 
 import org.quiltmc.config.api.*;
 import org.quiltmc.config.api.exceptions.ConfigParseException;
+import org.quiltmc.config.api.metadata.MetadataType;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueKey;
 import org.quiltmc.config.impl.ConfigImpl;
 import org.quiltmc.config.impl.tree.TrackedValueImpl;
