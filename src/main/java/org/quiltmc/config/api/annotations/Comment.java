@@ -51,7 +51,11 @@ public @interface Comment {
 		private final List<String> comments = new ArrayList<>(0);
 
 		public void add(String... comments) {
-			this.comments.addAll(Arrays.asList(comments));
+			for (String comment : comments) {
+				for (String c : comment.split('\n')) {
+					this.comments.add(c);
+				}
+			}
 		}
 
 		@Override
