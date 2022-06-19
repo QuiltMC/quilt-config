@@ -52,9 +52,7 @@ public @interface Comment {
 
 		public void add(String... comments) {
 			for (String comment : comments) {
-				for (String c : comment.split('\n')) {
-					this.comments.add(c);
-				}
+				this.comments.addAll(Arrays.asList(comment.split("\n")));
 			}
 		}
 
