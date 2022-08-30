@@ -16,29 +16,50 @@
 package org.quiltmc.config.impl.builders;
 
 import org.quiltmc.config.api.Config;
-import org.quiltmc.config.api.annotations.Processor;
-import org.quiltmc.config.api.annotations.SerializedName;
+import org.quiltmc.config.api.annotations.*;
+import org.quiltmc.config.api.naming.NamingScheme;
+import org.quiltmc.config.api.naming.NamingSchemes;
 import org.quiltmc.config.api.values.TrackedValue;
-import org.quiltmc.config.api.annotations.ConfigFieldAnnotationProcessors;
 import org.quiltmc.config.api.exceptions.ConfigCreationException;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.impl.util.ConfigUtils;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
+import java.util.function.BiFunction;
 
 public class ReflectiveConfigCreator<C> implements Config.Creator {
 	private final Class<C> creatorClass;
+	private final NamingScheme defaultFieldNamingScheme;
 	private C instance;
 
 	public ReflectiveConfigCreator(Class<C> creatorClass) {
 		this.creatorClass = creatorClass;
+
+		this.defaultFieldNamingScheme = getNamingScheme(NamingSchemes.PASSTHROUGH, this.creatorClass, ConfigCreationException::new);
 	}
 
-	private void createField(Config.SectionBuilder builder, Object object, Field field) throws IllegalAccessException {
+	private NamingScheme getNamingScheme(NamingScheme scheme, AnnotatedElement element, BiFunction<String, Throwable, RuntimeException> exceptionFactory) {
+		CustomNameConvention customAnno = element.getAnnotation(CustomNameConvention.class);
+		if (customAnno != null) {
+			try {
+				scheme = (NamingScheme) Class.forName(customAnno.value(), true, this.creatorClass.getClassLoader()).newInstance();
+			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+				throw exceptionFactory.apply("CustomNameConvention: failed to create instance of \"" + customAnno.value() + "\"", e);
+			} catch (ClassCastException e) {
+				throw exceptionFactory.apply("CustomNameConvention: class \"" + customAnno.value() + "\" does not implement interface \"" + NamingScheme.class.getName() + "\"", e);
+			}
+		} else {
+			NameConvention nameAnno = element.getAnnotation(NameConvention.class);
+			if (nameAnno != null) {
+				scheme = nameAnno.value();
+			}
+		}
+
+		return scheme;
+	}
+
+	private void createField(Config.SectionBuilder builder, Object object, Field field, NamingScheme defaultFieldNamingScheme) throws IllegalAccessException {
 		if (!Modifier.isStatic(field.getModifiers()) && !Modifier.isTransient(field.getModifiers())) {
 			if (!Modifier.isFinal(field.getModifiers())) {
 				throw new ConfigFieldException("Field '" + field.getType().getName() + ':' + field.getName() + "' is not final");
@@ -49,7 +70,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 			Object defaultValue = field.get(object);
 
 			if (ConfigUtils.isValidValue(defaultValue)) {
-				TrackedValue<?> value = TrackedValue.create(defaultValue, getFieldName(field), valueBuilder -> {
+				TrackedValue<?> value = TrackedValue.create(defaultValue, getFieldName(defaultFieldNamingScheme, field), valueBuilder -> {
 					field.setAccessible(true);
 
 					valueBuilder.callback(tracked -> {
@@ -82,7 +103,9 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				field.set(object, value.getRealValue());
 				builder.field(value);
 			} else if (defaultValue instanceof Config.Section) {
-				builder.section(getFieldName(field), b -> {
+				NamingScheme sectionDefaultFieldNamingScheme = getNamingScheme(this.defaultFieldNamingScheme, defaultValue.getClass(), ConfigFieldException::new);
+
+				builder.section(getFieldName(this.defaultFieldNamingScheme, field), b -> {
 					for (Annotation annotation : field.getAnnotations()) {
 						ConfigFieldAnnotationProcessors.applyAnnotationProcessors(annotation, b);
 					}
@@ -90,7 +113,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 					for (Field f : defaultValue.getClass().getDeclaredFields()) {
 						if (!f.isSynthetic()) {
 							try {
-								this.createField(b, defaultValue, f);
+								this.createField(b, defaultValue, f, sectionDefaultFieldNamingScheme);
 							} catch (IllegalAccessException e) {
 								throw new RuntimeException(e);
 							}
@@ -105,15 +128,13 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 		}
 	}
 
-	private String getFieldName(Field field) {
-		SerializedName nameAnno = field.getAnnotation(SerializedName.class);
-		if (nameAnno != null) {
-			return nameAnno.value();
+	private String getFieldName(NamingScheme defaultFieldNamingScheme, Field field) {
+		SerializedName customNameAnno = field.getAnnotation(SerializedName.class);
+		if (customNameAnno == null) {
+			return getNamingScheme(defaultFieldNamingScheme, field, ConfigFieldException::new).coerce(field.getName());
+		} else {
+			return customNameAnno.value();
 		}
-
-		// TODO naming scheme
-
-		return field.getName();
 	}
 
 	public void create(Config.Builder builder) {
@@ -125,7 +146,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 			this.instance = this.creatorClass.newInstance();
 
 			for (Field field : this.creatorClass.getDeclaredFields()) {
-				this.createField(builder, this.instance, field);
+				this.createField(builder, this.instance, field, this.defaultFieldNamingScheme);
 			}
 
 			if (this.creatorClass.isAnnotationPresent(Processor.class)) {
