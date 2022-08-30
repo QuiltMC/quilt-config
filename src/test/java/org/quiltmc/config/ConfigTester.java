@@ -266,6 +266,16 @@ public class ConfigTester {
 		Assertions.assertThrows(TrackedValueException.class, () -> {
 			Config.create(ENV, "testmod", "testConfig", TestReflectiveConfig4.class);
 		}).printStackTrace();
+
+		TestReflectiveConfig5 config5 = Config.create(ENV, "testmod", id + "_2", TestReflectiveConfig5.class);
+
+		for (TrackedValue<?> value : config5.values()) {
+			System.out.printf("\"%s\": %s%n", value.key(), value.value());
+
+			for (String comment : value.metadata(Comment.TYPE)) {
+				System.out.printf("\t// %s%n", comment);
+			}
+		}
 	}
 
 	@Test
