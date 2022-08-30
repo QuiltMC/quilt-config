@@ -17,6 +17,7 @@ package org.quiltmc.config.impl.builders;
 
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.annotations.Processor;
+import org.quiltmc.config.api.annotations.SerializedName;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.annotations.ConfigFieldAnnotationProcessors;
 import org.quiltmc.config.api.exceptions.ConfigCreationException;
@@ -48,7 +49,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 			Object defaultValue = field.get(object);
 
 			if (ConfigUtils.isValidValue(defaultValue)) {
-				TrackedValue<?> value = TrackedValue.create(defaultValue, field.getName(), valueBuilder -> {
+				TrackedValue<?> value = TrackedValue.create(defaultValue, getFieldName(field), valueBuilder -> {
 					field.setAccessible(true);
 
 					valueBuilder.callback(tracked -> {
@@ -81,7 +82,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				field.set(object, value.getRealValue());
 				builder.field(value);
 			} else if (defaultValue instanceof Config.Section) {
-				builder.section(field.getName(), b -> {
+				builder.section(getFieldName(field), b -> {
 					for (Annotation annotation : field.getAnnotations()) {
 						ConfigFieldAnnotationProcessors.applyAnnotationProcessors(annotation, b);
 					}
@@ -102,6 +103,17 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				throw new ConfigFieldException("Class '" + defaultValue.getClass().getName() + "' of field '" + field.getName() + "' is not a valid config value; must be a basic type, complex type, or implement org.quiltmc.loader.api.Config.Section");
 			}
 		}
+	}
+
+	private String getFieldName(Field field) {
+		SerializedName nameAnno = field.getAnnotation(SerializedName.class);
+		if (nameAnno != null) {
+			return nameAnno.value();
+		}
+
+		// TODO naming scheme
+
+		return field.getName();
 	}
 
 	public void create(Config.Builder builder) {
