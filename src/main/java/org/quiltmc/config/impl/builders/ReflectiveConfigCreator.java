@@ -23,6 +23,7 @@ import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.exceptions.ConfigCreationException;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.impl.util.ConfigUtils;
+import org.quiltmc.config.impl.util.NamingSchemeUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
@@ -40,20 +41,9 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 	}
 
 	private NamingScheme getNamingScheme(NamingScheme scheme, AnnotatedElement element, BiFunction<String, Throwable, RuntimeException> exceptionFactory) {
-		NameConvention nameAnno = element.getAnnotation(NameConvention.class);
-		if (nameAnno != null) {
-			String customSchemeClass = nameAnno.custom();
-			if (customSchemeClass.isEmpty()) {
-				scheme = nameAnno.value();
-			} else {
-				try {
-					scheme = (NamingScheme) Class.forName(customSchemeClass, true, this.creatorClass.getClassLoader()).newInstance();
-				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-					throw exceptionFactory.apply("NameConvention.custom(): failed to create instance of \"" + customSchemeClass + "\"", e);
-				} catch (ClassCastException e) {
-					throw exceptionFactory.apply("NameConvention.custom(): class \"" + customSchemeClass + "\" does not implement interface \"" + NamingScheme.class.getName() + "\"", e);
-				}
-			}
+		NameConvention annotation = element.getAnnotation(NameConvention.class);
+		if (annotation != null) {
+			scheme = NamingSchemeUtils.getNamingScheme(annotation, exceptionFactory);
 		}
 
 		return scheme;
@@ -70,7 +60,10 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 			Object defaultValue = field.get(object);
 
 			if (ConfigUtils.isValidValue(defaultValue)) {
-				TrackedValue<?> value = TrackedValue.create(defaultValue, getFieldName(defaultFieldNamingScheme, field), valueBuilder -> {
+				NamingScheme fieldNamingScheme = getNamingScheme(defaultFieldNamingScheme, field, ConfigFieldException::new);
+				TrackedValue<?> value = TrackedValue.create(defaultValue, getFieldName(fieldNamingScheme, field), valueBuilder -> {
+					valueBuilder.metadata(NameConvention.TYPE, b -> b.set(fieldNamingScheme));
+
 					field.setAccessible(true);
 
 					valueBuilder.callback(tracked -> {
@@ -103,9 +96,11 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				field.set(object, value.getRealValue());
 				builder.field(value);
 			} else if (defaultValue instanceof Config.Section) {
-				NamingScheme sectionDefaultFieldNamingScheme = getNamingScheme(this.defaultFieldNamingScheme, defaultValue.getClass(), ConfigFieldException::new);
+				NamingScheme sectionDefaultFieldNamingScheme = getNamingScheme(defaultFieldNamingScheme, defaultValue.getClass(), ConfigFieldException::new);
 
-				builder.section(getFieldName(this.defaultFieldNamingScheme, field), b -> {
+				builder.section(getFieldName(getNamingScheme(sectionDefaultFieldNamingScheme, field, ConfigFieldException::new), field), b -> {
+					b.metadata(NameConvention.TYPE, mb -> mb.set(sectionDefaultFieldNamingScheme));
+
 					for (Annotation annotation : field.getAnnotations()) {
 						ConfigFieldAnnotationProcessors.applyAnnotationProcessors(annotation, b);
 					}
@@ -128,12 +123,12 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 		}
 	}
 
-	private String getFieldName(NamingScheme defaultFieldNamingScheme, Field field) {
-		SerializedName customNameAnno = field.getAnnotation(SerializedName.class);
-		if (customNameAnno == null) {
-			return getNamingScheme(defaultFieldNamingScheme, field, ConfigFieldException::new).coerce(field.getName());
+	private String getFieldName(NamingScheme fieldNamingScheme, Field field) {
+		SerializedName annotation = field.getAnnotation(SerializedName.class);
+		if (annotation == null) {
+			return fieldNamingScheme.coerce(field.getName());
 		} else {
-			return customNameAnno.value();
+			return annotation.value();
 		}
 	}
 

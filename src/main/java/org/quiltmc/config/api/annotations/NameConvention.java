@@ -19,12 +19,34 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Optional;
 
+import org.quiltmc.config.api.metadata.MetadataType;
+import org.quiltmc.config.api.naming.NamingScheme;
 import org.quiltmc.config.api.naming.NamingSchemes;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.FIELD})
 public @interface NameConvention {
+    MetadataType<NamingScheme, Builder> TYPE = MetadataType.create(() -> Optional.of(NamingSchemes.PASSTHROUGH), Builder::new);
+
     NamingSchemes value() default NamingSchemes.PASSTHROUGH;
     String custom() default "";
+
+    final class Builder implements MetadataType.Builder<NamingScheme> {
+        private NamingScheme scheme;
+
+        public Builder() {
+            scheme = NamingSchemes.PASSTHROUGH;
+        }
+
+        public void set(NamingScheme scheme) {
+            this.scheme = scheme;
+        }
+
+        @Override
+        public NamingScheme build() {
+            return scheme;
+        }
+    }
 }
