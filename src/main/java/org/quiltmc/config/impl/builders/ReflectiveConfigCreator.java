@@ -40,19 +40,19 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 	}
 
 	private NamingScheme getNamingScheme(NamingScheme scheme, AnnotatedElement element, BiFunction<String, Throwable, RuntimeException> exceptionFactory) {
-		CustomNameConvention customAnno = element.getAnnotation(CustomNameConvention.class);
-		if (customAnno != null) {
-			try {
-				scheme = (NamingScheme) Class.forName(customAnno.value(), true, this.creatorClass.getClassLoader()).newInstance();
-			} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-				throw exceptionFactory.apply("CustomNameConvention: failed to create instance of \"" + customAnno.value() + "\"", e);
-			} catch (ClassCastException e) {
-				throw exceptionFactory.apply("CustomNameConvention: class \"" + customAnno.value() + "\" does not implement interface \"" + NamingScheme.class.getName() + "\"", e);
-			}
-		} else {
-			NameConvention nameAnno = element.getAnnotation(NameConvention.class);
-			if (nameAnno != null) {
+		NameConvention nameAnno = element.getAnnotation(NameConvention.class);
+		if (nameAnno != null) {
+			String customSchemeClass = nameAnno.custom();
+			if (customSchemeClass.isEmpty()) {
 				scheme = nameAnno.value();
+			} else {
+				try {
+					scheme = (NamingScheme) Class.forName(customSchemeClass, true, this.creatorClass.getClassLoader()).newInstance();
+				} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+					throw exceptionFactory.apply("NameConvention.custom(): failed to create instance of \"" + customSchemeClass + "\"", e);
+				} catch (ClassCastException e) {
+					throw exceptionFactory.apply("NameConvention.custom(): class \"" + customSchemeClass + "\" does not implement interface \"" + NamingScheme.class.getName() + "\"", e);
+				}
 			}
 		}
 

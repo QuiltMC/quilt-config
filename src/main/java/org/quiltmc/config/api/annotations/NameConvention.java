@@ -25,5 +25,6 @@ import org.quiltmc.config.api.naming.NamingSchemes;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.FIELD})
 public @interface NameConvention {
-    NamingSchemes value();
+    NamingSchemes value() default NamingSchemes.PASSTHROUGH;
+    String custom() default "";
 }
