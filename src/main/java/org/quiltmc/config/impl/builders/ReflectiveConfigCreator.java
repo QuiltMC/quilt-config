@@ -23,21 +23,22 @@ import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.exceptions.ConfigCreationException;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.impl.util.ConfigUtils;
-import org.quiltmc.config.impl.util.NamingSchemeUtils;
+import org.quiltmc.config.impl.util.NamingSchemeHelper;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
-import java.util.function.BiFunction;
 
 public class ReflectiveConfigCreator<C> implements Config.Creator {
 	private final Class<C> creatorClass;
+	private final NamingSchemeHelper namingSchemeHelper;
 	private final NamingScheme defaultFieldNamingScheme;
 	private C instance;
 
 	public ReflectiveConfigCreator(Class<C> creatorClass) {
 		this.creatorClass = creatorClass;
 
-		this.defaultFieldNamingScheme = getNamingScheme(NamingSchemes.PASSTHROUGH, this.creatorClass, ConfigCreationException::new);
+		this.namingSchemeHelper = new NamingSchemeHelper(creatorClass.getClassLoader());
+		this.defaultFieldNamingScheme = namingSchemeHelper.getNamingScheme(NamingSchemes.PASSTHROUGH, creatorClass, ConfigCreationException::new);
 	}
 
 	private void createField(Config.SectionBuilder builder, Object object, Field field, NamingScheme defaultFieldNamingScheme) throws IllegalAccessException {
@@ -51,7 +52,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 			Object defaultValue = field.get(object);
 
 			if (ConfigUtils.isValidValue(defaultValue)) {
-				NamingScheme fieldNamingScheme = getNamingScheme(defaultFieldNamingScheme, field, ConfigFieldException::new);
+				NamingScheme fieldNamingScheme = namingSchemeHelper.getNamingScheme(defaultFieldNamingScheme, field, ConfigFieldException::new);
 				TrackedValue<?> value = TrackedValue.create(defaultValue, getFieldName(fieldNamingScheme, field), valueBuilder -> {
 					valueBuilder.metadata(NameConvention.TYPE, b -> b.set(fieldNamingScheme));
 
@@ -87,8 +88,8 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				field.set(object, value.getRealValue());
 				builder.field(value);
 			} else if (defaultValue instanceof Config.Section) {
-				NamingScheme sectionDefaultFieldNamingScheme = getNamingScheme(defaultFieldNamingScheme, defaultValue.getClass(), ConfigFieldException::new);
-                NamingScheme sectionFieldNamingScheme = getNamingScheme(sectionDefaultFieldNamingScheme, field, ConfigFieldException::new);
+				NamingScheme sectionDefaultFieldNamingScheme = namingSchemeHelper.getNamingScheme(defaultFieldNamingScheme, defaultValue.getClass(), ConfigFieldException::new);
+                NamingScheme sectionFieldNamingScheme = namingSchemeHelper.getNamingScheme(sectionDefaultFieldNamingScheme, field, ConfigFieldException::new);
 
 				builder.section(getFieldName(sectionFieldNamingScheme, field), b -> {
 					b.metadata(NameConvention.TYPE, mb -> mb.set(sectionFieldNamingScheme));
@@ -113,15 +114,6 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				throw new ConfigFieldException("Class '" + defaultValue.getClass().getName() + "' of field '" + field.getName() + "' is not a valid config value; must be a basic type, complex type, or implement org.quiltmc.loader.api.Config.Section");
 			}
 		}
-	}
-
-	private NamingScheme getNamingScheme(NamingScheme scheme, AnnotatedElement element, BiFunction<String, Throwable, RuntimeException> exceptionFactory) {
-		NameConvention annotation = element.getAnnotation(NameConvention.class);
-		if (annotation != null) {
-			scheme = NamingSchemeUtils.getNamingScheme(annotation, exceptionFactory);
-		}
-
-		return scheme;
 	}
 
 	private String getFieldName(NamingScheme fieldNamingScheme, Field field) {
