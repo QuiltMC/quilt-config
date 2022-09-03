@@ -18,6 +18,9 @@ public final class TestReflectiveConfig5 extends WrappedConfig {
 
     public final Nested differentConventionForSection = new Nested();
 
+    @NameConvention(NamingSchemes.CAMEL_CASE)
+    public final Nested overridenConventionForSection = new Nested();
+
     @NameConvention(custom = "org.quiltmc.config.ScreamingSnakeCaseNamingScheme")
     public static final class Nested implements Config.Section {
         public final String hello;

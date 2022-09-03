@@ -25,6 +25,7 @@ import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.ConfigEnvironment;
 import org.quiltmc.config.api.Constraint;
 import org.quiltmc.config.api.annotations.Comment;
+import org.quiltmc.config.api.annotations.NameConvention;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.api.exceptions.TrackedValueException;
 import org.quiltmc.config.api.metadata.Comments;

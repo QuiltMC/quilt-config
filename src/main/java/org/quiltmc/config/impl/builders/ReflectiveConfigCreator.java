@@ -40,15 +40,6 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 		this.defaultFieldNamingScheme = getNamingScheme(NamingSchemes.PASSTHROUGH, this.creatorClass, ConfigCreationException::new);
 	}
 
-	private NamingScheme getNamingScheme(NamingScheme scheme, AnnotatedElement element, BiFunction<String, Throwable, RuntimeException> exceptionFactory) {
-		NameConvention annotation = element.getAnnotation(NameConvention.class);
-		if (annotation != null) {
-			scheme = NamingSchemeUtils.getNamingScheme(annotation, exceptionFactory);
-		}
-
-		return scheme;
-	}
-
 	private void createField(Config.SectionBuilder builder, Object object, Field field, NamingScheme defaultFieldNamingScheme) throws IllegalAccessException {
 		if (!Modifier.isStatic(field.getModifiers()) && !Modifier.isTransient(field.getModifiers())) {
 			if (!Modifier.isFinal(field.getModifiers())) {
@@ -97,9 +88,10 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				builder.field(value);
 			} else if (defaultValue instanceof Config.Section) {
 				NamingScheme sectionDefaultFieldNamingScheme = getNamingScheme(defaultFieldNamingScheme, defaultValue.getClass(), ConfigFieldException::new);
+                NamingScheme sectionFieldNamingScheme = getNamingScheme(sectionDefaultFieldNamingScheme, field, ConfigFieldException::new);
 
-				builder.section(getFieldName(getNamingScheme(sectionDefaultFieldNamingScheme, field, ConfigFieldException::new), field), b -> {
-					b.metadata(NameConvention.TYPE, mb -> mb.set(sectionDefaultFieldNamingScheme));
+				builder.section(getFieldName(sectionFieldNamingScheme, field), b -> {
+					b.metadata(NameConvention.TYPE, mb -> mb.set(sectionFieldNamingScheme));
 
 					for (Annotation annotation : field.getAnnotations()) {
 						ConfigFieldAnnotationProcessors.applyAnnotationProcessors(annotation, b);
@@ -108,7 +100,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 					for (Field f : defaultValue.getClass().getDeclaredFields()) {
 						if (!f.isSynthetic()) {
 							try {
-								this.createField(b, defaultValue, f, sectionDefaultFieldNamingScheme);
+								this.createField(b, defaultValue, f, sectionFieldNamingScheme);
 							} catch (IllegalAccessException e) {
 								throw new RuntimeException(e);
 							}
@@ -121,6 +113,15 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				throw new ConfigFieldException("Class '" + defaultValue.getClass().getName() + "' of field '" + field.getName() + "' is not a valid config value; must be a basic type, complex type, or implement org.quiltmc.loader.api.Config.Section");
 			}
 		}
+	}
+
+	private NamingScheme getNamingScheme(NamingScheme scheme, AnnotatedElement element, BiFunction<String, Throwable, RuntimeException> exceptionFactory) {
+		NameConvention annotation = element.getAnnotation(NameConvention.class);
+		if (annotation != null) {
+			scheme = NamingSchemeUtils.getNamingScheme(annotation, exceptionFactory);
+		}
+
+		return scheme;
 	}
 
 	private String getFieldName(NamingScheme fieldNamingScheme, Field field) {
