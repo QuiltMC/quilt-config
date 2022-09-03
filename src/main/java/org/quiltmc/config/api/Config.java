@@ -85,10 +85,9 @@ public interface Config extends MetadataContainer {
 	TrackedValue<?> getValue(Iterable<String> key);
 
 	/**
-	 * Returns all nodes of the value tree represented by this config file, including section nodes
+	 * Returns all top-level nodes of the value tree represented by this config file, including section nodes
 	 *
-	 * <p>Section nodes are returned prior to each value within their respective section. Consider a config represented
-	 * by the following JSON5 file:
+	 * <p>Consider a config represented by the following JSON5 file:
 	 * <pre>
 	 * {
 	 *     wumbo: "mayonnaise",
@@ -104,11 +103,11 @@ public interface Config extends MetadataContainer {
 	 * <ul>
 	 *     <li>TrackedValue("wumbo", "mayonnaise")</li>
 	 *     <li>ValueTreeNode.Section("gui")</li>
-	 *     <li>TrackedValue("gui.scale", 1.0)</li>
-	 *     <li>TrackedValue("gui.fg_color", "0xFFFFFFFF")</li>
-	 *     <li>TrackedValue("gui.bg_color", "0x80000000")</li>
 	 *     <li>TrackedValue("count", 100)</li>
 	 * </ul>
+	 * 
+	 * iterating over children would need to be done by checking <pre>node instanceof ValueTreeNode.Section<pre>
+	 * and iterating over that node as well, recursively.
 	 */
 	Iterable<ValueTreeNode> nodes();
 
