@@ -44,6 +44,8 @@ public final class TestReflectiveConfig extends WrappedConfig {
 	public final Nested nested1 = new Nested(10, 11, 12, 13);
 	public final Nested nested3 = new Nested(20, 21, 22, 23);
 
+	public final ValueList<String> enabled = ValueList.create("");
+
 	@Processor("processField")
 	public final ValueList<Vec3i> vecs = ValueList.create(new Vec3i(0, 0, 0),
 			new Vec3i(1, 2, 3),
@@ -56,6 +58,8 @@ public final class TestReflectiveConfig extends WrappedConfig {
 	@Comment("Test section comment 3")
 	@Comment("Test section comment 4")
 	public final Nested nested4 = new Nested(30, 31, 32, 33);
+
+	public final ValueMap<ValueList<String>> key_binds = ValueMap.builder(ValueList.create("")).build();
 
 	@IntegerRange(min=0, max=10)
 	public final ValueList<Integer> ints = ValueList.create(0, 1, 2, 3, 4);
