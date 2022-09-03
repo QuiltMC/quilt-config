@@ -20,7 +20,6 @@ import com.electronwill.nightconfig.toml.TomlWriter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.ConfigEnvironment;
 import org.quiltmc.config.api.Constraint;
@@ -35,13 +34,13 @@ import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.impl.CommentsImpl;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 
 public class ConfigTester {
-	@TempDir
-	static Path TEMP;
+	static Path TEMP = Paths.get("temp");
 	static ConfigEnvironment ENV;
 
 	static TrackedValue<String> TEST;
