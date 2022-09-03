@@ -49,8 +49,8 @@ public class SectionBuilderImpl implements Config.SectionBuilder {
 		ValueKey valueKey = this.key.child(key);
 		SectionBuilderImpl sectionBuilder = new SectionBuilderImpl(valueKey, this.builder);
 
-		this.builder.values.put(valueKey, sectionBuilder);
 		creator.accept(sectionBuilder);
+		this.builder.values.put(valueKey, sectionBuilder);
 
 		return this;
 	}
