@@ -23,13 +23,13 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-    testImplementation 'com.electronwill.night-config:core:3.6.5'
-    testImplementation 'com.electronwill.night-config:toml:3.6.5'
-    testImplementation 'org.quiltmc:quilt-json5:1.0.0'
+    testImplementation "org.junit.jupiter:junit-jupiter-api:${project.junit_bom}"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${project.junit_bom}"
+    testImplementation "com.electronwill.night-config:core:${project.night_config}"
+    testImplementation "com.electronwill.night-config:toml:${project.night_config}"
+    testImplementation "org.quiltmc:quilt-json5:${project.quilt_json5}"
 
-    implementation 'org.jetbrains:annotations:23.0.0'
+    implementation "org.jetbrains:annotations:${project.annotations}"
 }
 
 test {
