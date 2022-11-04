@@ -15,9 +15,12 @@
  */
 package org.quiltmc.config.impl.util;
 
+import org.quiltmc.config.api.ConfigTypeWrapper;
 import org.quiltmc.config.api.exceptions.TrackedValueException;
 import org.quiltmc.config.api.values.CompoundConfigValue;
 import org.quiltmc.config.api.values.ConfigSerializableObject;
+
+import java.util.Map;
 
 public final class ConfigUtils {
 	private static final Class<?>[] VALID_VALUE_CLASSES = new Class[] {
@@ -34,15 +37,15 @@ public final class ConfigUtils {
 			String.class
 	};
 
-	public static void assertValueType(Object object) {
+	public static void assertValueType(Object object, Map<Class<?>, ConfigTypeWrapper<?, ?>> typeWrapper) {
 		if (object == null) {
 			throw new TrackedValueException("Cannot create value with null default value");
-		} else if (!isValidValue(object)) {
+		} else if (!isValidValue(object, typeWrapper)) {
 			throw new TrackedValueException("Cannot create value of type '" + object.getClass() + "'");
 		}
 	}
 
-	public static boolean isValidValue(Object object) {
+	public static boolean isValidValue(Object object, Map<Class<?>, ConfigTypeWrapper<?, ?>> typeWrapper) {
 		if (object == null) {
 			return false;
 		} else if (object instanceof ConfigSerializableObject) {
@@ -52,7 +55,10 @@ public final class ConfigUtils {
 				object = ((CompoundConfigValue<?>) object).getDefaultValue();
 			}
 
-			return isValidValue(object);
+			return isValidValue(object, typeWrapper);
+		} else if (typeWrapper.containsKey(object.getClass())) {
+			ConfigTypeWrapper configTypeWrapper = typeWrapper.get(object.getClass());
+			return isValidValue(configTypeWrapper.getRepresentation(object), typeWrapper);
 		} else {
 			return isValidValueClass(object.getClass());
 		}

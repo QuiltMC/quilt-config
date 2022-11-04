@@ -21,11 +21,13 @@ import com.electronwill.nightconfig.core.UnmodifiableCommentedConfig;
 import com.electronwill.nightconfig.core.io.ConfigParser;
 import com.electronwill.nightconfig.core.io.ConfigWriter;
 import org.quiltmc.config.api.Config;
+import org.quiltmc.config.api.ConfigTypeWrapper;
 import org.quiltmc.config.api.MarshallingUtils;
 import org.quiltmc.config.api.Serializer;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.values.*;
+import org.quiltmc.config.impl.ConfigImpl;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -52,7 +54,7 @@ public final class NightConfigSerializer<C extends CommentedConfig> implements S
 
 	@Override
 	public void serialize(Config config, OutputStream to) {
-		this.writer.write(write(createCommentedConfig(), config.nodes()), to);
+		this.writer.write(write(createCommentedConfig(), config.nodes(), ((ConfigImpl)config).getTypeWrapper()), to);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
@@ -63,44 +65,47 @@ public final class NightConfigSerializer<C extends CommentedConfig> implements S
 		for (TrackedValue<?> trackedValue : config.values()) {
 			if (read.contains(trackedValue.key().toString())) {
 				((TrackedValue) trackedValue).setValue(MarshallingUtils.coerce(read.get(trackedValue.key().toString()), trackedValue.getDefaultValue(), (CommentedConfig c, MarshallingUtils.MapEntryConsumer entryConsumer) ->
-						c.entrySet().forEach(e -> entryConsumer.put(e.getKey(), e.getValue()))), false);
+						c.entrySet().forEach(e -> entryConsumer.put(e.getKey(), e.getValue())), ((ConfigImpl)config).getTypeWrapper()), false);
 			}
 		}
 	}
 
-	private static List<Object> convertList(List<?> list) {
+	private static List<Object> convertList(List<?> list, Map<Class<?>, ConfigTypeWrapper<?, ?>> configTypeWrapper) {
 		List<Object> result = new ArrayList<>(list.size());
 
 		for (Object value : list) {
-			result.add(convertAny(value));
+			result.add(convertAny(value, configTypeWrapper));
 		}
 
 		return result;
 	}
 
-	private static UnmodifiableCommentedConfig convertMap(ValueMap<?> map) {
+	private static UnmodifiableCommentedConfig convertMap(ValueMap<?> map, Map<Class<?>, ConfigTypeWrapper<?, ?>> configTypeWrapper) {
 		CommentedConfig result = createCommentedConfig();
 
 		for (Map.Entry<String, ?> entry : map.entrySet()) {
-			result.add(entry.getKey(), convertAny(entry.getValue()));
+			result.add(entry.getKey(), convertAny(entry.getValue(), configTypeWrapper));
 		}
 
 		return result;
 	}
 
-	private static Object convertAny(Object value) {
+	private static Object convertAny(Object value, Map<Class<?>, ConfigTypeWrapper<?, ?>> configTypeWrapper) {
 		if (value instanceof ValueMap) {
-			return convertMap((ValueMap<?>) value);
+			return convertMap((ValueMap<?>) value, configTypeWrapper);
 		} else if (value instanceof ValueList) {
-			return convertList((ValueList<?>) value);
+			return convertList((ValueList<?>) value, configTypeWrapper);
 		} else if (value instanceof ConfigSerializableObject) {
-			return convertAny(((ConfigSerializableObject<?>) value).getRepresentation());
+			return convertAny(((ConfigSerializableObject<?>) value).getRepresentation(), configTypeWrapper);
+		} else if (configTypeWrapper.containsKey(value.getClass())) {
+			ConfigTypeWrapper wrapper = configTypeWrapper.get(value.getClass());
+			return convertAny(wrapper.getRepresentation(value), configTypeWrapper);
 		} else {
 			return value;
 		}
 	}
 
-	private static CommentedConfig write(CommentedConfig config, Iterable<ValueTreeNode> nodes) {
+	private static CommentedConfig write(CommentedConfig config, Iterable<ValueTreeNode> nodes, Map<Class<?>, ConfigTypeWrapper<?, ?>> configTypeWrapper) {
 		for (ValueTreeNode node : nodes) {
 			List<String> comments = new ArrayList<>();
 
@@ -134,10 +139,9 @@ public final class NightConfigSerializer<C extends CommentedConfig> implements S
 				if (!(defaultValue instanceof CompoundConfigValue<?>)) {
 					comments.add("default: " + defaultValue);
 				}
-
-				config.add(trackedValue.key().toString(), convertAny(trackedValue.getRealValue()));
+				config.add(trackedValue.key().toString(), convertAny(trackedValue.getRealValue(), configTypeWrapper));
 			} else {
-				write(config, ((ValueTreeNode.Section) node));
+				write(config, ((ValueTreeNode.Section) node), configTypeWrapper);
 			}
 
 			if (!comments.isEmpty()) {

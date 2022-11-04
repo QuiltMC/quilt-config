@@ -28,6 +28,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
 
 public class ReflectiveConfigCreator<C> implements Config.Creator {
 	private final Class<C> creatorClass;
@@ -47,7 +48,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 			}
 			Object defaultValue = field.get(object);
 
-			if (ConfigUtils.isValidValue(defaultValue)) {
+			if (ConfigUtils.isValidValue(defaultValue, new HashMap<>())) {
 				TrackedValue<?> value = TrackedValue.create(defaultValue, field.getName(), valueBuilder -> {
 					field.setAccessible(true);
 

@@ -41,7 +41,9 @@ public final class ConfigImpl extends AbstractMetadataContainer implements Confi
 	private final Trie values;
 	private final String defaultFileType;
 
-	public ConfigImpl(ConfigEnvironment environment, String id, Path path, Map<MetadataType<?, ?>, Object> metadata, String family, List<UpdateCallback> callbacks, Trie values, String defaultFileType) {
+	private final Map<Class<?>, ConfigTypeWrapper<?,?>> configTypeWrapper;
+
+	public ConfigImpl(ConfigEnvironment environment, String id, Path path, Map<MetadataType<?, ?>, Object> metadata, String family, List<UpdateCallback> callbacks, Trie values, String defaultFileType, Map<Class<?>, ConfigTypeWrapper<?,?>> configTypeWrapper) {
 		super(metadata);
 		this.environment = environment;
 		this.family = family;
@@ -50,6 +52,7 @@ public final class ConfigImpl extends AbstractMetadataContainer implements Confi
 		this.callbacks = callbacks;
 		this.values = values;
 		this.defaultFileType = defaultFileType;
+		this.configTypeWrapper = configTypeWrapper;
 	}
 
 	@Override
@@ -82,6 +85,10 @@ public final class ConfigImpl extends AbstractMetadataContainer implements Confi
 
 	private Path getPath() {
 		return this.environment.getSaveDir().resolve(this.family).resolve(this.path).resolve(this.id + "." + this.environment.getSerializer(this.defaultFileType).getFileExtension());
+	}
+
+	public Map<Class<?>, ConfigTypeWrapper<?, ?>> getTypeWrapper() {
+		return configTypeWrapper;
 	}
 
 	@Override

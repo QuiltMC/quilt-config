@@ -22,6 +22,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.ConfigEnvironment;
+import org.quiltmc.config.api.ConfigTypeWrapper;
 import org.quiltmc.config.api.Constraint;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
@@ -48,6 +49,7 @@ public class ConfigTester {
 	static TrackedValue<Boolean> TEST_BOOLEAN;
 	static TrackedValue<String> TEST_STRING;
 	static TrackedValue<ValueList<Integer>> TEST_LIST;
+    static TrackedValue<DoubleWrappedValue> TEST_DOUBLE_WRAPPED;
 
 	@BeforeAll
 	public static void initializeConfigDir() {
@@ -330,4 +332,52 @@ public class ConfigTester {
 			}
 		}
 	}
+
+	@Test
+	public void testWrappedValue() {
+
+		Config config = Config.create(ENV, "testmod", "testConfigWrapped", builder -> {
+			builder.addTypeWrapper(WrappedValue.class, new ConfigTypeWrapper<String, WrappedValue>() {
+				@Override
+				public WrappedValue convertFrom(String representation) {
+					return new WrappedValue(representation);
+				}
+
+				@Override
+				public String getRepresentation(WrappedValue value) {
+					return value.value;
+				}
+			});
+			builder.field(TrackedValue.create(new WrappedValue("aString"), "testString"));
+		});
+	}
+
+	@Test
+	public void testDoubleWrappedValue() {
+		Config config = Config.create(ENV, "testmod", "testConfigDoubleWrapped", builder -> {
+			builder.addTypeWrapper(WrappedValue.class, new ConfigTypeWrapper<String, WrappedValue>() {
+				@Override
+				public WrappedValue convertFrom(String representation) {
+					return new WrappedValue(representation);
+				}
+
+				@Override
+				public String getRepresentation(WrappedValue value) {
+					return value.value;
+				}
+			});
+			builder.addTypeWrapper(DoubleWrappedValue.class, new ConfigTypeWrapper<WrappedValue, DoubleWrappedValue>() {
+				@Override
+				public DoubleWrappedValue convertFrom(WrappedValue representation) {
+					return new DoubleWrappedValue(representation);
+				}
+
+				@Override
+				public WrappedValue getRepresentation(DoubleWrappedValue value) {
+					return value.value;
+				}
+			});
+			builder.field(TEST_DOUBLE_WRAPPED = TrackedValue.create(new DoubleWrappedValue(new WrappedValue("aString")), "testString"));
+		});
+    }
 }

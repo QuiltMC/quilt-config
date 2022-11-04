@@ -117,8 +117,6 @@ public interface TrackedValue<T> extends ValueTreeNode {
 	 * @return a new {@link TrackedValue}
 	 */
 	static <T> TrackedValue<T> create(@NotNull T defaultValue, String key0, String... keys) {
-		ConfigUtils.assertValueType(defaultValue);
-
 		return new TrackedValueImpl<>(new ValueKeyImpl(key0, keys), defaultValue, new LinkedHashMap<>(0), new ArrayList<>(0), new ArrayList<>(0));
 	}
 

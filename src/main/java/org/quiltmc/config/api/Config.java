@@ -429,6 +429,14 @@ public interface Config extends MetadataContainer {
 		 * @return this
 		 */
 		Builder format(String format);
+
+		/**
+		 * Adds a typewrapper to this config.
+		 *
+		 * @return this
+		 *
+		 */
+		<K,V> Builder addTypeWrapper(Class<V> wrapperFor, ConfigTypeWrapper<K, V> wrapper);
 	}
 
 	@ApiStatus.NonExtendable

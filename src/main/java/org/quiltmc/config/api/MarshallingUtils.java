@@ -21,7 +21,9 @@ import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiFunction;
 
 /**
@@ -41,7 +43,7 @@ public final class MarshallingUtils {
 	 * @return some value
 	 */
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	private static <M, L> Object coerce(Object object, Object to, BiFunction<M, ValueMap<?>, ValueMap<?>> valueMapCreator, BiFunction<L, ValueList<?>, ValueList<?>> valueListCreator) {
+	private static <M, L> Object coerce(Object object, Object to, BiFunction<M, ValueMap<?>, ValueMap<?>> valueMapCreator, BiFunction<L, ValueList<?>, ValueList<?>> valueListCreator, Map<Class<?>, ConfigTypeWrapper<?, ?>> configTypeWrapper) {
 		if (to instanceof Integer) {
 			return ((Number) object).intValue();
 		} else if (to instanceof Long) {
@@ -55,7 +57,7 @@ public final class MarshallingUtils {
 		} else if (to instanceof Boolean) {
 			return object;
 		} else if (to instanceof ConfigSerializableObject) {
-			return ((ConfigSerializableObject) to).convertFrom(coerce(object, ((ConfigSerializableObject<?>) to).getRepresentation(), valueMapCreator, valueListCreator));
+			return ((ConfigSerializableObject) to).convertFrom(coerce(object, ((ConfigSerializableObject<?>) to).getRepresentation(), valueMapCreator, valueListCreator, configTypeWrapper));
 		} else if (to instanceof ValueMap) {
 			return valueMapCreator.apply((M) object, (ValueMap<?>) to);
 		} else if (to instanceof ValueList) {
@@ -68,15 +70,23 @@ public final class MarshallingUtils {
 			}
 
 			throw new ConfigParseException("Unexpected value '" + object + "' for enum class '" + to.getClass() + "'");
+		} else if (configTypeWrapper.containsKey(to.getClass())) {
+			ConfigTypeWrapper wrapper = configTypeWrapper.get(to.getClass());
+			return wrapper.convertFrom(coerce(object, wrapper.getRepresentation(to), valueMapCreator, valueListCreator, configTypeWrapper));
 		} else {
 			throw new ConfigParseException("Unexpected value type: " + to.getClass());
 		}
 	}
 
-	public static <M, L> Object coerce(Object object, Object to, ValueMapCreator<M> creator) {
-		MapCoercer<M> mapCoercer = new MapCoercer<>(creator);
+	public static <M, L> Object coerce(Object object, Object to, ValueMapCreator<M> creator, Map<Class<?>, ConfigTypeWrapper<?, ?>> configTypeWrapper) {
+		MapCoercer<M> mapCoercer = new MapCoercer<>(creator, configTypeWrapper);
 
-		return coerce(object, to, mapCoercer, new ListCoercer<>(mapCoercer));
+		return coerce(object, to, mapCoercer, new ListCoercer<>(mapCoercer, configTypeWrapper), configTypeWrapper);
+	}
+
+	@Deprecated
+	public static <M, L> Object coerce(Object object, Object to, ValueMapCreator<M> creator) {
+		return coerce(object, to, creator, new HashMap<>();
 	}
 
 	public interface ValueMapCreator<M> {
@@ -90,9 +100,10 @@ public final class MarshallingUtils {
 	@SuppressWarnings("rawtypes")
 	private static final class MapCoercer<M> implements BiFunction<M, ValueMap<?>, ValueMap<?>> {
 		private final ValueMapCreator<M> creator;
-
-		private MapCoercer(ValueMapCreator<M> creator) {
+		private final Map<Class<?>, ConfigTypeWrapper<?,?>> configTypeWrapper;
+		private MapCoercer(ValueMapCreator<M> creator, Map<Class<?>, ConfigTypeWrapper<?,?>> configTypeWrapper) {
 			this.creator = creator;
+			this.configTypeWrapper = configTypeWrapper;
 		}
 
 		@Override
@@ -101,7 +112,7 @@ public final class MarshallingUtils {
 			ValueMap.Builder builder = ValueMap.builder(defaultValue.getDefaultValue());
 
 			this.creator.create(object, (key, value) ->
-					builder.put(key, coerce(value, defaultValue.getDefaultValue(), this.creator)));
+					builder.put(key, coerce(value, defaultValue.getDefaultValue(), this.creator, configTypeWrapper)));
 
 			return builder.build();
 		}
@@ -109,9 +120,11 @@ public final class MarshallingUtils {
 
 	private static final class ListCoercer<M> implements BiFunction<List<?>, ValueList<?>, ValueList<?>> {
 		private final BiFunction<M, ValueMap<?>, ValueMap<?>> valueMapCreator;
+		private final Map<Class<?>, ConfigTypeWrapper<?,?>> configTypeWrapper;
 
-		private ListCoercer(BiFunction<M, ValueMap<?>, ValueMap<?>> valueMapCreator) {
+		private ListCoercer(BiFunction<M, ValueMap<?>, ValueMap<?>> valueMapCreator, Map<Class<?>, ConfigTypeWrapper<?,?>> configTypeWrapper) {
 			this.valueMapCreator = valueMapCreator;
+			this.configTypeWrapper = configTypeWrapper;
 		}
 
 		@Override
@@ -119,7 +132,7 @@ public final class MarshallingUtils {
 			Object[] values = list.toArray();
 
 			for (int i = 0; i < values.length; ++i) {
-				values[i] = coerce(values[i], defaultValue.getDefaultValue(), this.valueMapCreator, this);
+				values[i] = coerce(values[i], defaultValue.getDefaultValue(), this.valueMapCreator, this, configTypeWrapper);
 			}
 
 			return ValueList.create(defaultValue.getDefaultValue(), values);

@@ -15,6 +15,7 @@
  */
 package org.quiltmc.config;
 
+import org.quiltmc.config.impl.ConfigImpl;
 import org.quiltmc.json5.JsonReader;
 import org.quiltmc.json5.JsonToken;
 import org.quiltmc.json5.JsonWriter;
@@ -42,7 +43,7 @@ public final class Json5Serializer implements Serializer {
 		return "json5";
 	}
 
-	private void serialize(JsonWriter writer, Object value) throws IOException {
+	private void serialize(JsonWriter writer, Object value, Map<Class<?>, ConfigTypeWrapper<?, ?>> configTypeWrapper) throws IOException {
 		if (value instanceof Integer) {
 			writer.value((Integer) value);
 		} else if (value instanceof Long) {
@@ -59,7 +60,7 @@ public final class Json5Serializer implements Serializer {
 			writer.beginArray();
 
 			for (Object v : (ValueList<?>) value) {
-				serialize(writer, v);
+				serialize(writer, v, configTypeWrapper);
 			}
 
 			writer.endArray();
@@ -68,22 +69,25 @@ public final class Json5Serializer implements Serializer {
 
 			for (Map.Entry<String, ?> entry : (ValueMap<?>) value) {
 				writer.name(entry.getKey());
-				serialize(writer, entry.getValue());
+				serialize(writer, entry.getValue(), configTypeWrapper);
 			}
 
 			writer.endObject();
 		} else if (value instanceof ConfigSerializableObject) {
-			serialize(writer, ((ConfigSerializableObject<?>) value).getRepresentation());
+			serialize(writer, ((ConfigSerializableObject<?>) value).getRepresentation(), configTypeWrapper);
 		} else if (value == null) {
 			writer.nullValue();
 		} else if (value.getClass().isEnum()) {
 			writer.value(((Enum<?>) value).name());
+		} else if (configTypeWrapper.containsKey(value.getClass())) {
+			ConfigTypeWrapper wrapper = configTypeWrapper.get(value.getClass());
+			serialize(writer, wrapper.getRepresentation(value), configTypeWrapper);
 		} else {
 			throw new ConfigParseException();
 		}
 	}
 
-	private void serialize(JsonWriter writer, ValueTreeNode node) throws IOException {
+	private void serialize(JsonWriter writer, ValueTreeNode node, Map<Class<?>, ConfigTypeWrapper<?, ?>> configTypeWrapper) throws IOException {
 		for (String comment : node.metadata(Comment.TYPE)) {
 			writer.comment(comment);
 		}
@@ -93,7 +97,7 @@ public final class Json5Serializer implements Serializer {
 			writer.beginObject();
 
 			for (ValueTreeNode child : ((ValueTreeNode.Section) node)) {
-				serialize(writer, child);
+				serialize(writer, child, configTypeWrapper);
 			}
 
 			writer.endObject();
@@ -128,7 +132,7 @@ public final class Json5Serializer implements Serializer {
 
 			writer.name(node.key().getLastComponent());
 
-			serialize(writer, trackedValue.getRealValue());
+			serialize(writer, trackedValue.getRealValue(), configTypeWrapper);
 		}
 	}
 
@@ -143,7 +147,7 @@ public final class Json5Serializer implements Serializer {
 		writer.beginObject();
 
 		for (ValueTreeNode node : config.nodes()) {
-			this.serialize(writer, node);
+			this.serialize(writer, node, ((ConfigImpl)config).getTypeWrapper());
 		}
 
 		writer.endObject();
@@ -168,7 +172,7 @@ public final class Json5Serializer implements Serializer {
 						m = (Map<String, Object>) m.get(k);
 					} else if (m.containsKey(k)) {
 						((TrackedValueImpl) value).setValue(MarshallingUtils.coerce(m.get(k), value.getDefaultValue(), (Map<String, ?> map, MarshallingUtils.MapEntryConsumer entryConsumer) ->
-								map.forEach(entryConsumer::put)), false);
+								map.forEach(entryConsumer::put), ((ConfigImpl)config).getTypeWrapper()), false);
 					}
 				}
 			}

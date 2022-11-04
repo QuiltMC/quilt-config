@@ -23,16 +23,14 @@ import org.quiltmc.config.api.values.ValueKey;
 import org.quiltmc.config.impl.ConfigImpl;
 import org.quiltmc.config.impl.tree.TrackedValueImpl;
 import org.quiltmc.config.impl.tree.Trie;
+import org.quiltmc.config.impl.util.ConfigUtils;
 import org.quiltmc.config.impl.util.ConfigsImpl;
 import org.quiltmc.config.impl.values.ValueKeyImpl;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 public final class ConfigBuilderImpl implements Config.Builder {
@@ -40,6 +38,7 @@ public final class ConfigBuilderImpl implements Config.Builder {
 	private final String familyId, id;
 	private final Path path;
 
+	private final Map<Class<?>, ConfigTypeWrapper<?, ?>> typeWrapper = new HashMap<>();
 	private final Map<MetadataType<?, ?>, MetadataType.Builder<?>> metadata = new LinkedHashMap<>();
 	private final List<Config.UpdateCallback> callbacks = new ArrayList<>();
 
@@ -57,6 +56,8 @@ public final class ConfigBuilderImpl implements Config.Builder {
 
 	@Override
 	public Config.Builder field(TrackedValue<?> value) {
+
+		ConfigUtils.assertValueType(value.getDefaultValue(), typeWrapper);
 		this.values.put(value.key(), value);
 
 		return this;
@@ -95,6 +96,12 @@ public final class ConfigBuilderImpl implements Config.Builder {
 		return this;
 	}
 
+	@Override
+	public <K, V> Config.Builder addTypeWrapper(Class<V> wrapperFor, ConfigTypeWrapper<K, V> wrapper) {
+		typeWrapper.put(wrapperFor, wrapper);
+		return this;
+	}
+
 	public ConfigImpl build() {
 		Map<MetadataType<?, ?>, Object> metadata = new LinkedHashMap<>();
 
@@ -102,7 +109,7 @@ public final class ConfigBuilderImpl implements Config.Builder {
 			metadata.put(entry.getKey(), entry.getValue().build());
 		}
 
-		ConfigImpl config = new ConfigImpl(this.environment, this.id, this.path, metadata, this.familyId, this.callbacks, this.values, this.format);
+		ConfigImpl config = new ConfigImpl(this.environment, this.id, this.path, metadata, this.familyId, this.callbacks, this.values, this.format, this.typeWrapper);
 
 		ConfigsImpl.put(familyId, config);
 

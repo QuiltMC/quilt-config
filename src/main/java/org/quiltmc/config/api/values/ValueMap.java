@@ -24,7 +24,6 @@ import java.util.Map;
 @ApiStatus.NonExtendable
 public interface ValueMap<T> extends Iterable<Map.Entry<String, T>>, Map<String, T>, CompoundConfigValue<T> {
 	static <T> Builder<T> builder(T defaultValue) {
-		ConfigUtils.assertValueType(defaultValue);
 
 		return new ValueMapBuilderImpl<>(defaultValue);
 	}
