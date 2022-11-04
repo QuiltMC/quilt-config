@@ -86,7 +86,7 @@ public final class MarshallingUtils {
 
 	@Deprecated
 	public static <M, L> Object coerce(Object object, Object to, ValueMapCreator<M> creator) {
-		return coerce(object, to, creator, new HashMap<>();
+		return coerce(object, to, creator, new HashMap<>());
 	}
 
 	public interface ValueMapCreator<M> {
