@@ -8,10 +8,10 @@ tab_width = 4
 trim_trailing_whitespace = true
 
 [*.gradle]
-indent_style = tab
+indent_style = space
 
 [*.java]
-indent_style = tab
+indent_style = space
 
 [*.json]
 indent_style = space
