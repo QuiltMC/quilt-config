@@ -17,13 +17,13 @@
 package org.quiltmc.config.api.metadata;
 
 public interface MetadataContainer {
-    /**
-     * @return the metadata attached to this value for the specified type
-     */
-    <M> M metadata(MetadataType<M, ?> type);
+	/**
+	 * @return the metadata attached to this value for the specified type
+	 */
+	<M> M metadata(MetadataType<M, ?> type);
 
-    /**
-     * @return whether or not this value has any metadata of the specified type
-     */
-    <M> boolean hasMetadata(MetadataType<M, ?> type);
+	/**
+	 * @return whether or not this value has any metadata of the specified type
+	 */
+	<M> boolean hasMetadata(MetadataType<M, ?> type);
 }

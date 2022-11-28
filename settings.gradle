@@ -1,17 +1,17 @@
 pluginManagement {
-    repositories {
-        gradlePluginPortal()
-        mavenCentral()
+	repositories {
+		gradlePluginPortal()
+		mavenCentral()
 
-        maven {
-            name "Quilt"
-            url "https://maven.quiltmc.org/repository/snapshot"
-        }
-        maven {
-            name "Quilt"
-            url "https://maven.quiltmc.org/repository/release"
-        }
-    }
+		maven {
+			name "Quilt"
+			url "https://maven.quiltmc.org/repository/snapshot"
+		}
+		maven {
+			name "Quilt"
+			url "https://maven.quiltmc.org/repository/release"
+		}
+	}
 }
 
 rootProject.name = 'quilt-config'

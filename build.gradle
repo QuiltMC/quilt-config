@@ -1,7 +1,7 @@
 plugins {
-    id 'java'
-    id 'maven-publish'
-    id 'org.quiltmc.gradle.licenser' version '1.+'
+	id 'java'
+	id 'maven-publish'
+	id 'org.quiltmc.gradle.licenser' version '1.+'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -11,67 +11,67 @@ group 'org.quiltmc'
 version '1.0.0-beta.6'
 
 java {
-    withSourcesJar()
+	withSourcesJar()
 }
 
 repositories {
-    mavenCentral()
-    maven {
-        name = 'Quilt'
-        url = 'https://maven.quiltmc.org/repository/release'
-    }
+	mavenCentral()
+	maven {
+		name = 'Quilt'
+		url = 'https://maven.quiltmc.org/repository/release'
+	}
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-    testImplementation 'com.electronwill.night-config:core:3.6.5'
-    testImplementation 'com.electronwill.night-config:toml:3.6.5'
-    testImplementation 'org.quiltmc:quilt-json5:1.0.0'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+	testImplementation 'com.electronwill.night-config:core:3.6.5'
+	testImplementation 'com.electronwill.night-config:toml:3.6.5'
+	testImplementation 'org.quiltmc:quilt-json5:1.0.0'
 
-    implementation 'org.jetbrains:annotations:23.0.0'
+	implementation 'org.jetbrains:annotations:23.0.0'
 }
 
 test {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }
 
 jar {
-    from ('.') {
-        include 'LICENSE'
-    }
+	from ('.') {
+		include 'LICENSE'
+	}
 }
 
 license {
-    rule rootProject.file("codeformat/HEADER")
+	rule rootProject.file("codeformat/HEADER")
 
-    include "**/*.java"
+	include "**/*.java"
 }
 
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+		}
+	}
 
-    // TODO: We should probably put this on central
-    repositories {
-        def ENV = System.getenv()
+	// TODO: We should probably put this on central
+	repositories {
+		def ENV = System.getenv()
 
-        if (ENV.MAVEN_URL) {
-            project.logger.info("Publishing to " + ENV.MAVEN_URL)
+		if (ENV.MAVEN_URL) {
+			project.logger.info("Publishing to " + ENV.MAVEN_URL)
 
-            repositories.maven {
-                url = ENV.MAVEN_URL
+			repositories.maven {
+				url = ENV.MAVEN_URL
 
-                credentials {
-                    username = ENV.MAVEN_USERNAME
-                    password = ENV.MAVEN_PASSWORD
-                }
-            }
-        } else {
-            project.logger.info("No Maven destination configured.")
-        }
-    }
+				credentials {
+					username = ENV.MAVEN_USERNAME
+					password = ENV.MAVEN_PASSWORD
+				}
+			}
+		} else {
+			project.logger.info("No Maven destination configured.")
+		}
+	}
 }

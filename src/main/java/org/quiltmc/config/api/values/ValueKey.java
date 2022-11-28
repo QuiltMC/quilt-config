@@ -34,7 +34,7 @@ public interface ValueKey extends Iterable<String> {
 
 	boolean isSibling(ValueKey key);
 
-    String getLastComponent();
+	String getLastComponent();
 
 	ValueKey child(ValueKey key);
 }
