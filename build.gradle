@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'maven-publish'
-    id 'org.quiltmc.gradle.licenser'
+    id 'org.quiltmc.gradle.licenser' version '1.+'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
