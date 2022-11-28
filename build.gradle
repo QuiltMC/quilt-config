@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'maven-publish'
-    id "com.diffplug.spotless" version "5.8.2"
+    id 'org.quiltmc.gradle.licenser'
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -42,11 +42,10 @@ jar {
     }
 }
 
-spotless {
-    java {
-        // Use comma separator for openjdk like license headers
-        licenseHeaderFile(file("codeformat/HEADER")).yearSeparator(", ")
-    }
+license {
+    rule rootProject.file("codeformat/HEADER")
+
+    include "**/*.java"
 }
 
 publishing {
