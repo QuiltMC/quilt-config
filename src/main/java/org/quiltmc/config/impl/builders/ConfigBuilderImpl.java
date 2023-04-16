@@ -26,6 +26,7 @@ import org.quiltmc.config.impl.tree.TrackedValueImpl;
 import org.quiltmc.config.impl.tree.Trie;
 import org.quiltmc.config.impl.util.ConfigsImpl;
 import org.quiltmc.config.impl.values.ValueKeyImpl;
+import org.quiltmc.config.implementor_api.ConfigEnvironment;
 
 import java.io.IOException;
 import java.nio.file.Files;

@@ -8,7 +8,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 group 'org.quiltmc'
-version '1.0.0-beta.6'
+version '2.0.0-alpha.0+experimental' // will remain "alpha" until included in QuiltLoader by default
 
 java {
 	withSourcesJar()

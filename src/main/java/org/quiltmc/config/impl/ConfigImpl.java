@@ -25,6 +25,7 @@ import org.quiltmc.config.impl.builders.ConfigBuilderImpl;
 import org.quiltmc.config.impl.builders.ReflectiveConfigCreator;
 import org.quiltmc.config.impl.tree.Trie;
 import org.quiltmc.config.impl.util.ImmutableIterable;
+import org.quiltmc.config.implementor_api.ConfigEnvironment;
 
 import java.io.IOException;
 import java.nio.file.Files;

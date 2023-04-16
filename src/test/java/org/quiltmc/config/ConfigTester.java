@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.quiltmc.config.api.Config;
-import org.quiltmc.config.api.ConfigEnvironment;
+import org.quiltmc.config.implementor_api.ConfigEnvironment;
 import org.quiltmc.config.api.Constraint;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config.api;
+package org.quiltmc.config.implementor_api;
+
+import org.quiltmc.config.api.Serializer;
 
 import java.nio.file.Path;
 import java.util.HashMap;
