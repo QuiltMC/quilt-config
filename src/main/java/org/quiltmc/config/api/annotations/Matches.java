@@ -36,20 +36,4 @@ public @interface Matches {
 	 * @return some regular expression to match against
 	 */
 	String value();
-
-	final class Processor implements ConfigFieldAnnotationProcessor<Matches> {
-		@Override
-		@SuppressWarnings("unchecked")
-		public void process(Matches matches, MetadataContainerBuilder<?> builder) {
-			if (builder instanceof TrackedValue.Builder) {
-				Object defaultValue = ((TrackedValue.Builder<?>) builder).getDefaultValue();
-
-				if (defaultValue instanceof String) {
-					((TrackedValue.Builder<String>) builder).constraint(Constraint.matching(matches.value()));
-				} else if (defaultValue instanceof CompoundConfigValue && ((CompoundConfigValue<?>) defaultValue).getType().equals(String.class)) {
-					((TrackedValue.Builder<CompoundConfigValue<String>>) builder).constraint(Constraint.all(Constraint.matching(matches.value())));
-				}
-			}
-		}
-	}
 }
