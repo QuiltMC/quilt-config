@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.quiltmc.config.api.Config;
+import org.quiltmc.config.api.ConfigEnvironment;
 import org.quiltmc.config.api.Constraint;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
@@ -32,7 +33,7 @@ import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.impl.CommentsImpl;
-import org.quiltmc.config.implementor_api.ConfigEnvironment;
+import org.quiltmc.config.oldwrapped.*;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 
+@SuppressWarnings("deprecation")
 public class ConfigTester {
 	static Path TEMP = Paths.get("temp");
 	static ConfigEnvironment ENV;
@@ -242,8 +244,8 @@ public class ConfigTester {
 		});
 	}
 
-	public void testReflectiveConfigs(String id, String format) {
-		TestReflectiveConfig config = Config.create(ENV, "testmod", id, TestReflectiveConfig.class, builder -> {
+	public void testWrappedConfigs(String id, String format) {
+		TestWrappedConfig config = Config.create(ENV, "testmod", id, TestWrappedConfig.class, builder -> {
 			builder.format(format);
 		});
 
@@ -256,27 +258,27 @@ public class ConfigTester {
 		}
 
 		Assertions.assertThrows(ConfigFieldException.class, () -> {
-			Config.create(ENV, "testmod", "testConfig", TestReflectiveConfig2.class);
+			Config.create(ENV, "testmod", "testConfig", TestWrappedConfig2.class);
 		}).printStackTrace();
 
 		Assertions.assertThrows(ConfigFieldException.class, () -> {
-			Config.create(ENV, "testmod", "testConfig", TestReflectiveConfig3.class);
+			Config.create(ENV, "testmod", "testConfig", TestValueConfig3.class);
 		}).printStackTrace();
 
 		Assertions.assertThrows(TrackedValueException.class, () -> {
-			Config.create(ENV, "testmod", "testConfig", TestReflectiveConfig4.class);
+			Config.create(ENV, "testmod", "testConfig", TestValueConfig4.class);
 		}).printStackTrace();
 	}
 
 	@Test
-	public void testReflectiveConfigs() {
-		testReflectiveConfigs("testConfig10", "toml");
-		testReflectiveConfigs("testConfig11", "json5");
+	public void testWrappedConfigs() {
+		testWrappedConfigs("testConfig10", "toml");
+		testWrappedConfigs("testConfig11", "json5");
 	}
 
 	@Test
 	public void testTomlConfigs() {
-		TestReflectiveConfig config = Config.create(ENV, "testmod", "testConfig12", TestReflectiveConfig.class, builder -> {
+		TestWrappedConfig config = Config.create(ENV, "testmod", "testConfig12", TestWrappedConfig.class, builder -> {
 			builder.format("toml");
 		});
 

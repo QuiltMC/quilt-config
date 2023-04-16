@@ -28,6 +28,7 @@ import org.quiltmc.config.impl.values.ValueKeyImpl;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -117,9 +118,9 @@ public interface TrackedValue<T> extends ValueTreeNode {
 	 * @param keys any number of additional keys for the new {@link TrackedValue}
 	 * @return a new {@link TrackedValue}
 	 */
-	static <T> TrackedValue<T> create(@NotNull T defaultValue, String key0, String... keys) {
+	static <T> TrackedValue<T> create(@NotNull T defaultValue, @NotNull String key0, String... keys) {
 		ConfigUtils.assertValueType(defaultValue);
-
+		Objects.requireNonNull(key0);
 		return new TrackedValueImpl<>(new ValueKeyImpl(key0, keys), defaultValue, new LinkedHashMap<>(0), new ArrayList<>(0), new ArrayList<>(0));
 	}
 

@@ -14,30 +14,24 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config;
+package org.quiltmc.config.oldwrapped;
 
+import org.quiltmc.config.Vec3i;
 import org.quiltmc.config.api.WrappedConfig;
 import org.quiltmc.config.api.annotations.Comment;
-import org.quiltmc.config.api.annotations.IntegerRange;
-import org.quiltmc.config.api.annotations.Matches;
+import org.quiltmc.config.api.annotations.FloatRange;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 
-public final class TestReflectiveConfig4 extends WrappedConfig {
+public final class TestValueConfig3 extends WrappedConfig {
 	@Comment({"Comment one", "Comment two"})
 	public final int a = 0;
-
-	@Comment("Comment one")
-	@Comment("Comment two")
 	public final int b = 1;
 	public final int c = 2;
-
-	@IntegerRange(min=0, max=10)
+	@FloatRange(min=0, max=10)
 	public final int d = 3;
 	public final Vec3i vec = new Vec3i(100, 200, 300);
-
-	@Matches("[a-zA-Z]+")
-	public final String whatever = "01234";
+	public final String whatever = "Riesling";
 	public final Nested nested1 = new Nested(10, 11, 12, 13);
 	public final Nested nested3 = new Nested(20, 21, 22, 23);
 	public final ValueList<Vec3i> vecs = ValueList.create(new Vec3i(0, 0, 0),
@@ -46,14 +40,8 @@ public final class TestReflectiveConfig4 extends WrappedConfig {
 			new Vec3i(7, 8, 9)
 	);
 
-	@Comment("Test section comment 1")
-	@Comment("Test section comment 2")
-	@Comment("Test section comment 3")
-	@Comment("Test section comment 4")
+	@Comment("Test section comment")
 	public final Nested nested4 = new Nested(30, 31, 32, 33);
-
-	@IntegerRange(min=0, max=10)
-	public final ValueList<Integer> ints = ValueList.create(0, 1, 2, 3, 4);
 
 	public final ValueList<ValueMap<Integer>> listOfNestedObjects = ValueList.create(ValueMap.builder(0).build(),
 			ValueMap.builder(0).put("a", 1).put("b", 2).put("c", 3).put("d", 4).build(),
@@ -61,7 +49,7 @@ public final class TestReflectiveConfig4 extends WrappedConfig {
 			ValueMap.builder(0).put("a", 1).put("b", 2).put("c", 3).put("d", 4).build()
 	);
 
-	public static final class Nested implements Section {
+	public static final class Nested {
 		public final int a;
 		public final int b;
 		public final int c;

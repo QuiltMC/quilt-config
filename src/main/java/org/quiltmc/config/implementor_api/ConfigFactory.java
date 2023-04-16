@@ -1,7 +1,7 @@
 package org.quiltmc.config.implementor_api;
 
 import org.quiltmc.config.api.Config;
-import org.quiltmc.config.api.WrappedConfig;
+import org.quiltmc.config.api.ReflectiveConfig;
 import org.quiltmc.config.api.annotations.ConfigFieldAnnotationProcessor;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
@@ -63,10 +63,10 @@ public final class ConfigFactory {
 	 * @param before a {@link Config.Creator} that can be used to configure the resulting config further
 	 * @param configCreatorClass a class as described above
 	 * @param after a {@link Config.Creator} that can be used to configure the resulting config further
-	 * @return a {@link WrappedConfig <C>}
+	 * @return a {@link ReflectiveConfig <C>}
 	 */
-	public static <C extends WrappedConfig> C create(ConfigEnvironment environment, String family, String id, Path path, Config.Creator before, Class<C> configCreatorClass, Config.Creator after) {
-		return ConfigImpl.create(environment, family, id, path, before, configCreatorClass, after);
+	public static <C extends ReflectiveConfig> C create(ConfigEnvironment environment, String family, String id, Path path, Config.Creator before, Class<C> configCreatorClass, Config.Creator after) {
+		return ConfigImpl.createReflective(environment, family, id, path, before, configCreatorClass, after);
 	}
 
 	/**
@@ -94,9 +94,9 @@ public final class ConfigFactory {
 	 *             if the path is "client/gui", the config file might be ".minecraft/config/example_mod/client/gui/id.toml"
 	 * @param before a {@link Config.Creator} that can be used to configure the resulting config further
 	 * @param configCreatorClass a class as described above
-	 * @return a {@link WrappedConfig <C>}
+	 * @return a {@link ReflectiveConfig <C>}
 	 */
-	public static <C extends WrappedConfig> C create(ConfigEnvironment environment, String family, String id, Path path, Config.Creator before, Class<C> configCreatorClass) {
+	public static <C extends ReflectiveConfig> C create(ConfigEnvironment environment, String family, String id, Path path, Config.Creator before, Class<C> configCreatorClass) {
 		return create(environment, family, id, path, before, configCreatorClass, builder -> {});
 	}
 
@@ -125,9 +125,9 @@ public final class ConfigFactory {
 	 *             if the path is "client/gui", the config file might be ".minecraft/config/example_mod/client/gui/id.toml"
 	 * @param configCreatorClass a class as described above
 	 * @param after a {@link Config.Creator} that can be used to configure the resulting config further
-	 * @return a {@link WrappedConfig <C>}
+	 * @return a {@link ReflectiveConfig <C>}
 	 */
-	public static <C extends WrappedConfig> C create(ConfigEnvironment environment, String family, String id, Path path, Class<C> configCreatorClass, Config.Creator after) {
+	public static <C extends ReflectiveConfig> C create(ConfigEnvironment environment, String family, String id, Path path, Class<C> configCreatorClass, Config.Creator after) {
 		return create(environment, family, id, path, builder -> {}, configCreatorClass, after);
 	}
 
@@ -155,9 +155,9 @@ public final class ConfigFactory {
 	 *             if the path is empty, the config file might be ".minecraft/config/example_mod/id.toml"
 	 *             if the path is "client/gui", the config file might be ".minecraft/config/example_mod/client/gui/id.toml"
 	 * @param configCreatorClass a class as described above
-	 * @return a {@link WrappedConfig <C>}
+	 * @return a {@link ReflectiveConfig <C>}
 	 */
-	public static <C extends WrappedConfig> C create(ConfigEnvironment environment, String family, String id, Path path, Class<C> configCreatorClass) {
+	public static <C extends ReflectiveConfig> C create(ConfigEnvironment environment, String family, String id, Path path, Class<C> configCreatorClass) {
 		return create(environment, family, id, path, builder -> {}, configCreatorClass, builder -> {});
 	}
 
@@ -184,9 +184,9 @@ public final class ConfigFactory {
 	 * @param before a {@link Config.Creator} that can be used to configure the resulting config further
 	 * @param configCreatorClass a class as described above
 	 * @param after a {@link Config.Creator} that can be used to configure the resulting config further
-	 * @return a {@link WrappedConfig <C>}
+	 * @return a {@link ReflectiveConfig <C>}
 	 */
-	public static <C extends WrappedConfig> C create(ConfigEnvironment environment, String family, String id, Config.Creator before, Class<C> configCreatorClass, Config.Creator after) {
+	public static <C extends ReflectiveConfig> C create(ConfigEnvironment environment, String family, String id, Config.Creator before, Class<C> configCreatorClass, Config.Creator after) {
 		return create(environment, family, id, Paths.get(""), before, configCreatorClass, after);
 	}
 
@@ -212,9 +212,9 @@ public final class ConfigFactory {
 	 * @param id the config's id
 	 * @param before a {@link Config.Creator} that can be used to configure the resulting config further
 	 * @param configCreatorClass a class as described above
-	 * @return a {@link WrappedConfig <C>}
+	 * @return a {@link ReflectiveConfig <C>}
 	 */
-	public static <C extends WrappedConfig> C create(ConfigEnvironment environment, String family, String id, Config.Creator before, Class<C> configCreatorClass) {
+	public static <C extends ReflectiveConfig> C create(ConfigEnvironment environment, String family, String id, Config.Creator before, Class<C> configCreatorClass) {
 		return create(environment, family, id, Paths.get(""), before, configCreatorClass, builder -> {});
 	}
 
@@ -240,9 +240,9 @@ public final class ConfigFactory {
 	 * @param id the config's id
 	 * @param configCreatorClass a class as described above
 	 * @param after a {@link Config.Creator} that can be used to configure the resulting config further
-	 * @return a {@link WrappedConfig <C>}
+	 * @return a {@link ReflectiveConfig <C>}
 	 */
-	public static <C extends WrappedConfig> C create(ConfigEnvironment environment, String family, String id, Class<C> configCreatorClass, Config.Creator after) {
+	public static <C extends ReflectiveConfig> C create(ConfigEnvironment environment, String family, String id, Class<C> configCreatorClass, Config.Creator after) {
 		return create(environment, family, id, Paths.get(""), builder -> {}, configCreatorClass, after);
 	}
 
@@ -263,9 +263,9 @@ public final class ConfigFactory {
 	 * @param family the mod owning the resulting config file
 	 * @param id the config's id
 	 * @param configCreatorClass a class as described above
-	 * @return a {@link WrappedConfig <C>}
+	 * @return a {@link ReflectiveConfig <C>}
 	 */
-	public static <C extends WrappedConfig> C create(ConfigEnvironment environment, String family, String id, Class<C> configCreatorClass) {
+	public static <C extends ReflectiveConfig> C create(ConfigEnvironment environment, String family, String id, Class<C> configCreatorClass) {
 		return create(environment, family, id, Paths.get(""), builder -> {}, configCreatorClass, builder -> {});
 	}
 }

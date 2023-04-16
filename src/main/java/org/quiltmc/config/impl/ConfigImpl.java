@@ -23,6 +23,7 @@ import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.builders.ConfigBuilderImpl;
 import org.quiltmc.config.impl.builders.ReflectiveConfigCreator;
+import org.quiltmc.config.impl.builders.WrappedConfigCreator;
 import org.quiltmc.config.impl.tree.Trie;
 import org.quiltmc.config.impl.util.ImmutableIterable;
 import org.quiltmc.config.implementor_api.ConfigEnvironment;
@@ -159,12 +160,23 @@ public final class ConfigImpl extends AbstractMetadataContainer implements Confi
 		return builder.build();
 	}
 
+	@Deprecated
 	public static <C extends WrappedConfig> C create(ConfigEnvironment environment, String familyId, String id, Path path, Creator before, Class<C> configCreatorClass, Creator after) {
-		ReflectiveConfigCreator<C> creator = ReflectiveConfigCreator.of(configCreatorClass);
+		WrappedConfigCreator<C> creator = WrappedConfigCreator.of(configCreatorClass);
 		Config config = create(environment, familyId, id, path, before, creator, after);
 		C c = creator.getInstance();
 
 		c.setWrappedConfig(config);
+
+		return c;
+	}
+
+	public static <C extends ReflectiveConfig> C createReflective(ConfigEnvironment environment, String familyId, String id, Path path, Creator before, Class<C> configCreatorClass, Creator after) {
+		ReflectiveConfigCreator<C> creator = ReflectiveConfigCreator.of(configCreatorClass);
+		Config config = create(environment, familyId, id, path, before, creator, after);
+		C c = creator.getInstance();
+
+		InternalsHelper.setWrappedConfig(c, config);
 
 		return c;
 	}

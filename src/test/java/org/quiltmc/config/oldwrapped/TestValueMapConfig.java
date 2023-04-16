@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config;
+package org.quiltmc.config.oldwrapped;
 
 import org.quiltmc.config.api.WrappedConfig;
-import org.quiltmc.config.api.values.ValueList;
+import org.quiltmc.config.api.values.ValueMap;
 
-public class TestValueListConfig extends WrappedConfig {
-	public final String test = "watermark";
-	public final int thingy = 1009;
-	public final ValueList<String> strings = ValueList.create("");
+public class TestValueMapConfig extends WrappedConfig {
+	public final int version = 100;
+	public final String flavor = "lemon";
+	public final ValueMap<Integer> weights = ValueMap.builder(0).build();
 }

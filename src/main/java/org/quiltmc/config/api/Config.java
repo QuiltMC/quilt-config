@@ -394,9 +394,11 @@ public interface Config extends MetadataContainer {
 		void create(Builder builder);
 	}
 
+
 	/**
-	 * Marker interface to designate a class as a section for reflective configs
+	 * @deprecated for removal; use {@link ReflectiveConfig.Section}
 	 */
+	@Deprecated
 	interface Section {
 
 	}

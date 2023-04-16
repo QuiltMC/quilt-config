@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config;
+package org.quiltmc.config.oldwrapped;
 
+import org.quiltmc.config.Vec3i;
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.WrappedConfig;
 import org.quiltmc.config.api.annotations.Comment;
@@ -27,7 +28,7 @@ import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 
 @Processor("processConfig")
-public final class TestReflectiveConfig extends WrappedConfig {
+public final class TestWrappedConfig extends WrappedConfig {
 	@Comment({"Comment one", "Comment two"})
 	public final int a = 0;
 

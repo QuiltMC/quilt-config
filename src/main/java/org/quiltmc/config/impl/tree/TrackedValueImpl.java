@@ -18,10 +18,10 @@ package org.quiltmc.config.impl.tree;
 
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.config.api.Constraint;
-import org.quiltmc.config.api.metadata.MetadataType;
-import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.exceptions.TrackedValueException;
+import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.values.ComplexConfigValue;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueKey;
 import org.quiltmc.config.impl.AbstractMetadataContainer;
 import org.quiltmc.config.impl.ConfigImpl;
@@ -33,8 +33,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public final class TrackedValueImpl<T> extends AbstractMetadataContainer implements TrackedValue<T> {
-	private final List<UpdateCallback<T>> callbacks;
-	private final List<Constraint<T>> constraints;
+	public List<UpdateCallback<T>> callbacks;
+	public List<Constraint<T>> constraints;
 	private final T defaultValue;
 
 	private ValueKey key;

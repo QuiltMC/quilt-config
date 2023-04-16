@@ -23,21 +23,11 @@ import org.quiltmc.config.api.values.ValueTreeNode;
 
 import java.nio.file.Path;
 
+
 /**
- * A wrapper containing a {@link Config} object to be extended by config definition classes.
- *
- * <p>See the following methods:
- * <ul>
- *     <li>{@link Config#create(String, String, Class)}</li>
- *     <li>{@link Config#create(String, String, Path, Class)}</li>
- *     <li>{@link Config#create(String, String, Class, Creator)}</li>
- *     <li>{@link Config#create(String, String, Creator, Class)}</li>
- *     <li>{@link Config#create(String, String, Path, Class, Creator)}</li>
- *     <li>{@link Config#create(String, String, Path, Creator, Class)}</li>
- *     <li>{@link Config#create(String, String, Creator, Class, Creator)}</li>
- *     <li>{@link Config#create(String, String, Path, Creator, Class, Creator)}</li>
- * </ul>
+ * @deprecated for removal: use {@link ReflectiveConfig} instead.
  */
+@Deprecated
 public abstract class WrappedConfig implements Config {
 	private Config wrapped;
 
