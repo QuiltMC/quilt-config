@@ -28,8 +28,6 @@ import java.util.List;
 public interface ValueList<T> extends List<T>, CompoundConfigValue<T> {
 	@SafeVarargs
 	static <T> ValueList<T> create(T defaultValue, T... values) {
-		ConfigUtils.assertValueType(defaultValue);
-
 		return new ValueListImpl<>(defaultValue, new ArrayList<>(Arrays.asList(values)));
 	}
 }
