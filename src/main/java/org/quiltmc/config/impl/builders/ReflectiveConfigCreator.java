@@ -17,16 +17,13 @@
 package org.quiltmc.config.impl.builders;
 
 import org.quiltmc.config.api.Config;
-import org.quiltmc.config.api.WrappedConfig;
+import org.quiltmc.config.api.ReflectiveConfig;
 import org.quiltmc.config.api.annotations.Processor;
 import org.quiltmc.config.api.values.TrackedValue;
-import org.quiltmc.config.api.values.ValueKey;
 import org.quiltmc.config.impl.ConfigFieldAnnotationProcessors;
 import org.quiltmc.config.api.exceptions.ConfigCreationException;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.impl.tree.TrackedValueImpl;
-import org.quiltmc.config.impl.util.ConfigUtils;
-import org.quiltmc.config.impl.values.ValueKeyImpl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -56,7 +53,6 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 			if (defaultValue instanceof TrackedValueImpl) {
 				TrackedValueImpl<?> value = (TrackedValueImpl<?>) defaultValue;
 
-//				value.setKey(new ValueKeyImpl(field.getName()));
 				TrackedValueBuilderImpl<?> delegateBuilder = new TrackedValueBuilderImpl<>(value.getDefaultValue(), field.getName());
 
 				for (Annotation annotation : field.getAnnotations()) {
@@ -80,6 +76,9 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				}
 
 				TrackedValueImpl delegate = (TrackedValueImpl<?>) delegateBuilder.build();
+				if (value.key() != null) {
+					throw new IllegalStateException("Unexpected key set in TrackedValue. Please report this!");
+				}
 				value.setKey(delegate.key());
 				if (!value.metadata.isEmpty()) {
 					throw new IllegalStateException("Unexpected metadata value set in TrackedValue. Please report this!");
@@ -95,7 +94,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				value.callbacks = delegate.callbacks;
 
 				builder.field(value);
-			} else if (defaultValue instanceof WrappedConfig.Section) {
+			} else if (defaultValue instanceof ReflectiveConfig.Section) {
 				builder.section(field.getName(), b -> {
 					for (Annotation annotation : field.getAnnotations()) {
 						ConfigFieldAnnotationProcessors.applyAnnotationProcessors(annotation, b);

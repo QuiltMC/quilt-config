@@ -17,7 +17,7 @@
 package org.quiltmc.config;
 
 import org.quiltmc.config.api.Config;
-import org.quiltmc.config.api.WrappedConfig;
+import org.quiltmc.config.api.ReflectiveConfig;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.annotations.IntegerRange;
 import org.quiltmc.config.api.annotations.Matches;
@@ -27,7 +27,7 @@ import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 
 @Processor("processConfig")
-public final class TestReflectiveConfig extends WrappedConfig {
+public final class TestReflectiveConfig extends ReflectiveConfig {
 	@Comment({"Comment one", "Comment two"})
 	public final TrackedValue<Integer> a = value(0);
 

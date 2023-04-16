@@ -34,6 +34,7 @@ public class TrackedValueBuilderImpl<T> implements TrackedValue.Builder<T> {
 
 	// Implementation note: Any values added here will also need to be added to ReflectiveConfigCreator
 	public TrackedValueBuilderImpl(T defaultValue, String key0) {
+		Objects.requireNonNull(key0);
 		this.defaultValue = defaultValue;
 		this.key.add(key0);
 	}

@@ -22,8 +22,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.quiltmc.config.api.Config;
-import org.quiltmc.config.api.WrappedConfig;
-import org.quiltmc.config.api.annotations.IntegerRange;
 import org.quiltmc.config.implementor_api.ConfigEnvironment;
 import org.quiltmc.config.api.Constraint;
 import org.quiltmc.config.api.annotations.Comment;

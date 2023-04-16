@@ -11,7 +11,7 @@ public final class InternalsHelper {
 	private InternalsHelper() {
 	}
 
-	public static <T extends WrappedConfig> void setWrappedConfig(T wrapped, Config config) {
+	public static <T extends ReflectiveConfig> void setWrappedConfig(T wrapped, Config config) {
 		wrapped.setWrappedConfig(config);
 	}
 }

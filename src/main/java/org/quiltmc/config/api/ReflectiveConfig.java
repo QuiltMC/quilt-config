@@ -16,7 +16,6 @@
 
 package org.quiltmc.config.api;
 
-import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
@@ -25,29 +24,12 @@ import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.builders.ValueMapBuilderImpl;
 import org.quiltmc.config.impl.tree.TrackedValueImpl;
 import org.quiltmc.config.impl.util.ConfigUtils;
-import org.quiltmc.config.impl.values.ValueKeyImpl;
-import org.quiltmc.config.implementor_api.ConfigFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-/**
- * A wrapper containing a {@link Config} object to be extended by config definition classes.
- *
- * <p>See the following methods:
- * <ul>
- *     <li>{@link ConfigFactory#create(String, String, Class)}</li>
- *     <li>{@link ConfigFactory#create(String, String, Path, Class)}</li>
- *     <li>{@link ConfigFactory#create(String, String, Class, Creator)}</li>
- *     <li>{@link ConfigFactory#create(String, String, Creator, Class)}</li>
- *     <li>{@link ConfigFactory#create(String, String, Path, Class, Creator)}</li>
- *     <li>{@link ConfigFactory#create(String, String, Path, Creator, Class)}</li>
- *     <li>{@link ConfigFactory#create(String, String, Creator, Class, Creator)}</li>
- *     <li>{@link ConfigFactory#create(String, String, Path, Creator, Class, Creator)}</li>
- * </ul>
- */
-public abstract class WrappedConfig implements Config {
+public abstract class ReflectiveConfig implements Config {
 	private Config wrapped;
 
 	@Override
