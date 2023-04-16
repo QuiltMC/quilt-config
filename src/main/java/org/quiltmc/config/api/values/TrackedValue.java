@@ -57,8 +57,10 @@ public interface TrackedValue<T> extends ValueTreeNode {
 
 	/**
 	 * @param newValue the value to set
-	 * @param serialize whether or not to serialize this values config file. Should be false only when deserializing
+	 * @param serialize whether to serialize this value's config file. False when deserializing or when setting a large
+	 *                  amount of values, to be saved at the end.
 	 * @return the old value that's been replaced
+	 * @throws org.quiltmc.config.api.exceptions.TrackedValueException if the value is forbidden by its {@linkplain #checkForFailingConstraints(Object) constraints}
 	 */
 	T setValue(@NotNull T newValue, boolean serialize);
 
@@ -66,6 +68,7 @@ public interface TrackedValue<T> extends ValueTreeNode {
 	 * Sets an override for this value to be returned by {@link #value} that is not serialized to disk
 	 *
 	 * @param newValue some value
+	 * @throws org.quiltmc.config.api.exceptions.TrackedValueException if the value is forbidden by its {@linkplain #checkForFailingConstraints(Object) constraints}
 	 */
 	void setOverride(T newValue);
 
@@ -105,7 +108,7 @@ public interface TrackedValue<T> extends ValueTreeNode {
 
 	/**
 	 * Add a config value to be tracked.
-	 *
+	 * <p>
 	 * Config values can be one of the following types:
 	 * <ul>
 	 *     <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
@@ -125,7 +128,7 @@ public interface TrackedValue<T> extends ValueTreeNode {
 
 	/**
 	 * Add a config value to be tracked.
-	 *
+	 * <p>
 	 * Config values can be one of the following types:
 	 * <ul>
 	 *     <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
@@ -161,10 +164,8 @@ public interface TrackedValue<T> extends ValueTreeNode {
 		T getDefaultValue();
 
 		/**
-		 * Adds an additional key to this values key
-		 *
-		 * e.g. if this {@link TrackedValue}'s current key is "appearance.gui", calling this method with
-		 * "inventory" would result in a key of "appearance.gui.inventory".
+		 * Adds a key to this value's key--e.g. if this {@link TrackedValue}'s current key is "appearance.gui",
+		 * calling this method with "inventory" would result in a key of "appearance.gui.inventory".
 		 *
 		 * @param key the key to append
 		 * @return this

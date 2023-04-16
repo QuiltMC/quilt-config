@@ -32,7 +32,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-@ApiStatus.Internal // just in case.
+@ApiStatus.Internal // just in case
 public @interface Comments {
 	Comment[] value();
 
