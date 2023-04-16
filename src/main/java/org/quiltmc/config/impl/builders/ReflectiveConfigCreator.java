@@ -17,12 +17,16 @@
 package org.quiltmc.config.impl.builders;
 
 import org.quiltmc.config.api.Config;
+import org.quiltmc.config.api.WrappedConfig;
 import org.quiltmc.config.api.annotations.Processor;
 import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.config.api.values.ValueKey;
 import org.quiltmc.config.impl.ConfigFieldAnnotationProcessors;
 import org.quiltmc.config.api.exceptions.ConfigCreationException;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
+import org.quiltmc.config.impl.tree.TrackedValueImpl;
 import org.quiltmc.config.impl.util.ConfigUtils;
+import org.quiltmc.config.impl.values.ValueKeyImpl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -38,6 +42,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 		this.creatorClass = creatorClass;
 	}
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	private void createField(Config.SectionBuilder builder, Object object, Field field) throws IllegalAccessException {
 		if (!Modifier.isStatic(field.getModifiers()) && !Modifier.isTransient(field.getModifiers())) {
 			if (!Modifier.isFinal(field.getModifiers())) {
@@ -48,40 +53,49 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 			}
 			Object defaultValue = field.get(object);
 
-			if (ConfigUtils.isValidValue(defaultValue)) {
-				TrackedValue<?> value = TrackedValue.create(defaultValue, field.getName(), valueBuilder -> {
-					field.setAccessible(true);
+			if (defaultValue instanceof TrackedValueImpl) {
+				TrackedValueImpl<?> value = (TrackedValueImpl<?>) defaultValue;
 
-					valueBuilder.callback(tracked -> {
-						try {
-							field.set(object, tracked.value());
-						} catch (IllegalAccessException e) {
-							throw new RuntimeException(e);
-						}
-					});
+//				value.setKey(new ValueKeyImpl(field.getName()));
+				TrackedValueBuilderImpl<?> delegateBuilder = new TrackedValueBuilderImpl<>(value.getDefaultValue(), field.getName());
 
-					for (Annotation annotation : field.getAnnotations()) {
-						ConfigFieldAnnotationProcessors.applyAnnotationProcessors(annotation, valueBuilder);
+				for (Annotation annotation : field.getAnnotations()) {
+
+					ConfigFieldAnnotationProcessors.applyAnnotationProcessors(annotation, delegateBuilder);
+				}
+
+
+				if (field.isAnnotationPresent(Processor.class)) {
+					Processor processor = field.getAnnotation(Processor.class);
+
+					try {
+						Method method = field.getDeclaringClass().getMethod(processor.value(), TrackedValue.Builder.class);
+
+						method.invoke(object, delegateBuilder);
+					} catch (NoSuchMethodException e) {
+						throw new ConfigCreationException("Processor method '" + processor.value() + "' not found.");
+					} catch (InvocationTargetException | IllegalAccessException e) {
+						throw new ConfigCreationException("Exception invoking processor method '" + processor.value() + "': " + e.getLocalizedMessage());
 					}
+				}
 
-					if (field.isAnnotationPresent(Processor.class)) {
-						Processor processor = field.getAnnotation(Processor.class);
+				TrackedValueImpl delegate = (TrackedValueImpl<?>) delegateBuilder.build();
+				value.setKey(delegate.key());
+				if (!value.metadata.isEmpty()) {
+					throw new IllegalStateException("Unexpected metadata value set in TrackedValue. Please report this!");
+				}
+				value.metadata = delegate.metadata;
+				if (!value.constraints.isEmpty()) {
+					throw new IllegalStateException("Unexpected constraints value set in TrackedValue. Please report this!");
+				}
+				value.constraints = delegate.constraints;
+				if (!value.callbacks.isEmpty()) {
+					throw new IllegalStateException("Unexpected callback value set in TrackedValue. Please report this!");
+				}
+				value.callbacks = delegate.callbacks;
 
-						try {
-							Method method = field.getDeclaringClass().getMethod(processor.value(), TrackedValue.Builder.class);
-
-							method.invoke(object, valueBuilder);
-						} catch (NoSuchMethodException e) {
-							throw new ConfigCreationException("Processor method '" + processor.value() + "' not found.");
-						} catch (InvocationTargetException | IllegalAccessException e) {
-							throw new ConfigCreationException("Exception invoking processor method '" + processor.value() + "': " + e.getLocalizedMessage());
-						}
-					}
-				});
-
-				field.set(object, value.getRealValue());
 				builder.field(value);
-			} else if (defaultValue instanceof Config.Section) {
+			} else if (defaultValue instanceof WrappedConfig.Section) {
 				builder.section(field.getName(), b -> {
 					for (Annotation annotation : field.getAnnotations()) {
 						ConfigFieldAnnotationProcessors.applyAnnotationProcessors(annotation, b);
@@ -100,7 +114,8 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 			} else if (defaultValue == null) {
 				throw new ConfigFieldException("Default value for field '" + field.getName() + "' cannot be null");
 			} else {
-				throw new ConfigFieldException("Class '" + defaultValue.getClass().getName() + "' of field '" + field.getName() + "' is not a valid config value; must be a basic type, complex type, or implement org.quiltmc.loader.api.Config.Section");
+				throw new ConfigFieldException("Class '" + defaultValue.getClass().getName() + "' of field '" + field.getName() + "' " +
+						"of config class '" + field.getDeclaringClass().getName() + "'is not a valid config value: it must be a TrackedValue or implement org.quiltmc.loader.api.Config.Section");
 			}
 		}
 	}

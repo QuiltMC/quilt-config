@@ -17,7 +17,9 @@
 package org.quiltmc.config.impl.tree;
 
 import org.jetbrains.annotations.NotNull;
+import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.Constraint;
+import org.quiltmc.config.api.metadata.MetadataContainerBuilder;
 import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.exceptions.TrackedValueException;
@@ -26,15 +28,15 @@ import org.quiltmc.config.api.values.ValueKey;
 import org.quiltmc.config.impl.AbstractMetadataContainer;
 import org.quiltmc.config.impl.ConfigImpl;
 import org.quiltmc.config.impl.util.ImmutableIterable;
+import org.quiltmc.config.impl.values.ValueKeyImpl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public final class TrackedValueImpl<T> extends AbstractMetadataContainer implements TrackedValue<T> {
-	private final List<UpdateCallback<T>> callbacks;
-	private final List<Constraint<T>> constraints;
+	public List<UpdateCallback<T>> callbacks;
+	public List<Constraint<T>> constraints;
 	private final T defaultValue;
 
 	private ValueKey key;
@@ -215,4 +217,44 @@ public final class TrackedValueImpl<T> extends AbstractMetadataContainer impleme
 			callback.onUpdate(this);
 		}
 	}
+//
+//	@Override
+//	public TrackedValue.Builder<T> key(String key) {
+//		String[] keys = new String[this.key.length() + 1];
+//
+//		Iterator<String> keyIter = key().iterator();
+//		for (int i = 0; i < key.length(); i++) {
+//			keys[i] = keyIter.next();
+//		}
+//		keys[keys.length - 1] = key;
+//		this.key = new ValueKeyImpl(keys);
+//		return this;
+//	}
+//
+//	@SuppressWarnings("unchecked")
+//	public <M, B extends MetadataType.Builder<M>> TrackedValue.Builder<T> metadata(MetadataType<M, B> type, Consumer<B> builderConsumer) {
+//		B builder = type.newBuilder();
+//		if (this.metadata.get(type) != null) {
+//			builder.
+//		}
+//		builderConsumer.accept((B) this.metadata.computeIfAbsent(type, t -> type.newBuilder().build()));
+//
+//		return this;
+//	}
+//
+//	@Override
+//	public TrackedValue.Builder<T> constraint(Constraint<T> constraint) {
+//		this.constraints.add(constraint);
+//
+//		return this;
+//	}
+//
+//	@Override
+//	public TrackedValue.Builder<T> callback(TrackedValue.UpdateCallback<T> callback) {
+//		this.callbacks.add(callback);
+//
+//		return this;
+//	}
+
+
 }

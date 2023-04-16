@@ -17,10 +17,11 @@
 package org.quiltmc.config;
 
 import org.quiltmc.config.api.WrappedConfig;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueMap;
 
 public class TestValueMapConfig extends WrappedConfig {
-	public final int version = 100;
-	public final String flavor = "lemon";
-	public final ValueMap<Integer> weights = ValueMap.builder(0).build();
+	public final TrackedValue<Integer> version = value(100);
+	public final TrackedValue<String> flavor = value("lemon");
+	public final TrackedValue<ValueMap<Integer>> weights = value(ValueMap.builder(0).build());
 }

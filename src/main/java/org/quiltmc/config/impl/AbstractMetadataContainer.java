@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public abstract class AbstractMetadataContainer implements MetadataContainer {
-	protected final Map<MetadataType<?, ?>, Object> metadata;
+	public Map<MetadataType<?, ?>, Object> metadata;
 
 	protected AbstractMetadataContainer(Map<MetadataType<?, ?>, Object> metadata) {
 		this.metadata = metadata;

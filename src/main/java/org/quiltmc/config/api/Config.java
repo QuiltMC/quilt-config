@@ -21,6 +21,8 @@ import org.quiltmc.config.api.metadata.MetadataContainer;
 import org.quiltmc.config.api.metadata.MetadataContainerBuilder;
 import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.values.*;
+import org.quiltmc.config.impl.tree.TrackedValueImpl;
+import org.quiltmc.config.impl.util.ConfigUtils;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;
@@ -114,13 +116,6 @@ public interface Config extends MetadataContainer {
 
 	interface Creator {
 		void create(Builder builder);
-	}
-
-	/**
-	 * Marker interface to designate a class as a section for reflective configs
-	 */
-	interface Section {
-
 	}
 
 	@ApiStatus.NonExtendable

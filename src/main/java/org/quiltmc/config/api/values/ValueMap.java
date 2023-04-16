@@ -36,4 +36,11 @@ public interface ValueMap<T> extends Iterable<Map.Entry<String, T>>, Map<String,
 
 		ValueMap<T> build();
 	}
+
+
+	interface TrackedBuilder<T> {
+		TrackedBuilder<T> put(String key, T value);
+
+		TrackedValue<ValueMap<T>> build();
+	}
 }

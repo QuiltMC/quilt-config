@@ -32,6 +32,7 @@ public class TrackedValueBuilderImpl<T> implements TrackedValue.Builder<T> {
 	private final List<TrackedValue.UpdateCallback<T>> callbacks = new ArrayList<>();
 	private final List<Constraint<T>> constraints = new ArrayList<>();
 
+	// Implementation note: Any values added here will also need to be added to ReflectiveConfigCreator
 	public TrackedValueBuilderImpl(T defaultValue, String key0) {
 		this.defaultValue = defaultValue;
 		this.key.add(key0);

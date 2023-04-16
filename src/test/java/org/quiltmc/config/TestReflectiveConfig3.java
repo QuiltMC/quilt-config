@@ -19,21 +19,23 @@ package org.quiltmc.config;
 import org.quiltmc.config.api.WrappedConfig;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.annotations.FloatRange;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 
 public final class TestReflectiveConfig3 extends WrappedConfig {
 	@Comment({"Comment one", "Comment two"})
-	public final int a = 0;
-	public final int b = 1;
-	public final int c = 2;
+	public final TrackedValue<Integer> a = value(0);
+	public final TrackedValue<Integer> b = value(1);
+	public final TrackedValue<Integer> c = value(2);
+
 	@FloatRange(min=0, max=10)
-	public final int d = 3;
-	public final Vec3i vec = new Vec3i(100, 200, 300);
-	public final String whatever = "Riesling";
+	public final TrackedValue<Integer> d = value(3);
+	public final TrackedValue<Vec3i> vec = value(new Vec3i(100, 200, 300));
+	public final TrackedValue<String> whatever = value("Riesling");
 	public final Nested nested1 = new Nested(10, 11, 12, 13);
 	public final Nested nested3 = new Nested(20, 21, 22, 23);
-	public final ValueList<Vec3i> vecs = ValueList.create(new Vec3i(0, 0, 0),
+	public final TrackedValue<ValueList<Vec3i>> vecs = list(new Vec3i(0, 0, 0),
 			new Vec3i(1, 2, 3),
 			new Vec3i(4, 5, 6),
 			new Vec3i(7, 8, 9)
@@ -42,23 +44,25 @@ public final class TestReflectiveConfig3 extends WrappedConfig {
 	@Comment("Test section comment")
 	public final Nested nested4 = new Nested(30, 31, 32, 33);
 
-	public final ValueList<ValueMap<Integer>> listOfNestedObjects = ValueList.create(ValueMap.builder(0).build(),
+	public final TrackedValue<ValueList<ValueMap<Integer>>> listOfNestedObjects = list(ValueMap.builder(0).build(),
 			ValueMap.builder(0).put("a", 1).put("b", 2).put("c", 3).put("d", 4).build(),
 			ValueMap.builder(0).put("a", 1).put("b", 2).put("c", 3).put("d", 4).build(),
 			ValueMap.builder(0).put("a", 1).put("b", 2).put("c", 3).put("d", 4).build()
 	);
 
-	public static final class Nested {
-		public final int a;
-		public final int b;
-		public final int c;
-		public final int d;
+
+	public static final class Nested extends Section {
+		public final TrackedValue<Integer> a;
+		public final TrackedValue<Integer> b;
+		public final TrackedValue<Integer> c;
+		public final TrackedValue<Integer> d;
 
 		public Nested(int a, int b, int c, int d) {
-			this.a = a;
-			this.b = b;
-			this.c = c;
-			this.d = d;
+			this.a = value(a);
+			this.b = value(b);
+			this.c = value(c);
+			this.d = value(d);
 		}
 	}
 }
+

@@ -19,10 +19,18 @@ package org.quiltmc.config.api;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.config.api.values.ValueList;
+import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.api.values.ValueTreeNode;
+import org.quiltmc.config.impl.builders.ValueMapBuilderImpl;
+import org.quiltmc.config.impl.tree.TrackedValueImpl;
+import org.quiltmc.config.impl.util.ConfigUtils;
+import org.quiltmc.config.impl.values.ValueKeyImpl;
 import org.quiltmc.config.implementor_api.ConfigFactory;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  * A wrapper containing a {@link Config} object to be extended by config definition classes.
@@ -94,5 +102,38 @@ public abstract class WrappedConfig implements Config {
 
 	final void setWrappedConfig(Config config) {
 		this.wrapped = config;
+	}
+
+
+	public final <T> TrackedValue<T> value(T defaultValue) {
+		ConfigUtils.assertValueType(defaultValue);
+
+		return new TrackedValueImpl<>(null, defaultValue, new LinkedHashMap<>(0), new ArrayList<>(0), new ArrayList<>(0));
+	}
+
+	@SafeVarargs
+	public final <T> TrackedValue<ValueList<T>> list(T defaultValue, T... values) {
+		return value(ValueList.create(defaultValue, values));
+	}
+
+	public final <T> ValueMap.TrackedBuilder<T> map(T defaultValue) {
+		return new ValueMapBuilderImpl.TrackedValueMapBuilderImpl<>(defaultValue, this::value);
+	}
+
+	public static class Section {
+		public final <T> TrackedValue<T> value(T defaultValue) {
+			ConfigUtils.assertValueType(defaultValue);
+
+			return new TrackedValueImpl<>(null, defaultValue, new LinkedHashMap<>(0), new ArrayList<>(0), new ArrayList<>(0));
+		}
+
+		@SafeVarargs
+		public final <T> TrackedValue<ValueList<T>> list(T defaultValue, T... values) {
+			return value(ValueList.create(defaultValue, values));
+		}
+
+		public final <T> ValueMap.TrackedBuilder<T> map(T defaultValue) {
+			return new ValueMapBuilderImpl.TrackedValueMapBuilderImpl<>(defaultValue, this::value);
+		}
 	}
 }
