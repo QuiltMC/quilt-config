@@ -108,9 +108,6 @@ public interface Config extends MetadataContainer {
 	 */
 	Iterable<ValueTreeNode> nodes();
 
-
-
-
 	interface UpdateCallback {
 		void onUpdate(Config config);
 	}

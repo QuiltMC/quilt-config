@@ -28,6 +28,9 @@ import org.quiltmc.config.impl.util.ImmutableIterable;
 import org.quiltmc.config.implementor_api.ConfigEnvironment;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -164,7 +167,7 @@ public final class ConfigImpl extends AbstractMetadataContainer implements Confi
 		Config config = create(environment, familyId, id, path, before, creator, after);
 		C c = creator.getInstance();
 
-		c.setWrappedConfig(config);
+		InternalsHelper.setWrappedConfig(c, config);
 
 		return c;
 	}

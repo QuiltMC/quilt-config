@@ -20,6 +20,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueTreeNode;
+import org.quiltmc.config.implementor_api.ConfigFactory;
 
 import java.nio.file.Path;
 
@@ -28,14 +29,14 @@ import java.nio.file.Path;
  *
  * <p>See the following methods:
  * <ul>
- *     <li>{@link Config#create(String, String, Class)}</li>
- *     <li>{@link Config#create(String, String, Path, Class)}</li>
- *     <li>{@link Config#create(String, String, Class, Creator)}</li>
- *     <li>{@link Config#create(String, String, Creator, Class)}</li>
- *     <li>{@link Config#create(String, String, Path, Class, Creator)}</li>
- *     <li>{@link Config#create(String, String, Path, Creator, Class)}</li>
- *     <li>{@link Config#create(String, String, Creator, Class, Creator)}</li>
- *     <li>{@link Config#create(String, String, Path, Creator, Class, Creator)}</li>
+ *     <li>{@link ConfigFactory#create(String, String, Class)}</li>
+ *     <li>{@link ConfigFactory#create(String, String, Path, Class)}</li>
+ *     <li>{@link ConfigFactory#create(String, String, Class, Creator)}</li>
+ *     <li>{@link ConfigFactory#create(String, String, Creator, Class)}</li>
+ *     <li>{@link ConfigFactory#create(String, String, Path, Class, Creator)}</li>
+ *     <li>{@link ConfigFactory#create(String, String, Path, Creator, Class)}</li>
+ *     <li>{@link ConfigFactory#create(String, String, Creator, Class, Creator)}</li>
+ *     <li>{@link ConfigFactory#create(String, String, Path, Creator, Class, Creator)}</li>
  * </ul>
  */
 public abstract class WrappedConfig implements Config {
@@ -91,8 +92,7 @@ public abstract class WrappedConfig implements Config {
 		return this.wrapped.nodes();
 	}
 
-	@ApiStatus.Internal
-	public final void setWrappedConfig(Config config) {
+	final void setWrappedConfig(Config config) {
 		this.wrapped = config;
 	}
 }

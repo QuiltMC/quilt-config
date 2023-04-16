@@ -22,6 +22,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.quiltmc.config.api.Config;
+import org.quiltmc.config.api.WrappedConfig;
+import org.quiltmc.config.api.annotations.IntegerRange;
 import org.quiltmc.config.implementor_api.ConfigEnvironment;
 import org.quiltmc.config.api.Constraint;
 import org.quiltmc.config.api.annotations.Comment;
@@ -33,12 +35,11 @@ import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.impl.CommentsImpl;
+import org.quiltmc.config.implementor_api.ConfigFactory;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 
 public class ConfigTester {
 	static Path TEMP = Paths.get("temp");
@@ -57,7 +58,7 @@ public class ConfigTester {
 
 	@Test
 	public void testSerializer() {
-		Config config = Config.create(ENV, "testmod", "testConfig6", builder -> {
+		Config config = ConfigFactory.create(ENV, "testmod", "testConfig6", builder -> {
 			builder.field(TrackedValue.create(0, "testInteger", creator -> {
 				creator.metadata(Comment.TYPE, comments -> comments.add("Comment one"));
 				creator.metadata(Comment.TYPE, comments -> comments.add("Comment two"));
@@ -104,13 +105,13 @@ public class ConfigTester {
 	@Test
 	public void testValidation() {
 		Assertions.assertThrows(TrackedValueException.class, () -> {
-			Config.create(ENV, "testmod", "testConfig1", builder -> {
+			ConfigFactory.create(ENV, "testmod", "testConfig1", builder -> {
 				builder.field(TrackedValue.create(new ArrayList<Integer>(), "boop"));
 			});
 		});
 
 		Assertions.assertThrows(TrackedValueException.class, () -> {
-			Config.create(ENV, "testmod", "testConfig2", builder -> {
+			ConfigFactory.create(ENV, "testmod", "testConfig2", builder -> {
 				builder.field(TrackedValue.create(ValueList.create(new ArrayList<Integer>()), "boop"));
 			});
 		});
@@ -118,7 +119,7 @@ public class ConfigTester {
 
 	@Test
 	public void testValues() {
-		Config config = Config.create(ENV, "testmod", "testConfig3", builder -> {
+		Config config = ConfigFactory.create(ENV, "testmod", "testConfig3", builder -> {
 			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger"));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
 			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
@@ -156,7 +157,7 @@ public class ConfigTester {
 
 	@Test
 	public void testMetadata() {
-		Config config = Config.create(ENV, "testmod", "testConfig4", builder -> {
+		Config config = ConfigFactory.create(ENV, "testmod", "testConfig4", builder -> {
 			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> {
 				creator.metadata(Comment.TYPE, comments -> comments.add(
 						"Comment one",
@@ -179,7 +180,7 @@ public class ConfigTester {
 
 	@Test
 	public void testFlags() {
-		Config config = Config.create(ENV, "testmod", "testConfig5", builder -> {
+		Config config = ConfigFactory.create(ENV, "testmod", "testConfig5", builder -> {
 			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger"));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
 			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
@@ -196,7 +197,7 @@ public class ConfigTester {
 
 	@Test
 	public void testConstraints() {
-		Assertions.assertThrows(TrackedValueException.class, () -> Config.create(ENV, "testmod", "testConfig6", builder -> {
+		Assertions.assertThrows(TrackedValueException.class, () -> ConfigFactory.create(ENV, "testmod", "testConfig6", builder -> {
 			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> {
 				// Should throw an exception since the default value is outside of the constraint range
 				creator.constraint(Constraint.range(5, 10));
@@ -206,7 +207,7 @@ public class ConfigTester {
 		}));
 
 		Assertions.assertThrows(TrackedValueException.class, () -> {
-			Config.create(ENV, "testmod", "testConfig7", builder -> {
+			ConfigFactory.create(ENV, "testmod", "testConfig7", builder -> {
 				builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> {
 					creator.constraint(Constraint.range(-10, 10));
 				}));
@@ -218,7 +219,7 @@ public class ConfigTester {
 		});
 
 		Assertions.assertThrows(TrackedValueException.class, () -> {
-			Config.create(ENV, "testmod", "testConfig8", builder -> {
+			ConfigFactory.create(ENV, "testmod", "testConfig8", builder -> {
 				builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> {
 					creator.constraint(Constraint.range(-10, 10));
 				}));
@@ -231,7 +232,7 @@ public class ConfigTester {
 			TEST_INTEGER.setValue(1000, true);
 		});
 
-		Config.create(ENV, "testmod", "testConfig9", builder -> {
+		ConfigFactory.create(ENV, "testmod", "testConfig9", builder -> {
 			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> {
 				creator.constraint(Constraint.range(-10, 10));
 			}));
@@ -243,7 +244,7 @@ public class ConfigTester {
 	}
 
 	public void testReflectiveConfigs(String id, String format) {
-		TestReflectiveConfig config = Config.create(ENV, "testmod", id, TestReflectiveConfig.class, builder -> {
+		TestReflectiveConfig config = ConfigFactory.create(ENV, "testmod", id, TestReflectiveConfig.class, builder -> {
 			builder.format(format);
 		});
 
@@ -256,15 +257,15 @@ public class ConfigTester {
 		}
 
 		Assertions.assertThrows(ConfigFieldException.class, () -> {
-			Config.create(ENV, "testmod", "testConfig", TestReflectiveConfig2.class);
+			ConfigFactory.create(ENV, "testmod", "testConfig", TestReflectiveConfig2.class);
 		}).printStackTrace();
 
 		Assertions.assertThrows(ConfigFieldException.class, () -> {
-			Config.create(ENV, "testmod", "testConfig", TestReflectiveConfig3.class);
+			ConfigFactory.create(ENV, "testmod", "testConfig", TestReflectiveConfig3.class);
 		}).printStackTrace();
 
 		Assertions.assertThrows(TrackedValueException.class, () -> {
-			Config.create(ENV, "testmod", "testConfig", TestReflectiveConfig4.class);
+			ConfigFactory.create(ENV, "testmod", "testConfig", TestReflectiveConfig4.class);
 		}).printStackTrace();
 	}
 
@@ -276,7 +277,7 @@ public class ConfigTester {
 
 	@Test
 	public void testTomlConfigs() {
-		TestReflectiveConfig config = Config.create(ENV, "testmod", "testConfig12", TestReflectiveConfig.class, builder -> {
+		TestReflectiveConfig config = ConfigFactory.create(ENV, "testmod", "testConfig12", TestReflectiveConfig.class, builder -> {
 			builder.format("toml");
 		});
 
@@ -291,14 +292,14 @@ public class ConfigTester {
 
 	@Test
 	public void testValueMapBehavior() {
-		TestValueMapConfig c = Config.create(ENV, "testmod", "testConfig13", TestValueMapConfig.class);
+		TestValueMapConfig c = ConfigFactory.create(ENV, "testmod", "testConfig13", TestValueMapConfig.class);
 
 		c.weights.put("" + c.weights.size(), c.weights.size());
 	}
 
 	@Test
 	public void testValueListBehavior() {
-		TestValueListConfig c = Config.create(ENV, "testmod", "testConfig14", TestValueListConfig.class);
+		TestValueListConfig c = ConfigFactory.create(ENV, "testmod", "testConfig14", TestValueListConfig.class);
 
 		c.strings.add(c.strings.size() + "");
 	}
@@ -313,7 +314,7 @@ public class ConfigTester {
 			}
 		}, Comment.Builder::new);
 
-		Config config = Config.create(ENV, "testmod", "testConfig400", builder -> {
+		Config config = ConfigFactory.create(ENV, "testmod", "testConfig400", builder -> {
 			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> {
 				creator.metadata(TYPE, comments -> comments.add(
 						"Comment one",

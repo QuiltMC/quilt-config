@@ -111,7 +111,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 		}
 
 		try {
-			this.instance = this.creatorClass.newInstance();
+			this.instance = this.creatorClass.getDeclaredConstructor().newInstance();
 
 			for (Field field : this.creatorClass.getDeclaredFields()) {
 				this.createField(builder, this.instance, field);
@@ -129,7 +129,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				} catch (InvocationTargetException | IllegalAccessException e) {
 					throw new ConfigCreationException("Exception invoking processor method '" + processor.value() + "': " + e.getLocalizedMessage());
 				}
-			}		} catch (InstantiationException | IllegalAccessException e) {
+			}		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 			throw new ConfigCreationException(e);
 		}
 	}
