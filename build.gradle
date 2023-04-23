@@ -43,8 +43,8 @@ jar {
 }
 
 license {
+	rule rootProject.file("codeformat/CONFIGURATE_MODIFIED_HEADER")
 	rule rootProject.file("codeformat/HEADER")
-
 	include "**/*.java"
 }
 
