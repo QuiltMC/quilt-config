@@ -34,6 +34,7 @@ import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.impl.CommentsImpl;
+import org.quiltmc.config.implementor_api.ConfigFactory;
 import org.quiltmc.config.oldwrapped.*;
 
 import java.nio.file.Path;
@@ -270,7 +271,7 @@ public class ConfigTester {
 			Config.create(ENV, "testmod", "testConfig", TestValueConfig4.class);
 		}).printStackTrace();
 
-		TestReflectiveConfig5 config5 = Config.create(ENV, "testmod", id + "_2", TestReflectiveConfig5.class);
+		TestReflectiveConfig5 config5 = ConfigFactory.create(ENV, "testmod", id + "_2", TestReflectiveConfig5.class, builder -> builder.format(format));
 
 		for (TrackedValue<?> value : config5.values()) {
 			System.out.printf("\"%s\": %s%n", value.key(), value.value());
