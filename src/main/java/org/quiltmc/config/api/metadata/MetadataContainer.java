@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,16 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.quiltmc.config.api.metadata;
 
 public interface MetadataContainer {
-    /**
-     * @return the metadata attached to this value for the specified type
-     */
-    <M> M metadata(MetadataType<M, ?> type);
+	/**
+	 * @return the metadata attached to this value for the specified type
+	 */
+	<M> M metadata(MetadataType<M, ?> type);
 
-    /**
-     * @return whether or not this value has any metadata of the specified type
-     */
-    <M> boolean hasMetadata(MetadataType<M, ?> type);
+	/**
+	 * @return whether or not this value has any metadata of the specified type
+	 */
+	<M> boolean hasMetadata(MetadataType<M, ?> type);
 }

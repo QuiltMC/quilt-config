@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,30 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config.api;
+package org.quiltmc.config.implementor_api;
+
+import org.quiltmc.config.api.Serializer;
 
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * @deprecated Go through your implementor's API, or use {@link org.quiltmc.config.implementor_api.ConfigEnvironment}
- * if necessary.
- */
-@Deprecated
-public final class ConfigEnvironment extends org.quiltmc.config.implementor_api.ConfigEnvironment {
+public class ConfigEnvironment {
+	private final Map<String, Serializer> serializers = new HashMap<>();
+	private final Path saveFolder;
+	private final String defaultFileFormat;
+	private final String globalSerializer;
+
 	public ConfigEnvironment(Path saveFolder, String globalSerializer, Serializer defaultSerializer, Serializer... serializers) {
-		super(saveFolder, globalSerializer, defaultSerializer, serializers);
+		this.serializers.put(defaultSerializer.getFileExtension(), defaultSerializer);
+		this.defaultFileFormat = defaultSerializer.getFileExtension();
+
+		for (Serializer serializer : serializers) {
+			this.serializers.put(serializer.getFileExtension(), serializer);
+		}
+
+		this.saveFolder = saveFolder;
+		this.globalSerializer = globalSerializer;
 	}
 
 	public ConfigEnvironment(Path saveFolder, Serializer defaultSerializer, Serializer... serializers) {
@@ -33,26 +45,30 @@ public final class ConfigEnvironment extends org.quiltmc.config.implementor_api.
 	}
 
 	public Path getSaveDir() {
-		return super.getSaveDir();
+		return this.saveFolder;
 	}
 
 	public String getDefaultFormat() {
-		return super.getDefaultFormat();
+		return this.defaultFileFormat;
 	}
 
 	public String getGlobalFormat() {
-		return super.getGlobalFormat();
+		return globalSerializer;
 	}
 
 	public Serializer registerSerializer(Serializer serializer) {
-		return super.registerSerializer(serializer);
+		return serializers.put(serializer.getFileExtension(), serializer);
 	}
 
 	public Serializer getActualSerializer(String fileType) {
-		return super.getActualSerializer(fileType);
+		if (this.serializers.containsKey(fileType)) {
+			return this.serializers.get(fileType);
+		} else {
+			throw new RuntimeException("No serializer registered for extension '." + fileType + "'");
+		}
 	}
 
 	public Serializer getSerializer(String fileType) {
-		return super.getSerializer(fileType);
+		return getActualSerializer(this.globalSerializer == null ? fileType : this.globalSerializer);
 	}
 }

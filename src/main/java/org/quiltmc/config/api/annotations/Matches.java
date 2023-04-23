@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.quiltmc.config.api.annotations;
 
 import org.quiltmc.config.api.Constraint;
@@ -35,20 +36,4 @@ public @interface Matches {
 	 * @return some regular expression to match against
 	 */
 	String value();
-
-	final class Processor implements ConfigFieldAnnotationProcessor<Matches> {
-		@Override
-		@SuppressWarnings("unchecked")
-		public void process(Matches matches, MetadataContainerBuilder<?> builder) {
-			if (builder instanceof TrackedValue.Builder) {
-				Object defaultValue = ((TrackedValue.Builder<?>) builder).getDefaultValue();
-
-				if (defaultValue instanceof String) {
-					((TrackedValue.Builder<String>) builder).constraint(Constraint.matching(matches.value()));
-				} else if (defaultValue instanceof CompoundConfigValue && ((CompoundConfigValue<?>) defaultValue).getType().equals(String.class)) {
-					((TrackedValue.Builder<CompoundConfigValue<String>>) builder).constraint(Constraint.all(Constraint.matching(matches.value())));
-				}
-			}
-		}
-	}
 }

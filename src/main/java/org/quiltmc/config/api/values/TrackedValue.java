@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.quiltmc.config.api.values;
 
 import org.jetbrains.annotations.ApiStatus;
@@ -27,6 +28,7 @@ import org.quiltmc.config.impl.values.ValueKeyImpl;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -116,9 +118,9 @@ public interface TrackedValue<T> extends ValueTreeNode {
 	 * @param keys any number of additional keys for the new {@link TrackedValue}
 	 * @return a new {@link TrackedValue}
 	 */
-	static <T> TrackedValue<T> create(@NotNull T defaultValue, String key0, String... keys) {
+	static <T> TrackedValue<T> create(@NotNull T defaultValue, @NotNull String key0, String... keys) {
 		ConfigUtils.assertValueType(defaultValue);
-
+		Objects.requireNonNull(key0);
 		return new TrackedValueImpl<>(new ValueKeyImpl(key0, keys), defaultValue, new LinkedHashMap<>(0), new ArrayList<>(0), new ArrayList<>(0));
 	}
 

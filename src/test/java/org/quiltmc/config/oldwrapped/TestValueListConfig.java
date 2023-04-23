@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config.api.metadata;
+package org.quiltmc.config.oldwrapped;
 
-import java.util.function.Consumer;
+import org.quiltmc.config.api.WrappedConfig;
+import org.quiltmc.config.api.values.ValueList;
 
-public interface MetadataContainerBuilder<SELF extends MetadataContainerBuilder<SELF>> {
-	/**
-	 * Create or configure a piece of metadata
-	 *
-	 * @param type the type of metadata to configure
-	 * @param builderConsumer the modifications to be made to the piece of metadata
-	 * @return this
-	 */
-	<M, B extends MetadataType.Builder<M>> SELF metadata(MetadataType<M, B> type, Consumer<B> builderConsumer);
+public class TestValueListConfig extends WrappedConfig {
+	public final String test = "watermark";
+	public final int thingy = 1009;
+	public final ValueList<String> strings = ValueList.create("");
 }

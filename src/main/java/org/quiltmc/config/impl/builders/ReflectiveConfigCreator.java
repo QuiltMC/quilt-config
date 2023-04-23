@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.quiltmc.config.impl.builders;
 
 import org.quiltmc.config.api.Config;
-import org.quiltmc.config.api.annotations.*;
+import org.quiltmc.config.api.ReflectiveConfig;
+import org.quiltmc.config.api.annotations.NameConvention;
+import org.quiltmc.config.api.annotations.Processor;
+import org.quiltmc.config.api.annotations.SerializedName;
 import org.quiltmc.config.api.naming.NamingScheme;
 import org.quiltmc.config.api.naming.NamingSchemes;
 import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.config.impl.ConfigFieldAnnotationProcessors;
 import org.quiltmc.config.api.exceptions.ConfigCreationException;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
-import org.quiltmc.config.impl.util.ConfigUtils;
+import org.quiltmc.config.impl.tree.TrackedValueImpl;
 import org.quiltmc.config.impl.util.NamingSchemeHelper;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 public class ReflectiveConfigCreator<C> implements Config.Creator {
 	private final Class<C> creatorClass;
@@ -36,11 +44,11 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 
 	public ReflectiveConfigCreator(Class<C> creatorClass) {
 		this.creatorClass = creatorClass;
-
 		this.namingSchemeHelper = new NamingSchemeHelper(creatorClass.getClassLoader());
 		this.defaultFieldNamingScheme = namingSchemeHelper.getNamingScheme(NamingSchemes.PASSTHROUGH, creatorClass, ConfigCreationException::new);
 	}
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	private void createField(Config.SectionBuilder builder, Object object, Field field, NamingScheme defaultFieldNamingScheme) throws IllegalAccessException {
 		if (!Modifier.isStatic(field.getModifiers()) && !Modifier.isTransient(field.getModifiers())) {
 			if (!Modifier.isFinal(field.getModifiers())) {
@@ -51,45 +59,53 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 			}
 			Object defaultValue = field.get(object);
 
-			if (ConfigUtils.isValidValue(defaultValue)) {
+			if (defaultValue instanceof TrackedValueImpl) {
+				TrackedValueImpl<?> value = (TrackedValueImpl<?>) defaultValue;
 				NamingScheme fieldNamingScheme = namingSchemeHelper.getNamingScheme(defaultFieldNamingScheme, field, ConfigFieldException::new);
-				TrackedValue<?> value = TrackedValue.create(defaultValue, getFieldName(fieldNamingScheme, field), valueBuilder -> {
-					valueBuilder.metadata(NameConvention.TYPE, b -> b.set(fieldNamingScheme));
+				TrackedValueBuilderImpl<?> delegateBuilder = new TrackedValueBuilderImpl<>(value.getDefaultValue(), getFieldName(fieldNamingScheme, field));
+				delegateBuilder.metadata(NameConvention.TYPE, b -> b.set(fieldNamingScheme));
 
-					field.setAccessible(true);
+				for (Annotation annotation : field.getAnnotations()) {
+					ConfigFieldAnnotationProcessors.applyAnnotationProcessors(annotation, delegateBuilder);
+				}
 
-					valueBuilder.callback(tracked -> {
-						try {
-							field.set(object, tracked.value());
-						} catch (IllegalAccessException e) {
-							throw new RuntimeException(e);
-						}
-					});
 
-					for (Annotation annotation : field.getAnnotations()) {
-						ConfigFieldAnnotationProcessors.applyAnnotationProcessors(annotation, valueBuilder);
+				if (field.isAnnotationPresent(Processor.class)) {
+					Processor processor = field.getAnnotation(Processor.class);
+
+					try {
+						Method method = field.getDeclaringClass().getMethod(processor.value(), TrackedValue.Builder.class);
+
+						method.invoke(object, delegateBuilder);
+					} catch (NoSuchMethodException e) {
+						throw new ConfigCreationException("Processor method '" + processor.value() + "' not found.");
+					} catch (InvocationTargetException | IllegalAccessException e) {
+						throw new ConfigCreationException("Exception invoking processor method '" + processor.value() + "': " + e.getLocalizedMessage());
 					}
+				}
 
-					if (field.isAnnotationPresent(Processor.class)) {
-						Processor processor = field.getAnnotation(Processor.class);
+				TrackedValueImpl delegate = (TrackedValueImpl<?>) delegateBuilder.build();
+				if (value.key() != null) {
+					throw new IllegalStateException("Unexpected key set in TrackedValue. Please report this!");
+				}
+				value.setKey(delegate.key());
+				if (!value.metadata.isEmpty()) {
+					throw new IllegalStateException("Unexpected metadata value set in TrackedValue. Please report this!");
+				}
+				value.metadata = delegate.metadata;
+				if (!value.constraints.isEmpty()) {
+					throw new IllegalStateException("Unexpected constraints value set in TrackedValue. Please report this!");
+				}
+				value.constraints = delegate.constraints;
+				if (!value.callbacks.isEmpty()) {
+					throw new IllegalStateException("Unexpected callback value set in TrackedValue. Please report this!");
+				}
+				value.callbacks = delegate.callbacks;
 
-						try {
-							Method method = field.getDeclaringClass().getMethod(processor.value(), TrackedValue.Builder.class);
-
-							method.invoke(object, valueBuilder);
-						} catch (NoSuchMethodException e) {
-							throw new ConfigCreationException("Processor method '" + processor.value() + "' not found.");
-						} catch (InvocationTargetException | IllegalAccessException e) {
-							throw new ConfigCreationException("Exception invoking processor method '" + processor.value() + "': " + e.getLocalizedMessage());
-						}
-					}
-				});
-
-				field.set(object, value.getRealValue());
 				builder.field(value);
-			} else if (defaultValue instanceof Config.Section) {
+			} else if (defaultValue instanceof ReflectiveConfig.Section) {
 				NamingScheme sectionDefaultFieldNamingScheme = namingSchemeHelper.getNamingScheme(defaultFieldNamingScheme, defaultValue.getClass(), ConfigFieldException::new);
-                NamingScheme sectionFieldNamingScheme = namingSchemeHelper.getNamingScheme(sectionDefaultFieldNamingScheme, field, ConfigFieldException::new);
+				NamingScheme sectionFieldNamingScheme = namingSchemeHelper.getNamingScheme(sectionDefaultFieldNamingScheme, field, ConfigFieldException::new);
 
 				builder.section(getFieldName(sectionFieldNamingScheme, field), b -> {
 					b.metadata(NameConvention.TYPE, mb -> mb.set(sectionFieldNamingScheme));
@@ -111,10 +127,12 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 			} else if (defaultValue == null) {
 				throw new ConfigFieldException("Default value for field '" + field.getName() + "' cannot be null");
 			} else {
-				throw new ConfigFieldException("Class '" + defaultValue.getClass().getName() + "' of field '" + field.getName() + "' is not a valid config value; must be a basic type, complex type, or implement org.quiltmc.loader.api.Config.Section");
+				throw new ConfigFieldException("Class '" + defaultValue.getClass().getName() + "' of field '" + field.getName() + "' " +
+						"of config class '" + field.getDeclaringClass().getName() + "'is not a valid config value: it must be a TrackedValue or implement org.quiltmc.loader.api.Config.Section");
 			}
 		}
 	}
+
 
 	private String getFieldName(NamingScheme fieldNamingScheme, Field field) {
 		SerializedName annotation = field.getAnnotation(SerializedName.class);
@@ -131,7 +149,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 		}
 
 		try {
-			this.instance = this.creatorClass.newInstance();
+			this.instance = this.creatorClass.getDeclaredConstructor().newInstance();
 
 			for (Field field : this.creatorClass.getDeclaredFields()) {
 				this.createField(builder, this.instance, field, this.defaultFieldNamingScheme);
@@ -149,7 +167,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				} catch (InvocationTargetException | IllegalAccessException e) {
 					throw new ConfigCreationException("Exception invoking processor method '" + processor.value() + "': " + e.getLocalizedMessage());
 				}
-			}		} catch (InstantiationException | IllegalAccessException e) {
+			}		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 			throw new ConfigCreationException(e);
 		}
 	}

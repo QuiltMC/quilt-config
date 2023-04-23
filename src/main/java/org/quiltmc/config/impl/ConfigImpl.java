@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.quiltmc.config.impl;
 
 import org.jetbrains.annotations.NotNull;
@@ -22,8 +23,10 @@ import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.builders.ConfigBuilderImpl;
 import org.quiltmc.config.impl.builders.ReflectiveConfigCreator;
+import org.quiltmc.config.impl.builders.WrappedConfigCreator;
 import org.quiltmc.config.impl.tree.Trie;
 import org.quiltmc.config.impl.util.ImmutableIterable;
+import org.quiltmc.config.implementor_api.ConfigEnvironment;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -157,12 +160,23 @@ public final class ConfigImpl extends AbstractMetadataContainer implements Confi
 		return builder.build();
 	}
 
+	@Deprecated
 	public static <C extends WrappedConfig> C create(ConfigEnvironment environment, String familyId, String id, Path path, Creator before, Class<C> configCreatorClass, Creator after) {
-		ReflectiveConfigCreator<C> creator = ReflectiveConfigCreator.of(configCreatorClass);
+		WrappedConfigCreator<C> creator = WrappedConfigCreator.of(configCreatorClass);
 		Config config = create(environment, familyId, id, path, before, creator, after);
 		C c = creator.getInstance();
 
 		c.setWrappedConfig(config);
+
+		return c;
+	}
+
+	public static <C extends ReflectiveConfig> C createReflective(ConfigEnvironment environment, String familyId, String id, Path path, Creator before, Class<C> configCreatorClass, Creator after) {
+		ReflectiveConfigCreator<C> creator = ReflectiveConfigCreator.of(configCreatorClass);
+		Config config = create(environment, familyId, id, path, before, creator, after);
+		C c = creator.getInstance();
+
+		InternalsHelper.setWrappedConfig(c, config);
 
 		return c;
 	}

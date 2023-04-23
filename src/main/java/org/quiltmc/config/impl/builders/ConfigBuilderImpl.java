@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.quiltmc.config.impl.builders;
 
 import org.quiltmc.config.api.*;
@@ -25,6 +26,7 @@ import org.quiltmc.config.impl.tree.TrackedValueImpl;
 import org.quiltmc.config.impl.tree.Trie;
 import org.quiltmc.config.impl.util.ConfigsImpl;
 import org.quiltmc.config.impl.values.ValueKeyImpl;
+import org.quiltmc.config.implementor_api.ConfigEnvironment;
 
 import java.io.IOException;
 import java.nio.file.Files;

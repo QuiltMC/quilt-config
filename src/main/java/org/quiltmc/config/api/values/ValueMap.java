@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.quiltmc.config.api.values;
 
 import org.jetbrains.annotations.ApiStatus;
@@ -34,5 +35,11 @@ public interface ValueMap<T> extends Iterable<Map.Entry<String, T>>, Map<String,
 		Builder<T> put(String key, T value);
 
 		ValueMap<T> build();
+	}
+
+	interface TrackedBuilder<T> {
+		TrackedBuilder<T> put(String key, T value);
+
+		TrackedValue<ValueMap<T>> build();
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.quiltmc.config.impl.builders;
 
 import org.quiltmc.config.api.Constraint;
@@ -31,7 +32,9 @@ public class TrackedValueBuilderImpl<T> implements TrackedValue.Builder<T> {
 	private final List<TrackedValue.UpdateCallback<T>> callbacks = new ArrayList<>();
 	private final List<Constraint<T>> constraints = new ArrayList<>();
 
+	// Implementation note: Any values added here will also need to be added to ReflectiveConfigCreator
 	public TrackedValueBuilderImpl(T defaultValue, String key0) {
+		Objects.requireNonNull(key0);
 		this.defaultValue = defaultValue;
 		this.key.add(key0);
 	}

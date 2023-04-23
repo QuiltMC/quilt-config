@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.quiltmc.config;
 
-import org.quiltmc.config.api.WrappedConfig;
-import org.quiltmc.config.api.values.ValueList;
+package org.quiltmc.config.api;
 
-public class TestValueListConfig extends WrappedConfig {
-	public final String test = "watermark";
-	public final int thingy = 1009;
-	public final ValueList<String> strings = ValueList.create("");
+import org.jetbrains.annotations.ApiStatus;
+
+/**
+ * Provides the implementation packages access to package-private methods. <strong>DO NOT USE THIS CLASS</strong>
+ */
+
+@ApiStatus.Internal
+public final class InternalsHelper {
+	private InternalsHelper() {
+	}
+
+	public static <T extends ReflectiveConfig> void setWrappedConfig(T wrapped, Config config) {
+		wrapped.setWrappedConfig(config);
+	}
 }

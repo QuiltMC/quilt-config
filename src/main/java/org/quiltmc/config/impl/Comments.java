@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.quiltmc.config.impl;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.config.api.metadata.MetadataContainerBuilder;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.annotations.ConfigFieldAnnotationProcessor;
@@ -25,10 +27,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Containing class for multiple {@link Comment} annotations.
+ * Containing class for multiple {@link Comment} annotations. Automatically converted by {@link java.lang.annotation.Repeatable};
+ * see <a href=https://docs.oracle.com/javase/tutorial/java/annotations/repeating.html>the oracle docs</a>.
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
+@ApiStatus.Internal // just in case.
 public @interface Comments {
 	Comment[] value();
 

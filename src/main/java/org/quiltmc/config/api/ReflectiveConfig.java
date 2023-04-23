@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,20 @@
 
 package org.quiltmc.config.api;
 
-import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.config.api.values.ValueList;
+import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.api.values.ValueTreeNode;
+import org.quiltmc.config.impl.builders.ValueMapBuilderImpl;
+import org.quiltmc.config.impl.tree.TrackedValueImpl;
+import org.quiltmc.config.impl.util.ConfigUtils;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
-
-/**
- * @deprecated for removal: use {@link ReflectiveConfig} instead.
- */
-@Deprecated
-public abstract class WrappedConfig implements Config {
+public abstract class ReflectiveConfig implements Config {
 	private Config wrapped;
 
 	@Override
@@ -81,8 +82,40 @@ public abstract class WrappedConfig implements Config {
 		return this.wrapped.nodes();
 	}
 
-	@ApiStatus.Internal
-	public final void setWrappedConfig(Config config) {
+	final void setWrappedConfig(Config config) {
 		this.wrapped = config;
+	}
+
+
+	public final <T> TrackedValue<T> value(T defaultValue) {
+		ConfigUtils.assertValueType(defaultValue);
+
+		return new TrackedValueImpl<>(null, defaultValue, new LinkedHashMap<>(0), new ArrayList<>(0), new ArrayList<>(0));
+	}
+
+	@SafeVarargs
+	public final <T> TrackedValue<ValueList<T>> list(T defaultValue, T... values) {
+		return value(ValueList.create(defaultValue, values));
+	}
+
+	public final <T> ValueMap.TrackedBuilder<T> map(T defaultValue) {
+		return new ValueMapBuilderImpl.TrackedValueMapBuilderImpl<>(defaultValue, this::value);
+	}
+
+	public static class Section {
+		public final <T> TrackedValue<T> value(T defaultValue) {
+			ConfigUtils.assertValueType(defaultValue);
+
+			return new TrackedValueImpl<>(null, defaultValue, new LinkedHashMap<>(0), new ArrayList<>(0), new ArrayList<>(0));
+		}
+
+		@SafeVarargs
+		public final <T> TrackedValue<ValueList<T>> list(T defaultValue, T... values) {
+			return value(ValueList.create(defaultValue, values));
+		}
+
+		public final <T> ValueMap.TrackedBuilder<T> map(T defaultValue) {
+			return new ValueMapBuilderImpl.TrackedValueMapBuilderImpl<>(defaultValue, this::value);
+		}
 	}
 }

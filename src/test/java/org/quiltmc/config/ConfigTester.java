@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.quiltmc.config;
 
 import com.electronwill.nightconfig.toml.TomlParser;
@@ -33,6 +34,7 @@ import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.impl.CommentsImpl;
+import org.quiltmc.config.oldwrapped.*;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 
+@SuppressWarnings("deprecation")
 public class ConfigTester {
 	static Path TEMP = Paths.get("temp");
 	static ConfigEnvironment ENV;
@@ -242,8 +245,8 @@ public class ConfigTester {
 		});
 	}
 
-	public void testReflectiveConfigs(String id, String format) {
-		TestReflectiveConfig config = Config.create(ENV, "testmod", id, TestReflectiveConfig.class, builder -> {
+	public void testWrappedConfigs(String id, String format) {
+		TestWrappedConfig config = Config.create(ENV, "testmod", id, TestWrappedConfig.class, builder -> {
 			builder.format(format);
 		});
 
@@ -256,15 +259,15 @@ public class ConfigTester {
 		}
 
 		Assertions.assertThrows(ConfigFieldException.class, () -> {
-			Config.create(ENV, "testmod", "testConfig", TestReflectiveConfig2.class);
+			Config.create(ENV, "testmod", "testConfig", TestWrappedConfig2.class);
 		}).printStackTrace();
 
 		Assertions.assertThrows(ConfigFieldException.class, () -> {
-			Config.create(ENV, "testmod", "testConfig", TestReflectiveConfig3.class);
+			Config.create(ENV, "testmod", "testConfig", TestValueConfig3.class);
 		}).printStackTrace();
 
 		Assertions.assertThrows(TrackedValueException.class, () -> {
-			Config.create(ENV, "testmod", "testConfig", TestReflectiveConfig4.class);
+			Config.create(ENV, "testmod", "testConfig", TestValueConfig4.class);
 		}).printStackTrace();
 
 		TestReflectiveConfig5 config5 = Config.create(ENV, "testmod", id + "_2", TestReflectiveConfig5.class);
@@ -279,14 +282,14 @@ public class ConfigTester {
 	}
 
 	@Test
-	public void testReflectiveConfigs() {
-		testReflectiveConfigs("testConfig10", "toml");
-		testReflectiveConfigs("testConfig11", "json5");
+	public void testWrappedConfigs() {
+		testWrappedConfigs("testConfig10", "toml");
+		testWrappedConfigs("testConfig11", "json5");
 	}
 
 	@Test
 	public void testTomlConfigs() {
-		TestReflectiveConfig config = Config.create(ENV, "testmod", "testConfig12", TestReflectiveConfig.class, builder -> {
+		TestWrappedConfig config = Config.create(ENV, "testmod", "testConfig12", TestWrappedConfig.class, builder -> {
 			builder.format("toml");
 		});
 

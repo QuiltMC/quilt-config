@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.quiltmc.config.api.annotations;
 
-import org.quiltmc.config.api.Constraint;
-import org.quiltmc.config.api.metadata.MetadataContainerBuilder;
-import org.quiltmc.config.api.values.TrackedValue;
-import org.quiltmc.config.api.exceptions.ConfigFieldException;
-import org.quiltmc.config.api.values.CompoundConfigValue;
+package org.quiltmc.config.api.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -31,26 +26,4 @@ import java.lang.annotation.Target;
 public @interface IntegerRange {
 	long min();
 	long max();
-
-	final class Processor implements ConfigFieldAnnotationProcessor<IntegerRange> {
-		@Override
-		@SuppressWarnings("unchecked")
-		public void process(IntegerRange range, MetadataContainerBuilder<?> builder) {
-			if (builder instanceof TrackedValue.Builder) {
-				Object defaultValue = ((TrackedValue.Builder<?>) builder).getDefaultValue();
-
-				if (defaultValue instanceof Integer) {
-					((TrackedValue.Builder<Integer>) builder).constraint(Constraint.range((int) range.min(), (int) range.max()));
-				} else if (defaultValue instanceof Long) {
-					((TrackedValue.Builder<Long>) builder).constraint(Constraint.range(range.min(), range.max()));
-				} else if (defaultValue instanceof CompoundConfigValue && Integer.class.isAssignableFrom(((CompoundConfigValue<?>) defaultValue).getType())) {
-					((TrackedValue.Builder<CompoundConfigValue<Integer>>) builder).constraint(Constraint.all(Constraint.range((int) range.min(), (int) range.max())));
-				} else if (defaultValue instanceof CompoundConfigValue && Long.class.isAssignableFrom(((CompoundConfigValue<?>) defaultValue).getType())) {
-					((TrackedValue.Builder<CompoundConfigValue<Long>>) builder).constraint(Constraint.all(Constraint.range(range.min(), range.max())));
-				} else {
-					throw new ConfigFieldException("Constraint LongRange not applicable for type '" + defaultValue.getClass() + "'");
-				}
-			}
-		}
-	}
 }
