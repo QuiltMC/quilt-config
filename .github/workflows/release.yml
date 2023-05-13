@@ -8,7 +8,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: "temurin"
-          java-version: ${{ matrix.java }}
+          java-version: 17
       - uses: gradle/wrapper-validation-action@v1
       - run: ./gradlew build publish --stacktrace
         env:
