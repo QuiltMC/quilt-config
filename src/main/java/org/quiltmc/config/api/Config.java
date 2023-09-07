@@ -97,8 +97,8 @@ public interface Config extends MetadataContainer {
 	 *         bg_color: "0x80000000
 	 *     },
 	 *     count: 100
-	 * }</pre>
-	 *
+	 * }
+	 * </pre>
 	 * iterating over the nodes in the tree would produce the following nodes:
 	 * <ul>
 	 *     <li>TrackedValue("wumbo", "mayonnaise")</li>
@@ -106,7 +106,7 @@ public interface Config extends MetadataContainer {
 	 *     <li>TrackedValue("count", 100)</li>
 	 * </ul>
 	 *
-	 * iterating over children would need to be done by checking <pre>node instanceof ValueTreeNode.Section<pre>
+	 * iterating over children would need to be done by checking <pre>node instanceof ValueTreeNode.Section</pre>
 	 * and iterating over that node as well, recursively.
 	 */
 	Iterable<ValueTreeNode> nodes();
@@ -135,6 +135,7 @@ public interface Config extends MetadataContainer {
 	 * @param creators any number of {@link Creator}s that can be used to configure the resulting config
 	 * @deprecated Use your implementor's API to construct Config instances.
 	 */
+	@Deprecated
 	static Config create(ConfigEnvironment environment, String family, String id, Creator... creators) {
 		return create(environment, family, id, Paths.get(""), creators);
 	}
@@ -145,12 +146,12 @@ public interface Config extends MetadataContainer {
 	 * <p>The passed class should have the following characteristics:
 	 * <ul>
 	 *     <li>Has a public no-argument constructor</li>
-	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:</li>
+	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
 	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
-	 *     </ul>
+	 *     </ul></li>
 	 * </ul>
 	 *
 	 * <p>Certain annotations can also be used on fields of this class to attach metadata to them. The {@link org.quiltmc.config.api.annotations.Comment}
@@ -165,7 +166,7 @@ public interface Config extends MetadataContainer {
 	 * @param before a {@link Creator} that can be used to configure the resulting config further
 	 * @param configCreatorClass a class as described above
 	 * @param after a {@link Creator} that can be used to configure the resulting config further
-	 * @return a {@link WrappedConfig <C>}
+	 * @return a {@link WrappedConfig}.
 	 * @deprecated Use your implementor's API to construct Config instances
 	 */
 	@Deprecated
@@ -179,12 +180,12 @@ public interface Config extends MetadataContainer {
 	 * <p>The passed class should have the following characteristics:
 	 * <ul>
 	 *     <li>Has a public no-argument constructor</li>
-	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:</li>
+	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
 	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
-	 *     </ul>
+	 *     </ul></li>
 	 * </ul>
 	 *
 	 * <p>Certain annotations can also be used on fields of this class to attach metadata to them. The {@link org.quiltmc.config.api.annotations.Comment}
@@ -198,7 +199,7 @@ public interface Config extends MetadataContainer {
 	 *             if the path is "client/gui", the config file might be ".minecraft/config/example_mod/client/gui/id.toml"
 	 * @param before a {@link Creator} that can be used to configure the resulting config further
 	 * @param configCreatorClass a class as described above
-	 * @return a {@link WrappedConfig <C>}
+	 * @return a {@link WrappedConfig} of the type passed in.
 	 * @deprecated Use your implementor's API to construct Config instances
 	*/
 	@Deprecated
@@ -212,12 +213,12 @@ public interface Config extends MetadataContainer {
 	 * <p>The passed class should have the following characteristics:
 	 * <ul>
 	 *     <li>Has a public no-argument constructor</li>
-	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:</li>
+	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
 	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
-	 *     </ul>
+	 *     </ul></li>
 	 * </ul>
 	 *
 	 * <p>Certain annotations can also be used on fields of this class to attach metadata to them. The {@link org.quiltmc.config.api.annotations.Comment}
@@ -231,7 +232,7 @@ public interface Config extends MetadataContainer {
 	 *             if the path is "client/gui", the config file might be ".minecraft/config/example_mod/client/gui/id.toml"
 	 * @param configCreatorClass a class as described above
 	 * @param after a {@link Creator} that can be used to configure the resulting config further
-	 * @return a {@link WrappedConfig <C>}
+	 * @return a {@link WrappedConfig} of the type passed in.
 	 */
 	@Deprecated
 	static <C extends WrappedConfig> C create(ConfigEnvironment environment, String family, String id, Path path, Class<C> configCreatorClass, Creator after) {
@@ -244,12 +245,12 @@ public interface Config extends MetadataContainer {
 	 * <p>The passed class should have the following characteristics:
 	 * <ul>
 	 *     <li>Has a public no-argument constructor</li>
-	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:</li>
+	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
 	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
-	 *     </ul>
+	 *     </ul></li>
 	 * </ul>
 	 *
 	 * <p>Certain annotations can also be used on fields of this class to attach metadata to them. The {@link org.quiltmc.config.api.annotations.Comment}
@@ -262,7 +263,7 @@ public interface Config extends MetadataContainer {
 	 *             if the path is empty, the config file might be ".minecraft/config/example_mod/id.toml"
 	 *             if the path is "client/gui", the config file might be ".minecraft/config/example_mod/client/gui/id.toml"
 	 * @param configCreatorClass a class as described above
-	 * @return a {@link WrappedConfig <C>}
+	 * @return a {@link WrappedConfig} of the type passed in.
 	 * @deprecated Use your implementor's API to construct Config instances
 	 */
 	@Deprecated
@@ -276,12 +277,12 @@ public interface Config extends MetadataContainer {
 	 * <p>The passed class should have the following characteristics:
 	 * <ul>
 	 *     <li>Has a public no-argument constructor</li>
-	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:</li>
+	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
 	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
-	 *     </ul>
+	 *     </ul></li>
 	 * </ul>
 	 *
 	 * <p>Certain annotations can also be used on fields of this class to attach metadata to them. The {@link org.quiltmc.config.api.annotations.Comment}
@@ -293,7 +294,7 @@ public interface Config extends MetadataContainer {
 	 * @param before a {@link Creator} that can be used to configure the resulting config further
 	 * @param configCreatorClass a class as described above
 	 * @param after a {@link Creator} that can be used to configure the resulting config further
-	 * @return a {@link WrappedConfig <C>}
+	 * @return a {@link WrappedConfig} of the type passed in.
 	 * @deprecated Use your implementor's API to construct Config instances
 	 */
 	@Deprecated
@@ -307,12 +308,12 @@ public interface Config extends MetadataContainer {
 	 * <p>The passed class should have the following characteristics:
 	 * <ul>
 	 *     <li>Has a public no-argument constructor</li>
-	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:</li>
+	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
 	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
-	 *     </ul>
+	 *     </ul></li>
 	 * </ul>
 	 *
 	 * <p>Certain annotations can also be used on fields of this class to attach metadata to them. The {@link org.quiltmc.config.api.annotations.Comment}
@@ -323,7 +324,7 @@ public interface Config extends MetadataContainer {
 	 * @param id the config's id
 	 * @param before a {@link Creator} that can be used to configure the resulting config further
 	 * @param configCreatorClass a class as described above
-	 * @return a {@link WrappedConfig <C>}
+	 * @return a {@link WrappedConfig} of the type passed in.
 	 * @deprecated Use your implementor's API to construct Config instances
 	 */
 	@Deprecated
@@ -337,12 +338,12 @@ public interface Config extends MetadataContainer {
 	 * <p>The passed class should have the following characteristics:
 	 * <ul>
 	 *     <li>Has a public no-argument constructor</li>
-	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:</li>
+	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
 	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
-	 *     </ul>
+	 *     </ul></li>
 	 * </ul>
 	 *
 	 * <p>Certain annotations can also be used on fields of this class to attach metadata to them. The {@link org.quiltmc.config.api.annotations.Comment}
@@ -353,7 +354,7 @@ public interface Config extends MetadataContainer {
 	 * @param id the config's id
 	 * @param configCreatorClass a class as described above
 	 * @param after a {@link Creator} that can be used to configure the resulting config further
-	 * @return a {@link WrappedConfig <C>}
+	 * @return a {@link WrappedConfig} of the type passed in.
 	 * @deprecated Use your implementor's API to construct Config instances
 	 */
 	@Deprecated
@@ -367,18 +368,18 @@ public interface Config extends MetadataContainer {
 	 * <p>The passed class should have the following characteristics:
 	 * <ul>
 	 *     <li>Has a public no-argument constructor</li>
-	 *     <li>Each non-static field should be final and be one of the following types:</li>
+	 *     <li>Each non-static field should be final and be one of the following types:
 	 *     <ul>
 	 *     	   <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
 	 *     	   <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types)</li>
 	 *         <li>An object whose class follows these rules</li>
-	 *     </ul>
+	 *     </ul></li>
 	 * </ul>
 	 *
 	 * @param family the mod owning the resulting config file
 	 * @param id the config's id
 	 * @param configCreatorClass a class as described above
-	 * @return a {@link WrappedConfig <C>}
+	 * @return a {@link WrappedConfig} of the type passed in.
 	 * @deprecated Use your implementor's API to construct Config instances
 	 */
 	@Deprecated

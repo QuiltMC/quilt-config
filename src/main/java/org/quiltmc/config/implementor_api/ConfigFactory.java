@@ -59,12 +59,12 @@ public final class ConfigFactory {
 	 * <p>The passed class should have the following characteristics:
 	 * <ul>
 	 *     <li>Has a public no-argument constructor</li>
-	 *     <li>Each non-public static non-transient field should be final, not null, and be one of the following types:</li>
+	 *     <li>Each non-public static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
 	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
-	 *     </ul>
+	 *     </ul></li>
 	 * </ul>
 	 *
 	 * <p>Certain annotations can also be used on fields of this class to attach metadata to them. The {@link org.quiltmc.config.api.annotations.Comment}
@@ -79,7 +79,7 @@ public final class ConfigFactory {
 	 * @param before a {@link Config.Creator} that can be used to configure the resulting config further
 	 * @param configCreatorClass a class as described above
 	 * @param after a {@link Config.Creator} that can be used to configure the resulting config further
-	 * @return a {@link ReflectiveConfig <C>}
+	 * @return a {@link ReflectiveConfig} of the type passed in.
 	 */
 	public static <C extends ReflectiveConfig> C create(ConfigEnvironment environment, String family, String id, Path path, Config.Creator before, Class<C> configCreatorClass, Config.Creator after) {
 		return ConfigImpl.createReflective(environment, family, id, path, before, configCreatorClass, after);
@@ -91,12 +91,12 @@ public final class ConfigFactory {
 	 * <p>The passed class should have the following characteristics:
 	 * <ul>
 	 *     <li>Has a public no-argument constructor</li>
-	 *     <li>Each non-public static non-transient field should be final, not null, and be one of the following types:</li>
+	 *     <li>Each non-public static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
 	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
-	 *     </ul>
+	 *     </ul></li>
 	 * </ul>
 	 *
 	 * <p>Certain annotations can also be used on fields of this class to attach metadata to them. The {@link org.quiltmc.config.api.annotations.Comment}
@@ -110,7 +110,7 @@ public final class ConfigFactory {
 	 *             if the path is "client/gui", the config file might be ".minecraft/config/example_mod/client/gui/id.toml"
 	 * @param before a {@link Config.Creator} that can be used to configure the resulting config further
 	 * @param configCreatorClass a class as described above
-	 * @return a {@link ReflectiveConfig <C>}
+	 * @return a {@link ReflectiveConfig} of the {@link Class} passed in.
 	 */
 	public static <C extends ReflectiveConfig> C create(ConfigEnvironment environment, String family, String id, Path path, Config.Creator before, Class<C> configCreatorClass) {
 		return create(environment, family, id, path, before, configCreatorClass, builder -> {});
@@ -122,12 +122,12 @@ public final class ConfigFactory {
 	 * <p>The passed class should have the following characteristics:
 	 * <ul>
 	 *     <li>Has a public no-argument constructor</li>
-	 *     <li>Each non-public static non-transient field should be final, not null, and be one of the following types:</li>
+	 *     <li>Each non-public static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
 	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
-	 *     </ul>
+	 *     </ul></li>
 	 * </ul>
 	 *
 	 * <p>Certain annotations can also be used on fields of this class to attach metadata to them. The {@link org.quiltmc.config.api.annotations.Comment}
@@ -141,7 +141,7 @@ public final class ConfigFactory {
 	 *             if the path is "client/gui", the config file might be ".minecraft/config/example_mod/client/gui/id.toml"
 	 * @param configCreatorClass a class as described above
 	 * @param after a {@link Config.Creator} that can be used to configure the resulting config further
-	 * @return a {@link ReflectiveConfig <C>}
+	 * @return a {@link ReflectiveConfig} of the {@link Class} passed in.
 	 */
 	public static <C extends ReflectiveConfig> C create(ConfigEnvironment environment, String family, String id, Path path, Class<C> configCreatorClass, Config.Creator after) {
 		return create(environment, family, id, path, builder -> {}, configCreatorClass, after);
@@ -153,12 +153,12 @@ public final class ConfigFactory {
 	 * <p>The passed class should have the following characteristics:
 	 * <ul>
 	 *     <li>Has a public no-argument constructor</li>
-	 *     <li>Each non-public static non-transient field should be final, not null, and be one of the following types:</li>
+	 *     <li>Each non-public static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
 	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
-	 *     </ul>
+	 *     </ul></li>
 	 * </ul>
 	 *
 	 * <p>Certain annotations can also be used on fields of this class to attach metadata to them. The {@link org.quiltmc.config.api.annotations.Comment}
@@ -171,7 +171,7 @@ public final class ConfigFactory {
 	 *             if the path is empty, the config file might be ".minecraft/config/example_mod/id.toml"
 	 *             if the path is "client/gui", the config file might be ".minecraft/config/example_mod/client/gui/id.toml"
 	 * @param configCreatorClass a class as described above
-	 * @return a {@link ReflectiveConfig <C>}
+	 * @return a {@link ReflectiveConfig} of the {@link Class} passed in.
 	 */
 	public static <C extends ReflectiveConfig> C create(ConfigEnvironment environment, String family, String id, Path path, Class<C> configCreatorClass) {
 		return create(environment, family, id, path, builder -> {}, configCreatorClass, builder -> {});
@@ -183,12 +183,12 @@ public final class ConfigFactory {
 	 * <p>The passed class should have the following characteristics:
 	 * <ul>
 	 *     <li>Has a public no-argument constructor</li>
-	 *     <li>Each non-public static non-transient field should be final, not null, and be one of the following types:</li>
+	 *     <li>Each non-public static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
 	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
-	 *     </ul>
+	 *     </ul></li>
 	 * </ul>
 	 *
 	 * <p>Certain annotations can also be used on fields of this class to attach metadata to them. The {@link org.quiltmc.config.api.annotations.Comment}
@@ -200,7 +200,7 @@ public final class ConfigFactory {
 	 * @param before a {@link Config.Creator} that can be used to configure the resulting config further
 	 * @param configCreatorClass a class as described above
 	 * @param after a {@link Config.Creator} that can be used to configure the resulting config further
-	 * @return a {@link ReflectiveConfig <C>}
+	 * @return a {@link ReflectiveConfig} of the {@link Class} passed in.
 	 */
 	public static <C extends ReflectiveConfig> C create(ConfigEnvironment environment, String family, String id, Config.Creator before, Class<C> configCreatorClass, Config.Creator after) {
 		return create(environment, family, id, Paths.get(""), before, configCreatorClass, after);
@@ -212,12 +212,12 @@ public final class ConfigFactory {
 	 * <p>The passed class should have the following characteristics:
 	 * <ul>
 	 *     <li>Has a public no-argument constructor</li>
-	 *     <li>Each non-public static non-transient field should be final, not null, and be one of the following types:</li>
+	 *     <li>Each non-public static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
 	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
-	 *     </ul>
+	 *     </ul></li>
 	 * </ul>
 	 *
 	 * <p>Certain annotations can also be used on fields of this class to attach metadata to them. The {@link org.quiltmc.config.api.annotations.Comment}
@@ -228,7 +228,7 @@ public final class ConfigFactory {
 	 * @param id the config's id
 	 * @param before a {@link Config.Creator} that can be used to configure the resulting config further
 	 * @param configCreatorClass a class as described above
-	 * @return a {@link ReflectiveConfig <C>}
+	 * @return a {@link ReflectiveConfig} of the {@link Class} passed in.
 	 */
 	public static <C extends ReflectiveConfig> C create(ConfigEnvironment environment, String family, String id, Config.Creator before, Class<C> configCreatorClass) {
 		return create(environment, family, id, Paths.get(""), before, configCreatorClass, builder -> {});
@@ -240,12 +240,12 @@ public final class ConfigFactory {
 	 * <p>The passed class should have the following characteristics:
 	 * <ul>
 	 *     <li>Has a public no-argument constructor</li>
-	 *     <li>Each non-public static non-transient field should be final, not null, and be one of the following types:</li>
+	 *     <li>Each non-public static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
 	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
-	 *     </ul>
+	 *     </ul></li>
 	 * </ul>
 	 *
 	 * <p>Certain annotations can also be used on fields of this class to attach metadata to them. The {@link org.quiltmc.config.api.annotations.Comment}
@@ -256,7 +256,7 @@ public final class ConfigFactory {
 	 * @param id the config's id
 	 * @param configCreatorClass a class as described above
 	 * @param after a {@link Config.Creator} that can be used to configure the resulting config further
-	 * @return a {@link ReflectiveConfig <C>}
+	 * @return a {@link ReflectiveConfig} of the {@link Class} passed in.
 	 */
 	public static <C extends ReflectiveConfig> C create(ConfigEnvironment environment, String family, String id, Class<C> configCreatorClass, Config.Creator after) {
 		return create(environment, family, id, Paths.get(""), builder -> {}, configCreatorClass, after);
@@ -268,18 +268,18 @@ public final class ConfigFactory {
 	 * <p>The passed class should have the following characteristics:
 	 * <ul>
 	 *     <li>Has a public no-argument constructor</li>
-	 *     <li>Each non-public static field should be final and be one of the following types:</li>
+	 *     <li>Each non-public static field should be final and be one of the following types:
 	 *     <ul>
 	 *     	   <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
 	 *     	   <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types)</li>
 	 *         <li>An object whose class follows these rules</li>
-	 *     </ul>
+	 *     </ul></li>
 	 * </ul>
 	 *
 	 * @param family the mod owning the resulting config file
 	 * @param id the config's id
 	 * @param configCreatorClass a class as described above
-	 * @return a {@link ReflectiveConfig <C>}
+	 * @return a {@link ReflectiveConfig} of the {@link Class} passed in.
 	 */
 	public static <C extends ReflectiveConfig> C create(ConfigEnvironment environment, String family, String id, Class<C> configCreatorClass) {
 		return create(environment, family, id, Paths.get(""), builder -> {}, configCreatorClass, builder -> {});
