@@ -102,8 +102,9 @@ public final class TomlSerializer implements Serializer {
 				}
 			}
 
-			if (node instanceof TrackedValue<?> trackedValue) {
-				Object defaultValue = trackedValue.getDefaultValue();
+			if (node instanceof TrackedValue<?>) {
+				TrackedValue<?> value = (TrackedValue<?>) node;
+				Object defaultValue = value.getDefaultValue();
 
 				if (defaultValue.getClass().isEnum()) {
 					StringBuilder options = new StringBuilder("options: ");
@@ -122,7 +123,7 @@ public final class TomlSerializer implements Serializer {
 					comments.add(options.toString());
 				}
 
-				for (Constraint<?> constraint : trackedValue.constraints()) {
+				for (Constraint<?> constraint : value.constraints()) {
 					comments.add(constraint.getRepresentation());
 				}
 
@@ -130,12 +131,12 @@ public final class TomlSerializer implements Serializer {
 					comments.add("default: " + defaultValue);
 				}
 
-				String name = trackedValue.key().toString();
-				if (trackedValue.hasMetadata(SerializedName.TYPE)) {
-					name = trackedValue.metadata(SerializedName.TYPE).getName();
+				String name = value.key().toString();
+				if (value.hasMetadata(SerializedName.TYPE)) {
+					name = value.metadata(SerializedName.TYPE).getName();
 				}
 
-				config.add(name, convertAny(trackedValue.getRealValue()));
+				config.add(name, convertAny(value.getRealValue()));
 			} else {
 				write(config, ((ValueTreeNode.Section) node));
 			}
