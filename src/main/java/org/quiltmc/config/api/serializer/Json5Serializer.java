@@ -14,23 +14,39 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config;
+package org.quiltmc.config.api.serializer;
 
-import org.quiltmc.json5.JsonReader;
-import org.quiltmc.json5.JsonToken;
-import org.quiltmc.json5.JsonWriter;
-import org.quiltmc.config.api.*;
+import org.quiltmc.config.api.Config;
+import org.quiltmc.config.api.Constraint;
+import org.quiltmc.config.api.MarshallingUtils;
+import org.quiltmc.config.api.Serializer;
 import org.quiltmc.config.api.annotations.Comment;
+import org.quiltmc.config.api.annotations.SerializedName;
 import org.quiltmc.config.api.exceptions.ConfigParseException;
-import org.quiltmc.config.api.values.*;
+import org.quiltmc.config.api.values.CompoundConfigValue;
+import org.quiltmc.config.api.values.ConfigSerializableObject;
+import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.config.api.values.ValueList;
+import org.quiltmc.config.api.values.ValueMap;
+import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.tree.TrackedValueImpl;
+import org.quiltmc.parsers.json.JsonReader;
+import org.quiltmc.parsers.json.JsonToken;
+import org.quiltmc.parsers.json.JsonWriter;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A default serializer that writes in the <a href="https://json5.org/">JSON5 format</a>.
+ */
 public final class Json5Serializer implements Serializer {
 	public static final Json5Serializer INSTANCE = new Json5Serializer();
 
@@ -127,7 +143,12 @@ public final class Json5Serializer implements Serializer {
 				writer.comment("default: " + defaultValue);
 			}
 
-			writer.name(node.key().getLastComponent());
+			String name = trackedValue.key().toString();
+			if (trackedValue.hasMetadata(SerializedName.TYPE)) {
+				name = trackedValue.metadata(SerializedName.TYPE).getName();
+			}
+
+			writer.name(name);
 
 			serialize(writer, trackedValue.getRealValue());
 		}
@@ -163,12 +184,15 @@ public final class Json5Serializer implements Serializer {
 				Map<String, Object> m = values;
 
 				for (int i = 0; i < value.key().length(); ++i) {
-					String k = value.key().getKeyComponent(i);
+					String name = value.key().getKeyComponent(i);
+					if (value.hasMetadata(SerializedName.TYPE)) {
+						name = value.metadata(SerializedName.TYPE).getName();
+					}
 
-					if (m.containsKey(k) && i != value.key().length() - 1) {
-						m = (Map<String, Object>) m.get(k);
-					} else if (m.containsKey(k)) {
-						((TrackedValueImpl) value).setValue(MarshallingUtils.coerce(m.get(k), value.getDefaultValue(), (Map<String, ?> map, MarshallingUtils.MapEntryConsumer entryConsumer) ->
+					if (m.containsKey(name) && i != value.key().length() - 1) {
+						m = (Map<String, Object>) m.get(name);
+					} else if (m.containsKey(name)) {
+						((TrackedValueImpl) value).setValue(MarshallingUtils.coerce(m.get(name), value.getDefaultValue(), (Map<String, ?> map, MarshallingUtils.MapEntryConsumer entryConsumer) ->
 								map.forEach(entryConsumer::put)), false);
 					}
 				}

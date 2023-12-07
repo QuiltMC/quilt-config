@@ -27,7 +27,7 @@ dependencies {
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
 	implementation 'com.electronwill.night-config:core:3.6.6'
 	implementation 'com.electronwill.night-config:toml:3.6.6'
-	testImplementation 'org.quiltmc:quilt-json5:1.0.4+final'
+	implementation 'org.quiltmc.parsers:json:0.2.1'
 
 	implementation 'org.jetbrains:annotations:23.0.0'
 }
