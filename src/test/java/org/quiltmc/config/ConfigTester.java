@@ -16,8 +16,6 @@
 
 package org.quiltmc.config;
 
-import com.electronwill.nightconfig.toml.TomlParser;
-import com.electronwill.nightconfig.toml.TomlWriter;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -29,11 +27,17 @@ import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.api.exceptions.TrackedValueException;
 import org.quiltmc.config.api.metadata.Comments;
 import org.quiltmc.config.api.metadata.MetadataType;
+import org.quiltmc.config.api.serializer.TomlSerializer;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.impl.CommentsImpl;
-import org.quiltmc.config.oldwrapped.*;
+import org.quiltmc.config.oldwrapped.TestValueConfig3;
+import org.quiltmc.config.oldwrapped.TestValueConfig4;
+import org.quiltmc.config.oldwrapped.TestValueListConfig;
+import org.quiltmc.config.oldwrapped.TestValueMapConfig;
+import org.quiltmc.config.oldwrapped.TestWrappedConfig;
+import org.quiltmc.config.oldwrapped.TestWrappedConfig2;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -54,7 +58,7 @@ public class ConfigTester {
 
 	@BeforeAll
 	public static void initializeConfigDir() {
-		ENV = new ConfigEnvironment(TEMP, new NightConfigSerializer<>("toml", new TomlParser(), new TomlWriter()), Json5Serializer.INSTANCE);
+		ENV = new ConfigEnvironment(TEMP, TomlSerializer.INSTANCE, Json5Serializer.INSTANCE);
 	}
 
 	@Test

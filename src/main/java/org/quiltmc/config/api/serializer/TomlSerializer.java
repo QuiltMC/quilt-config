@@ -1,32 +1,24 @@
-/*
- * Copyright 2022-2023 QuiltMC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-package org.quiltmc.config;
+package org.quiltmc.config.api.serializer;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.InMemoryCommentedFormat;
 import com.electronwill.nightconfig.core.UnmodifiableCommentedConfig;
 import com.electronwill.nightconfig.core.io.ConfigParser;
 import com.electronwill.nightconfig.core.io.ConfigWriter;
+import com.electronwill.nightconfig.toml.TomlParser;
+import com.electronwill.nightconfig.toml.TomlWriter;
 import org.quiltmc.config.api.Config;
+import org.quiltmc.config.api.Constraint;
 import org.quiltmc.config.api.MarshallingUtils;
 import org.quiltmc.config.api.Serializer;
-import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.annotations.Comment;
-import org.quiltmc.config.api.values.*;
+import org.quiltmc.config.api.annotations.SerializedName;
+import org.quiltmc.config.api.values.CompoundConfigValue;
+import org.quiltmc.config.api.values.ConfigSerializableObject;
+import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.config.api.values.ValueList;
+import org.quiltmc.config.api.values.ValueMap;
+import org.quiltmc.config.api.values.ValueTreeNode;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,20 +27,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class NightConfigSerializer<C extends CommentedConfig> implements Serializer {
-	private final String fileExtension;
-	private final ConfigParser<C> parser;
-	private final ConfigWriter writer;
-
-	public NightConfigSerializer(String fileExtension, ConfigParser<C> parser, ConfigWriter writer) {
-		this.fileExtension = fileExtension;
-		this.parser = parser;
-		this.writer = writer;
-	}
+public final class TomlSerializer implements Serializer {
+	public static final TomlSerializer INSTANCE = new TomlSerializer();
+	private final ConfigParser<CommentedConfig> parser = new TomlParser();
+	private final ConfigWriter writer = new TomlWriter();
 
 	@Override
 	public String getFileExtension() {
-		return this.fileExtension;
+		return "toml";
 	}
 
 	@Override
@@ -62,9 +48,14 @@ public final class NightConfigSerializer<C extends CommentedConfig> implements S
 		CommentedConfig read = this.parser.parse(from);
 
 		for (TrackedValue<?> trackedValue : config.values()) {
-			if (read.contains(trackedValue.key().toString())) {
-				((TrackedValue) trackedValue).setValue(MarshallingUtils.coerce(read.get(trackedValue.key().toString()), trackedValue.getDefaultValue(), (CommentedConfig c, MarshallingUtils.MapEntryConsumer entryConsumer) ->
-						c.entrySet().forEach(e -> entryConsumer.put(e.getKey(), e.getValue()))), false);
+			String name = trackedValue.key().toString();
+			if (trackedValue.hasMetadata(SerializedName.TYPE)) {
+				name = trackedValue.metadata(SerializedName.TYPE).getName();
+			}
+
+			if (read.contains(name)) {
+				((TrackedValue) trackedValue).setValue(MarshallingUtils.coerce(read.get(name), trackedValue.getDefaultValue(), (CommentedConfig c, MarshallingUtils.MapEntryConsumer entryConsumer) ->
+					c.entrySet().forEach(e -> entryConsumer.put(e.getKey(), e.getValue()))), false);
 			}
 		}
 	}
@@ -111,8 +102,7 @@ public final class NightConfigSerializer<C extends CommentedConfig> implements S
 				}
 			}
 
-			if (node instanceof TrackedValue) {
-				TrackedValue<?> trackedValue = (TrackedValue<?>) node;
+			if (node instanceof TrackedValue<?> trackedValue) {
 				Object defaultValue = trackedValue.getDefaultValue();
 
 				if (defaultValue.getClass().isEnum()) {
@@ -132,11 +122,20 @@ public final class NightConfigSerializer<C extends CommentedConfig> implements S
 					comments.add(options.toString());
 				}
 
+				for (Constraint<?> constraint : trackedValue.constraints()) {
+					comments.add(constraint.getRepresentation());
+				}
+
 				if (!(defaultValue instanceof CompoundConfigValue<?>)) {
 					comments.add("default: " + defaultValue);
 				}
 
-				config.add(trackedValue.key().toString(), convertAny(trackedValue.getRealValue()));
+				String name = trackedValue.key().toString();
+				if (trackedValue.hasMetadata(SerializedName.TYPE)) {
+					name = trackedValue.metadata(SerializedName.TYPE).getName();
+				}
+
+				config.add(name, convertAny(trackedValue.getRealValue()));
 			} else {
 				write(config, ((ValueTreeNode.Section) node));
 			}
