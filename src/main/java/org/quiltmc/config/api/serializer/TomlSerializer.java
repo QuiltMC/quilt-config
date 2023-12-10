@@ -28,13 +28,13 @@ import org.quiltmc.config.api.Constraint;
 import org.quiltmc.config.api.MarshallingUtils;
 import org.quiltmc.config.api.Serializer;
 import org.quiltmc.config.api.annotations.Comment;
-import org.quiltmc.config.api.annotations.SerializedName;
 import org.quiltmc.config.api.values.CompoundConfigValue;
 import org.quiltmc.config.api.values.ConfigSerializableObject;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.api.values.ValueTreeNode;
+import org.quiltmc.config.impl.util.SerializerUtils;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -71,10 +71,7 @@ public final class TomlSerializer implements Serializer {
 		CommentedConfig read = this.parser.parse(from);
 
 		for (TrackedValue<?> trackedValue : config.values()) {
-			String name = trackedValue.key().toString();
-			if (trackedValue.hasMetadata(SerializedName.TYPE)) {
-				name = trackedValue.metadata(SerializedName.TYPE).getName();
-			}
+			String name = SerializerUtils.getName(trackedValue);
 
 			if (read.contains(name)) {
 				((TrackedValue) trackedValue).setValue(MarshallingUtils.coerce(read.get(name), trackedValue.getDefaultValue(), (CommentedConfig c, MarshallingUtils.MapEntryConsumer entryConsumer) ->
@@ -129,22 +126,7 @@ public final class TomlSerializer implements Serializer {
 				TrackedValue<?> value = (TrackedValue<?>) node;
 				Object defaultValue = value.getDefaultValue();
 
-				if (defaultValue.getClass().isEnum()) {
-					StringBuilder options = new StringBuilder("options: ");
-					Object[] enumConstants = defaultValue.getClass().getEnumConstants();
-
-					for (int i = 0, enumConstantsLength = enumConstants.length; i < enumConstantsLength; i++) {
-						Object o = enumConstants[i];
-
-						options.append(o);
-
-						if (i < enumConstantsLength - 1) {
-							options.append(", ");
-						}
-					}
-
-					comments.add(options.toString());
-				}
+				SerializerUtils.createEnumOptionsComment(defaultValue).ifPresent(comments::add);
 
 				for (Constraint<?> constraint : value.constraints()) {
 					comments.add(constraint.getRepresentation());
@@ -154,11 +136,7 @@ public final class TomlSerializer implements Serializer {
 					comments.add("default: " + defaultValue);
 				}
 
-				String name = value.key().toString();
-				if (value.hasMetadata(SerializedName.TYPE)) {
-					name = value.metadata(SerializedName.TYPE).getName();
-				}
-
+				String name = SerializerUtils.getName(value);
 				config.add(name, convertAny(value.getRealValue()));
 			} else {
 				write(config, ((ValueTreeNode.Section) node));

@@ -30,6 +30,7 @@ import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.tree.TrackedValueImpl;
+import org.quiltmc.config.impl.util.SerializerUtils;
 import org.quiltmc.parsers.json.JsonReader;
 import org.quiltmc.parsers.json.JsonToken;
 import org.quiltmc.parsers.json.JsonWriter;
@@ -43,6 +44,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * A default serializer that writes in the <a href="https://json5.org/">JSON5 format</a>.
@@ -118,21 +120,9 @@ public final class Json5Serializer implements Serializer {
 			TrackedValue<?> trackedValue = ((TrackedValue<?>) node);
 			Object defaultValue = trackedValue.getDefaultValue();
 
-			if (defaultValue.getClass().isEnum()) {
-				StringBuilder options = new StringBuilder("options: ");
-				Object[] enumConstants = defaultValue.getClass().getEnumConstants();
-
-				for (int i = 0, enumConstantsLength = enumConstants.length; i < enumConstantsLength; i++) {
-					Object o = enumConstants[i];
-
-					options.append(o);
-
-					if (i < enumConstantsLength - 1) {
-						options.append(", ");
-					}
-				}
-
-				writer.comment(options.toString());
+			Optional<String> enumOptionsComment = SerializerUtils.createEnumOptionsComment(defaultValue);
+			if (enumOptionsComment.isPresent()) {
+				writer.comment(enumOptionsComment.get());
 			}
 
 			for (Constraint<?> constraint : trackedValue.constraints()) {
@@ -143,11 +133,7 @@ public final class Json5Serializer implements Serializer {
 				writer.comment("default: " + defaultValue);
 			}
 
-			String name = trackedValue.key().toString();
-			if (trackedValue.hasMetadata(SerializedName.TYPE)) {
-				name = trackedValue.metadata(SerializedName.TYPE).getName();
-			}
-
+			String name = SerializerUtils.getName(trackedValue);
 			writer.name(name);
 
 			serialize(writer, trackedValue.getRealValue());
