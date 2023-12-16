@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config.api.annotations;
+package org.quiltmc.config.api.metadata;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.security.InvalidParameterException;
 
-/**
- * Declares that the annotated string value or each member of a collection of strings matches the specified regex.
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface Matches {
-	/**
-	 * @return some regular expression to match against
-	 */
-	String value();
+public class SerialName {
+	private final String name;
+
+	public SerialName(String name) {
+		if (name == null || name.equals("")) {
+			throw new InvalidParameterException("Cannot set serialized name to an empty value!");
+		}
+
+		this.name = name;
+	}
+
+	public String getName() {
+		return name;
+	}
 }

@@ -8,7 +8,7 @@ sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
 group 'org.quiltmc'
-version '1.1.0'
+version '1.2.0-beta.1'
 
 java {
 	withSourcesJar()
@@ -25,9 +25,9 @@ repositories {
 dependencies {
 	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
-	testImplementation 'com.electronwill.night-config:core:3.6.6'
-	testImplementation 'com.electronwill.night-config:toml:3.6.6'
-	testImplementation 'org.quiltmc:quilt-json5:1.0.4+final'
+	implementation 'com.electronwill.night-config:core:3.6.6'
+	implementation 'com.electronwill.night-config:toml:3.6.6'
+	implementation 'org.quiltmc.parsers:json:0.2.1'
 
 	implementation 'org.jetbrains:annotations:23.0.0'
 }

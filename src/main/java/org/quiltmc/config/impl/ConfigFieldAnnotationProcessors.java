@@ -35,6 +35,7 @@ public final class ConfigFieldAnnotationProcessors {
 		register(IntegerRange.class, new IntegerRangeProcessor());
 		register(FloatRange.class, new FloatRangeProcessor());
 		register(Matches.class, new MatchesProcessor());
+		register(SerializedName.class, new SerialNameProcessor());
 	}
 
 	public static <T extends Annotation> void register(Class<T> annotationClass, ConfigFieldAnnotationProcessor<T> processor) {
@@ -59,6 +60,13 @@ public final class ConfigFieldAnnotationProcessors {
 			for (String c : comment.value()) {
 				builder.metadata(Comment.TYPE, comments -> comments.add(c));
 			}
+		}
+	}
+
+	private static final class SerialNameProcessor implements ConfigFieldAnnotationProcessor<SerializedName> {
+		@Override
+		public void process(SerializedName name, MetadataContainerBuilder<?> builder) {
+			builder.metadata(SerializedName.TYPE, nameBuilder -> nameBuilder.withName(name.value()));
 		}
 	}
 
