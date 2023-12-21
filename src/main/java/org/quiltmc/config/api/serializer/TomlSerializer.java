@@ -136,8 +136,7 @@ public final class TomlSerializer implements Serializer {
 					comments.add("default: " + defaultValue);
 				}
 
-				String name = SerializerUtils.getName(value);
-				config.add(name, convertAny(value.getRealValue()));
+				config.add(value.key().toString(), convertAny(value.getRealValue()));
 			} else {
 				write(config, ((ValueTreeNode.Section) node));
 			}
