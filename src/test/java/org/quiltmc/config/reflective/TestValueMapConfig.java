@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config.oldwrapped;
+package org.quiltmc.config.reflective;
 
-import org.quiltmc.config.api.WrappedConfig;
+import org.quiltmc.config.api.ReflectiveConfig;
+import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueMap;
 
-public class TestValueMapConfig extends WrappedConfig {
-	public final int version = 100;
-	public final String flavor = "lemon";
-	public final ValueMap<Integer> weights = ValueMap.builder(0).build();
+public class TestValueMapConfig extends ReflectiveConfig {
+	public final TrackedValue<Integer> version = this.value(100);
+	public final TrackedValue<String> flavor = this.value("lemon");
+	public final TrackedValue<ValueMap<Integer>> weights = this.map(0).build();
 }

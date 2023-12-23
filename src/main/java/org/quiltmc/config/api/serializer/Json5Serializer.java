@@ -133,7 +133,7 @@ public final class Json5Serializer implements Serializer {
 				writer.comment("default: " + defaultValue);
 			}
 
-			String name = SerializerUtils.getName(trackedValue);
+			String name = SerializerUtils.getSerializedName(trackedValue);
 			writer.name(name);
 
 			serialize(writer, trackedValue.getRealValue());

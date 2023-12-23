@@ -81,6 +81,11 @@ public abstract class WrappedConfig implements Config {
 		return this.wrapped.nodes();
 	}
 
+	@Override
+	public final ValueTreeNode getNode(Iterable<String> key) {
+		return this.wrapped.getNode(key);
+	}
+
 	@ApiStatus.Internal
 	public final void setWrappedConfig(Config config) {
 		this.wrapped = config;

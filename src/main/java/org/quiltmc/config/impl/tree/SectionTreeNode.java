@@ -28,7 +28,7 @@ import java.util.Map;
 public final class SectionTreeNode extends AbstractMetadataContainer implements ValueTreeNode.Section {
 	private final Trie.Node node;
 
-	protected SectionTreeNode(Trie.Node node, Map<MetadataType<?, ?>, Object> metadata) {
+	public SectionTreeNode(Trie.Node node, Map<MetadataType<?, ?>, Object> metadata) {
 		super(metadata);
 		this.node = node;
 	}

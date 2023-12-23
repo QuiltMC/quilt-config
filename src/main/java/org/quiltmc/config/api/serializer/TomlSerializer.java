@@ -62,7 +62,7 @@ public final class TomlSerializer implements Serializer {
 
 	@Override
 	public void serialize(Config config, OutputStream to) {
-		this.writer.write(write(createCommentedConfig(), config.nodes()), to);
+		this.writer.write(write(config, createCommentedConfig(), config.nodes()), to);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
@@ -71,10 +71,10 @@ public final class TomlSerializer implements Serializer {
 		CommentedConfig read = this.parser.parse(from);
 
 		for (TrackedValue<?> trackedValue : config.values()) {
-			String name = SerializerUtils.getName(trackedValue);
+			String key = SerializerUtils.getSerializedKey(config, trackedValue);
 
-			if (read.contains(name)) {
-				((TrackedValue) trackedValue).setValue(MarshallingUtils.coerce(read.get(name), trackedValue.getDefaultValue(), (CommentedConfig c, MarshallingUtils.MapEntryConsumer entryConsumer) ->
+			if (read.contains(key)) {
+				((TrackedValue) trackedValue).setValue(MarshallingUtils.coerce(read.get(key), trackedValue.getDefaultValue(), (CommentedConfig c, MarshallingUtils.MapEntryConsumer entryConsumer) ->
 					c.entrySet().forEach(e -> entryConsumer.put(e.getKey(), e.getValue()))), false);
 			}
 		}
@@ -112,7 +112,7 @@ public final class TomlSerializer implements Serializer {
 		}
 	}
 
-	private static CommentedConfig write(CommentedConfig config, Iterable<ValueTreeNode> nodes) {
+	private static CommentedConfig write(Config config, CommentedConfig commentedConfig, Iterable<ValueTreeNode> nodes) {
 		for (ValueTreeNode node : nodes) {
 			List<String> comments = new ArrayList<>();
 
@@ -121,6 +121,9 @@ public final class TomlSerializer implements Serializer {
 					comments.add(string);
 				}
 			}
+
+			String key = SerializerUtils.getSerializedKey(config, node);
+			//key = node.key().toString();
 
 			if (node instanceof TrackedValue<?>) {
 				TrackedValue<?> value = (TrackedValue<?>) node;
@@ -136,17 +139,17 @@ public final class TomlSerializer implements Serializer {
 					comments.add("default: " + defaultValue);
 				}
 
-				config.add(value.key().toString(), convertAny(value.getRealValue()));
+				commentedConfig.add(key, convertAny(value.getRealValue()));
 			} else {
-				write(config, ((ValueTreeNode.Section) node));
+				write(config, commentedConfig, ((ValueTreeNode.Section) node));
 			}
 
 			if (!comments.isEmpty()) {
-				config.setComment(node.key().toString(), " " + String.join("\n ", comments));
+				commentedConfig.setComment(key, " " + String.join("\n ", comments));
 			}
 		}
 
-		return config;
+		return commentedConfig;
 	}
 
 	private static CommentedConfig createCommentedConfig() {

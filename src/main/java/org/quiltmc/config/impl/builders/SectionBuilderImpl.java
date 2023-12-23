@@ -20,7 +20,9 @@ import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueKey;
+import org.quiltmc.config.impl.tree.SectionTreeNode;
 import org.quiltmc.config.impl.tree.TrackedValueImpl;
+import org.quiltmc.config.impl.tree.Trie;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -73,7 +75,9 @@ public class SectionBuilderImpl implements Config.SectionBuilder {
 		return metadata;
 	}
 
-	public void build() {
+	public void build(Trie.Node node) {
+		node.setValue(new SectionTreeNode(node, this.buildMetadata()));
+
 		for (Map.Entry<ValueKey, TrackedValueImpl<?>> entry : this.values.entrySet()) {
 			this.builder.values.put(entry.getKey(), entry.getValue());
 		}
