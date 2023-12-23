@@ -82,10 +82,14 @@ public abstract class ReflectiveConfig implements Config {
 		return this.wrapped.nodes();
 	}
 
+	@Override
+	public final ValueTreeNode getNode(Iterable<String> key) {
+		return this.wrapped.getNode(key);
+	}
+
 	final void setWrappedConfig(Config config) {
 		this.wrapped = config;
 	}
-
 
 	public final <T> TrackedValue<T> value(T defaultValue) {
 		ConfigUtils.assertValueType(defaultValue);

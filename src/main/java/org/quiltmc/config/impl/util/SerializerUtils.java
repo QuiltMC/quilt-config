@@ -16,9 +16,14 @@
 
 package org.quiltmc.config.impl.util;
 
+import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.annotations.SerializedName;
-import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.config.api.values.ValueKey;
+import org.quiltmc.config.api.values.ValueTreeNode;
+import org.quiltmc.config.impl.values.ValueKeyImpl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class SerializerUtils {
@@ -44,14 +49,28 @@ public class SerializerUtils {
 	}
 
 	/**
-	 * Gets the value's name, taking {@link SerializedName} into account. Should always be used when serializing and deserializing a config.
+	 * Gets the value's key, taking {@link SerializedName} into account. Should always be used when serializing and deserializing a config.
 	 */
-	public static String getName(TrackedValue<?> value) {
-		String name = value.key().toString();
-		if (value.hasMetadata(SerializedName.TYPE)) {
-			name = value.metadata(SerializedName.TYPE).getName();
+	public static String getSerializedKey(Config config, ValueTreeNode value) {
+		List<String> serializedKey = new ArrayList<>();
+		ValueKey key = value.key();
+
+		List<String> rawKey = new ArrayList<>();
+		for (int i = 0; i < value.key().length(); i++) {
+			rawKey.add(key.getKeyComponent(i));
+
+			ValueTreeNode currentNode = config.getNode(rawKey);
+			serializedKey.add(getSerializedName(currentNode));
 		}
 
-		return name;
+		return new ValueKeyImpl(serializedKey.toArray(new String[0])).toString();
+	}
+
+	public static String getSerializedName(ValueTreeNode value) {
+		if (value.hasMetadata(SerializedName.TYPE)) {
+			return value.metadata(SerializedName.TYPE).getName();
+		} else {
+			return value.key().getLastComponent();
+		}
 	}
 }

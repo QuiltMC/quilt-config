@@ -111,6 +111,8 @@ public interface Config extends MetadataContainer {
 	 */
 	Iterable<ValueTreeNode> nodes();
 
+	ValueTreeNode getNode(Iterable<String> key);
+
 	/**
 	 * Creates and registers a config file
 	 *

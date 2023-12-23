@@ -56,10 +56,8 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				TrackedValueBuilderImpl<?> delegateBuilder = new TrackedValueBuilderImpl<>(value.getDefaultValue(), field.getName());
 
 				for (Annotation annotation : field.getAnnotations()) {
-
 					ConfigFieldAnnotationProcessors.applyAnnotationProcessors(annotation, delegateBuilder);
 				}
-
 
 				if (field.isAnnotationPresent(Processor.class)) {
 					Processor processor = field.getAnnotation(Processor.class);

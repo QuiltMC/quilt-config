@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config;
+package org.quiltmc.config.reflective;
 
-public class Vec3i2 {
-	public final int x, y, z;
+import org.quiltmc.config.api.ReflectiveConfig;
+import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.config.api.values.ValueList;
 
-	public Vec3i2(int x, int y, int z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
+public class TestValueListConfig extends ReflectiveConfig {
+	public final TrackedValue<String> test = this.value("watermark");
+	public final TrackedValue<Integer> thingy = this.value(1009);
+	public final TrackedValue<ValueList<String>> strings = this.list("");
 }

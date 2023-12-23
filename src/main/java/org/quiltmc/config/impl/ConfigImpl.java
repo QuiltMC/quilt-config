@@ -146,6 +146,10 @@ public final class ConfigImpl extends AbstractMetadataContainer implements Confi
 		return new ImmutableIterable<>(this.values.nodes());
 	}
 
+	public ValueTreeNode getNode(Iterable<String> key) {
+		return this.values.getNode(key);
+	}
+
 	public static Config create(ConfigEnvironment environment, String familyId, String id, Creator... creators) {
 		return create(environment, familyId, id, Paths.get(""), creators);
 	}

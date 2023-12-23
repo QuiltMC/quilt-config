@@ -91,22 +91,26 @@ public final class Trie {
 			node = node.getOrCreateChild(keyComponent);
 		}
 
-		sectionBuilder.build();
+		sectionBuilder.build(node);
 
-		// Only increment the number of modifications if a new node wasn't created by the call to getOrCreateNChild
+		// Only increment the number of modifications if a new node wasn't created by the call to getOrCreateChild
 		if (modifiedCount == this.modCount) {
 			++this.modCount;
 		}
 	}
 
 	public TrackedValue<?> get(Iterable<String> key) {
+		return (TrackedValue<?>) this.getNode(key);
+	}
+
+	public ValueTreeNode getNode(Iterable<String> key) {
 		Node node = this.root;
 
 		for (String k : key) {
 			node = node.getOrCreateChild(k);
 		}
 
-		return (TrackedValue<?>) node.value;
+		return node.getValue();
 	}
 
 	private class LeafItr implements Iterator<ValueTreeNode> {
