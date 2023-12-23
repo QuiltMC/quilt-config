@@ -24,6 +24,7 @@ import org.quiltmc.config.api.ConfigEnvironment;
 import org.quiltmc.config.api.Constraint;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.annotations.SerializedName;
+import org.quiltmc.config.api.exceptions.ConfigCreationException;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.api.exceptions.TrackedValueException;
 import org.quiltmc.config.api.metadata.Comments;
@@ -77,6 +78,7 @@ public class ConfigTester {
 				section1.metadata(SerializedName.TYPE, name -> name.withName("super_duper_awesome_section"));
 				section1.field(TrackedValue.create(1, "before"));
 				section1.section("less_awesome_section", section2 -> {
+					section2.metadata(SerializedName.TYPE, name -> name.withName("much_less_awesome_section"));
 					section2.metadata(Comment.TYPE, comments -> comments.add("This is another section comment!"));
 					section2.section("regular_section", section3 -> {
 						section3.field(TrackedValue.create(0, "water"));
@@ -134,9 +136,7 @@ public class ConfigTester {
 				section.field(TrackedValue.create("wooooh", "emote"));
 				section.field(TrackedValue.create("etrator", "perp"));
 			});
-			builder.callback(c -> {
-				System.out.println("We was updated!");
-			});
+			builder.callback(c -> System.out.println("We was updated!"));
 		});
 
 		TEST_STRING.registerCallback((value) ->
@@ -233,9 +233,7 @@ public class ConfigTester {
 	}
 
 	public void testWrappedConfigs(String id, String format) {
-		TestReflectiveConfig config = ConfigFactory.create(ENV, "testmod", id, TestReflectiveConfig.class, builder -> {
-			builder.format(format);
-		});
+		TestReflectiveConfig config = ConfigFactory.create(ENV, "testmod", id, TestReflectiveConfig.class, builder -> builder.format(format));
 
 		for (TrackedValue<?> value : config.values()) {
 			System.out.printf("\"%s\": %s%n", value.key(), value.value());
@@ -245,7 +243,7 @@ public class ConfigTester {
 			}
 		}
 
-		Assertions.assertThrows(ConfigFieldException.class, () -> ConfigFactory.create(ENV, "testmod", "testConfig", TestReflectiveConfig2.class)).printStackTrace();
+		Assertions.assertThrows(ConfigCreationException.class, () -> ConfigFactory.create(ENV, "testmod", "testConfig", TestReflectiveConfig2.class)).printStackTrace();
 
 		Assertions.assertThrows(ConfigFieldException.class, () -> ConfigFactory.create(ENV, "testmod", "testConfig", TestValueConfig3.class)).printStackTrace();
 

@@ -223,7 +223,7 @@ public final class Trie {
 		}
 
 		public void setValue(ValueTreeNode value) {
-			if (this.value != null) {
+			if (this.value != null && !(value instanceof SectionTreeNode)) {
 				throw new UnsupportedOperationException("Cannot put node '" + value.key() + "': Node already exists");
 			}
 
