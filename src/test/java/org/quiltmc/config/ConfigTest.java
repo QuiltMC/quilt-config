@@ -16,6 +16,7 @@
 
 package org.quiltmc.config;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -43,15 +44,13 @@ import org.quiltmc.config.reflective.TestValueMapConfig;
 import org.quiltmc.config.reflective.TestReflectiveConfig;
 import org.quiltmc.config.reflective.TestReflectiveConfig2;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 
 @SuppressWarnings("deprecation")
-public class ConfigTester {
-	static Path TEMP = Paths.get("temp");
+public class ConfigTest {
 	static ConfigEnvironment ENV;
 
 	static TrackedValue<String> TEST;
@@ -61,8 +60,15 @@ public class ConfigTester {
 	static TrackedValue<ValueList<Integer>> TEST_LIST;
 
 	@BeforeAll
-	public static void initializeConfigDir() {
-		ENV = new ConfigEnvironment(TEMP, TomlSerializer.INSTANCE, Json5Serializer.INSTANCE);
+	public static void initializeConfigDir() throws IOException {
+		TestUtil.deleteTempDir();
+
+		ENV = new ConfigEnvironment(TestUtil.TEMP_DIR, TomlSerializer.INSTANCE, Json5Serializer.INSTANCE);
+	}
+
+	@AfterAll
+	public static void deleteConfigDir() throws IOException {
+		TestUtil.deleteTempDir();
 	}
 
 	@Test

@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.exceptions.ConfigCreationException;
-import org.quiltmc.config.impl.util.ImmutableIterable;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -38,6 +37,13 @@ public final class ConfigsImpl {
 		}
 
 		CONFIGS.computeIfAbsent(familyId, id -> new TreeMap<>()).put(config.id(), config);
+	}
+
+	/**
+	 * Not intended to be used for anything other than testing.
+	 */
+	public static void remove(Config config) {
+		CONFIGS.get(config.family()).remove(config.id());
 	}
 
 	public static Iterable<Config> getAll() {

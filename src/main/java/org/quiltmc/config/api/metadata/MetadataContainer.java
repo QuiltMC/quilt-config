@@ -16,6 +16,8 @@
 
 package org.quiltmc.config.api.metadata;
 
+import java.util.Map;
+
 public interface MetadataContainer {
 	/**
 	 * @return the metadata attached to this value for the specified type
@@ -23,7 +25,12 @@ public interface MetadataContainer {
 	<M> M metadata(MetadataType<M, ?> type);
 
 	/**
-	 * @return whether or not this value has any metadata of the specified type
+	 * @return whether this value has any metadata of the specified type
 	 */
 	<M> boolean hasMetadata(MetadataType<M, ?> type);
+
+	/**
+	 * @return a map of all metadata attached to this node
+	 */
+	Map<MetadataType<?, ?>, Object> metadata();
 }

@@ -137,7 +137,7 @@ public final class ValueListImpl<T> implements ValueList<T>, CompoundConfigValue
 
 	@Override
 	public boolean containsAll(@NotNull Collection<?> c) {
-		return values.containsAll(c);
+		return new HashSet<>(values).containsAll(c);
 	}
 
 	@Override

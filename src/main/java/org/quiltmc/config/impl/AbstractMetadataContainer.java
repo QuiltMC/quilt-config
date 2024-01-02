@@ -48,4 +48,8 @@ public abstract class AbstractMetadataContainer implements MetadataContainer {
 	public <M> boolean hasMetadata(MetadataType<M, ?> type) {
 		return this.metadata.containsKey(type) || type.getDefaultValue(this).isPresent();
 	}
+
+	public Map<MetadataType<?, ?>, Object> metadata() {
+		return this.metadata;
+	}
 }

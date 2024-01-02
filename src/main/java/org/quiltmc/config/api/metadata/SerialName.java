@@ -17,12 +17,13 @@
 package org.quiltmc.config.api.metadata;
 
 import java.security.InvalidParameterException;
+import java.util.Objects;
 
 public class SerialName {
 	private final String name;
 
 	public SerialName(String name) {
-		if (name == null || name.equals("")) {
+		if (name == null || name.isEmpty()) {
 			throw new InvalidParameterException("Cannot set serialized name to an empty value!");
 		}
 
@@ -31,5 +32,18 @@ public class SerialName {
 
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		SerialName that = (SerialName) o;
+		return Objects.equals(name, that.name);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name);
 	}
 }

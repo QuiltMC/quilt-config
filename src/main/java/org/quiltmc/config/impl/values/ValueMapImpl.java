@@ -183,4 +183,17 @@ public final class ValueMapImpl<T> implements ValueMap<T>, CompoundConfigValue<T
 	public Iterator<Entry<String, T>> iterator() {
 		return this.values.entrySet().iterator();
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		ValueMapImpl<?> valueMap = (ValueMapImpl<?>) o;
+		return Objects.equals(defaultValue, valueMap.defaultValue) && Objects.equals(values, valueMap.values);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(defaultValue, values, configValue);
+	}
 }

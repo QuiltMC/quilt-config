@@ -20,6 +20,8 @@ import org.quiltmc.config.api.values.ComplexConfigValue;
 import org.quiltmc.config.api.values.ConfigSerializableObject;
 import org.quiltmc.config.api.values.ValueMap;
 
+import java.util.Objects;
+
 public class Vec3i implements ConfigSerializableObject<ValueMap<Integer>> {
 	public final int x, y, z;
 
@@ -46,5 +48,18 @@ public class Vec3i implements ConfigSerializableObject<ValueMap<Integer>> {
 				.put("y", this.y)
 				.put("z", this.z)
 				.build();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Vec3i vec3i = (Vec3i) o;
+		return x == vec3i.x && y == vec3i.y && z == vec3i.z;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(x, y, z);
 	}
 }

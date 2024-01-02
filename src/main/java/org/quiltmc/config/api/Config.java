@@ -48,7 +48,7 @@ public interface Config extends MetadataContainer {
 	Path savePath();
 
 	/**
-	 * Adds a listener to this {@link Config} that's called whenever any of its values are updated
+	 * Adds a listener to this {@link Config} that's called whenever any of its values are updated.
 	 *
 	 * @param callback an update listener
 	 */
@@ -60,17 +60,17 @@ public interface Config extends MetadataContainer {
 	<M> M metadata(MetadataType<M, ?> type);
 
 	/**
-	 * @return whether or not this value has any metadata of the specified type
+	 * @return whether this value has any metadata of the specified type
 	 */
 	<M> boolean hasMetadata(MetadataType<M, ?> type);
 
 	/**
-	 * Serialize this config and all its values to disk
+	 * Serialize this config and all its values to disk.
 	 */
 	void save();
 
 	/**
-	 * Returns all values held by this config file
+	 * Returns all values held by this config file.
 	 *
 	 * <p>For all nodes, including section nodes, see {@link #nodes}
 	 *
@@ -81,11 +81,12 @@ public interface Config extends MetadataContainer {
 	/**
 	 * @param key an iterable of key components that make up a {@link TrackedValue}'s {@link ValueKey}
 	 * @return the value contained by this config class
+	 * @apiNote this method assumes that the key points to a value and not a section
 	 */
 	TrackedValue<?> getValue(Iterable<String> key);
 
 	/**
-	 * Returns all top-level nodes of the value tree represented by this config file, including section nodes
+	 * Returns all top-level nodes of the value tree represented by this config file, including section nodes.
 	 *
 	 * <p>Consider a config represented by the following JSON5 file:
 	 * <pre>
@@ -111,6 +112,10 @@ public interface Config extends MetadataContainer {
 	 */
 	Iterable<ValueTreeNode> nodes();
 
+	/**
+	 * @param key an iterable of key components that make up a {@link TrackedValue}'s {@link ValueKey}
+	 * @return the node contained by this config class, which can either be a value node or a section node
+	 */
 	ValueTreeNode getNode(Iterable<String> key);
 
 	/**
