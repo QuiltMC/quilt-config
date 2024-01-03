@@ -25,6 +25,7 @@ import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.serializer.Json5Serializer;
 import org.quiltmc.config.api.serializer.TomlSerializer;
 import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.util.ConfigsImpl;
 import org.quiltmc.config.implementor_api.ConfigEnvironment;
@@ -66,18 +67,21 @@ public class ReadWriteCycleTest {
 		matchConfigs(config, readConfig);
 	}
 
-	// todo set more nonsense
 	/**
 	 * Sets a bunch of nonsense on the config so that it isn't default: if all values were default we wouldn't be able to tell if they were deserialized or not.
 	 */
 	private void setUpConfig(TestReflectiveConfig config) {
 		config.a.setValue(100, true);
+		config.nested1.d.setValue(3543897, true);
+		config.enabled.value().add("gkjfdhgkjd");
+		config.listOfNestedObjects.value().add(ValueMap.builder(0).put("gaming", 123).build());
+		config.c.setValue(-2000, true);
+		config.whatever.setValue("slaying", true);
 
 		// remove config from internal map to avoid errors when creating the read config
 		ConfigsImpl.remove(config);
 	}
 
-	// todo include more info in errors
 	/**
 	 * Verifies that both metadata and values match in both configs.
 	 */
@@ -87,12 +91,11 @@ public class ReadWriteCycleTest {
 
 			for (Map.Entry<MetadataType<?, ?>, Object> metadataEntry : aNode.metadata().entrySet()) {
 				if (!bNode.hasMetadata(metadataEntry.getKey())) {
-					throw new RuntimeException("Missing metadata: " + metadataEntry.getKey());
+					throw new RuntimeException(String.format("Missing metadata of type '%s' on node '%s'!", metadataEntry.getKey(), aNode.key().toString()));
 				} else {
 					Object metadata = bNode.metadata().get(metadataEntry.getKey());
-					if (!metadata.equals(metadataEntry.getValue())) {
-						throw new RuntimeException("Non-equal metadata: " + metadataEntry.getValue());
-					}
+					Assertions.assertEquals(metadata, metadataEntry.getValue(), String.format("Metadata mismatch on node %s!", aNode.key().toString()));
+					System.out.printf("Matched metadata of type '%s' on key '%s' (%s == %s)%n", metadataEntry.getKey().toString(), aNode.key().toString(), metadata, metadataEntry.getValue().toString());
 				}
 			}
 
@@ -100,7 +103,8 @@ public class ReadWriteCycleTest {
 				TrackedValue<?> aValue = a.getValue(aNode.key());
 				TrackedValue<?> bValue = b.getValue(aNode.key());
 
-				Assertions.assertEquals(aValue.value(), bValue.value());
+				Assertions.assertEquals(aValue.value(), bValue.value(), String.format("Value mismatch on node %s!", aNode.key().toString()));
+				System.out.printf("Matched value on key '%s' (%s == %s)%n", aValue.key().toString(), aValue, bValue);
 			}
 		}
 	}

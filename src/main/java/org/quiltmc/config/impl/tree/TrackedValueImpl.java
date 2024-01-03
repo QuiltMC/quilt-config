@@ -146,7 +146,6 @@ public final class TrackedValueImpl<T> extends AbstractMetadataContainer impleme
 	@Override
 	public void removeOverride() {
 		this.isBeingOverridden = false;
-		T oldValueOverride = this.valueOverride;
 		this.valueOverride = null;
 
 		this.invokeCallbacks();
@@ -214,5 +213,10 @@ public final class TrackedValueImpl<T> extends AbstractMetadataContainer impleme
 		for (UpdateCallback<T> callback : this.callbacks) {
 			callback.onUpdate(this);
 		}
+	}
+
+	@Override
+	public String toString() {
+		return String.format("TrackedValueImpl[%s]", this.value.toString());
 	}
 }
