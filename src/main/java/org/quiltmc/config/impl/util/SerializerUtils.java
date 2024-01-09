@@ -51,7 +51,7 @@ public class SerializerUtils {
 	/**
 	 * Gets the value's key, taking {@link SerializedName} into account. Should always be used when serializing and deserializing a config.
 	 */
-	public static String getSerializedKey(Config config, ValueTreeNode value) {
+	public static ValueKey getSerializedKey(Config config, ValueTreeNode value) {
 		List<String> serializedKey = new ArrayList<>();
 		ValueKey key = value.key();
 
@@ -63,7 +63,7 @@ public class SerializerUtils {
 			serializedKey.add(getSerializedName(currentNode));
 		}
 
-		return new ValueKeyImpl(serializedKey.toArray(new String[0])).toString();
+		return new ValueKeyImpl(serializedKey.toArray(new String[0]));
 	}
 
 	public static String getSerializedName(ValueTreeNode value) {

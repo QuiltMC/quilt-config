@@ -22,13 +22,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.metadata.MetadataType;
-import org.quiltmc.config.api.serializer.Json5Serializer;
-import org.quiltmc.config.api.serializer.TomlSerializer;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.util.ConfigsImpl;
-import org.quiltmc.config.implementor_api.ConfigEnvironment;
 import org.quiltmc.config.implementor_api.ConfigFactory;
 import org.quiltmc.config.reflective.TestReflectiveConfig;
 
@@ -36,9 +33,6 @@ import java.io.IOException;
 import java.util.Map;
 
 public class ReadWriteCycleTest {
-	private static final ConfigEnvironment TOML_ENV = new ConfigEnvironment(TestUtil.TEMP_DIR, TomlSerializer.INSTANCE);
-	private static final ConfigEnvironment JSON5_ENV = new ConfigEnvironment(TestUtil.TEMP_DIR, Json5Serializer.INSTANCE);
-
 	@BeforeAll
 	public static void initializeConfigDir() throws IOException {
 		TestUtil.deleteTempDir();
@@ -51,19 +45,19 @@ public class ReadWriteCycleTest {
 
 	@Test
 	void testTomlReadWriteCycle() {
-		TestReflectiveConfig config = ConfigFactory.create(TOML_ENV, "testmod", "tomlTestConfig", TestReflectiveConfig.class);
+		TestReflectiveConfig config = ConfigFactory.create(TestUtil.TOML_ENV, "testmod", "tomlTestConfig", TestReflectiveConfig.class);
 		setUpConfig(config);
 
-		TestReflectiveConfig readConfig = ConfigFactory.create(TOML_ENV, "testmod", "tomlTestConfig", TestReflectiveConfig.class);
+		TestReflectiveConfig readConfig = ConfigFactory.create(TestUtil.TOML_ENV, "testmod", "tomlTestConfig", TestReflectiveConfig.class);
 		matchConfigs(config, readConfig);
 	}
 
 	@Test
 	void testJson5ReadWriteCycle() {
-		TestReflectiveConfig config = ConfigFactory.create(JSON5_ENV, "testmod", "json5TestConfig", TestReflectiveConfig.class);
+		TestReflectiveConfig config = ConfigFactory.create(TestUtil.JSON5_ENV, "testmod", "json5TestConfig", TestReflectiveConfig.class);
 		setUpConfig(config);
 
-		TestReflectiveConfig readConfig = ConfigFactory.create(JSON5_ENV, "testmod", "json5TestConfig", TestReflectiveConfig.class);
+		TestReflectiveConfig readConfig = ConfigFactory.create(TestUtil.JSON5_ENV, "testmod", "json5TestConfig", TestReflectiveConfig.class);
 		matchConfigs(config, readConfig);
 	}
 

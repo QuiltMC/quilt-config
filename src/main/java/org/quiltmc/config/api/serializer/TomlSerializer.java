@@ -31,6 +31,7 @@ import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.values.CompoundConfigValue;
 import org.quiltmc.config.api.values.ConfigSerializableObject;
 import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.config.api.values.ValueKey;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.api.values.ValueTreeNode;
@@ -45,6 +46,10 @@ import java.util.Map;
 
 /**
  * A default serializer that writes in the <a href="https://toml.io/en/">TOML format</a>.
+ *
+ * @implNote When passing entries to {@link com.electronwill.nightconfig.core.Config#add(String, Object)}, the string key is automatically split at each dot ({@code .}).
+ * This completely breaks TOML serialization, since we allow dots in keys, using either {@link org.quiltmc.config.api.annotations.SerializedName} or {@link ValueMap}, whose keys are not validated for certain characters.
+ * To get around this, use {@link com.electronwill.nightconfig.core.Config#add(List, Object)} via passing your key into {@link #toNightConfigSerializable(ValueKey)}.
  */
 public final class TomlSerializer implements Serializer {
 	public static final TomlSerializer INSTANCE = new TomlSerializer();
@@ -71,7 +76,7 @@ public final class TomlSerializer implements Serializer {
 		CommentedConfig read = this.parser.parse(from);
 
 		for (TrackedValue<?> trackedValue : config.values()) {
-			String key = SerializerUtils.getSerializedKey(config, trackedValue);
+			String key = SerializerUtils.getSerializedKey(config, trackedValue).toString();
 
 			if (read.contains(key)) {
 				((TrackedValue) trackedValue).setValue(MarshallingUtils.coerce(read.get(key), trackedValue.getDefaultValue(), (CommentedConfig c, MarshallingUtils.MapEntryConsumer entryConsumer) ->
@@ -94,7 +99,9 @@ public final class TomlSerializer implements Serializer {
 		CommentedConfig result = createCommentedConfig();
 
 		for (Map.Entry<String, ?> entry : map.entrySet()) {
-			result.add(entry.getKey(), convertAny(entry.getValue()));
+			List<String> key = new ArrayList<>();
+			key.add(entry.getKey());
+			result.add(key, convertAny(entry.getValue()));
 		}
 
 		return result;
@@ -122,8 +129,7 @@ public final class TomlSerializer implements Serializer {
 				}
 			}
 
-			String key = SerializerUtils.getSerializedKey(config, node);
-			//key = node.key().toString();
+			ValueKey key = SerializerUtils.getSerializedKey(config, node);
 
 			if (node instanceof TrackedValue<?>) {
 				TrackedValue<?> value = (TrackedValue<?>) node;
@@ -139,13 +145,13 @@ public final class TomlSerializer implements Serializer {
 					comments.add("default: " + defaultValue);
 				}
 
-				commentedConfig.add(key, convertAny(value.getRealValue()));
+				commentedConfig.add(toNightConfigSerializable(key), convertAny(value.getRealValue()));
 			} else {
 				write(config, commentedConfig, ((ValueTreeNode.Section) node));
 			}
 
 			if (!comments.isEmpty()) {
-				commentedConfig.setComment(key, " " + String.join("\n ", comments));
+				commentedConfig.setComment(toNightConfigSerializable(key), " " + String.join("\n ", comments));
 			}
 		}
 
@@ -154,5 +160,11 @@ public final class TomlSerializer implements Serializer {
 
 	private static CommentedConfig createCommentedConfig() {
 		return InMemoryCommentedFormat.defaultInstance().createConfig(LinkedHashMap::new);
+	}
+
+	private static List<String> toNightConfigSerializable(ValueKey key) {
+		List<String> listKey = new ArrayList<>();
+		key.forEach(listKey::add);
+		return listKey;
 	}
 }
