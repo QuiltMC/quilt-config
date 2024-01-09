@@ -18,6 +18,7 @@ package org.quiltmc.config.impl.util;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.TestOnly;
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.exceptions.ConfigCreationException;
 
@@ -39,9 +40,7 @@ public final class ConfigsImpl {
 		CONFIGS.computeIfAbsent(familyId, id -> new TreeMap<>()).put(config.id(), config);
 	}
 
-	/**
-	 * Not intended to be used for anything other than testing.
-	 */
+	@TestOnly
 	public static void remove(Config config) {
 		CONFIGS.get(config.family()).remove(config.id());
 	}
