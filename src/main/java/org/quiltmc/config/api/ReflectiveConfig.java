@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 QuiltMC
+ * Copyright 2023-2024 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.quiltmc.config.impl.util.ConfigUtils;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public abstract class ReflectiveConfig implements Config {
 	private Config wrapped;
@@ -60,6 +61,11 @@ public abstract class ReflectiveConfig implements Config {
 	@Override
 	public final <M> boolean hasMetadata(MetadataType<M, ?> type) {
 		return this.wrapped.hasMetadata(type);
+	}
+
+	@Override
+	public Map<MetadataType<?, ?>, Object> metadata() {
+		return this.wrapped.metadata();
 	}
 
 	@Override

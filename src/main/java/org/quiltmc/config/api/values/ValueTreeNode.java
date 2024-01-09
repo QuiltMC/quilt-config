@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2022-2024 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,25 +18,17 @@ package org.quiltmc.config.api.values;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.config.api.metadata.MetadataContainer;
-import org.quiltmc.config.api.metadata.MetadataType;
 
 /**
- * An element in a configs value tree.
+ * An element in a config's value tree.
  *
  * <p>Will be either a {@link TrackedValue} or {@link Section}
  */
 public interface ValueTreeNode extends MetadataContainer {
+	/**
+	 * @return this value's key
+	 */
 	ValueKey key();
-
-	/**
-	 * @return the metadata attached to this value for the specified type
-	 */
-	<M> M metadata(MetadataType<M, ?> type);
-
-	/**
-	 * @return whether or not this value has any metadata of the specified type
-	 */
-	<M> boolean hasMetadata(MetadataType<M, ?> type);
 
 	/**
 	 * A node that contains any number of child nodes.

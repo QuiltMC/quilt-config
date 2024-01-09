@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2022-2024 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ package org.quiltmc.config;
 import org.quiltmc.config.api.values.ComplexConfigValue;
 import org.quiltmc.config.api.values.ConfigSerializableObject;
 import org.quiltmc.config.api.values.ValueMap;
+
+import java.util.Objects;
 
 public class Vec3i implements ConfigSerializableObject<ValueMap<Integer>> {
 	public final int x, y, z;
@@ -46,5 +48,18 @@ public class Vec3i implements ConfigSerializableObject<ValueMap<Integer>> {
 				.put("y", this.y)
 				.put("z", this.z)
 				.build();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Vec3i vec3i = (Vec3i) o;
+		return x == vec3i.x && y == vec3i.y && z == vec3i.z;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(x, y, z);
 	}
 }
