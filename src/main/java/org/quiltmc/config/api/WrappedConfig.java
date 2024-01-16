@@ -22,6 +22,7 @@ import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueTreeNode;
 
 import java.nio.file.Path;
+import java.util.Map;
 
 
 /**
@@ -59,6 +60,11 @@ public abstract class WrappedConfig implements Config {
 	@Override
 	public final <M> boolean hasMetadata(MetadataType<M, ?> type) {
 		return this.wrapped.hasMetadata(type);
+	}
+
+	@Override
+	public Map<MetadataType<?, ?>, Object> metadata() {
+		return this.wrapped.metadata();
 	}
 
 	@Override
