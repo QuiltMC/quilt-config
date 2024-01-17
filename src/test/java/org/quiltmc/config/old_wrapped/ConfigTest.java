@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config;
+package org.quiltmc.config.old_wrapped;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -24,8 +23,6 @@ import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.ConfigEnvironment;
 import org.quiltmc.config.api.Constraint;
 import org.quiltmc.config.api.annotations.Comment;
-import org.quiltmc.config.api.annotations.SerializedName;
-import org.quiltmc.config.api.exceptions.ConfigCreationException;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.api.exceptions.TrackedValueException;
 import org.quiltmc.config.api.metadata.Comments;
@@ -36,21 +33,22 @@ import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.impl.CommentsImpl;
-import org.quiltmc.config.implementor_api.ConfigFactory;
-import org.quiltmc.config.reflective.TestValueConfig3;
-import org.quiltmc.config.reflective.TestValueConfig4;
-import org.quiltmc.config.reflective.TestValueListConfig;
-import org.quiltmc.config.reflective.TestValueMapConfig;
-import org.quiltmc.config.reflective.TestReflectiveConfig;
-import org.quiltmc.config.reflective.TestReflectiveConfig2;
+import org.quiltmc.config.old_wrapped.input.TestValueConfig3;
+import org.quiltmc.config.old_wrapped.input.TestValueConfig4;
+import org.quiltmc.config.old_wrapped.input.TestValueListConfig;
+import org.quiltmc.config.old_wrapped.input.TestValueMapConfig;
+import org.quiltmc.config.old_wrapped.input.TestWrappedConfig;
+import org.quiltmc.config.old_wrapped.input.TestWrappedConfig2;
 
-import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "unused"})
 public class ConfigTest {
+	static Path TEMP = Paths.get("temp");
 	static ConfigEnvironment ENV;
 
 	static TrackedValue<String> TEST;
@@ -60,15 +58,8 @@ public class ConfigTest {
 	static TrackedValue<ValueList<Integer>> TEST_LIST;
 
 	@BeforeAll
-	public static void initializeConfigDir() throws IOException {
-		TestUtil.deleteTempDir();
-
-		ENV = new ConfigEnvironment(TestUtil.TEMP_DIR, TomlSerializer.INSTANCE, Json5Serializer.INSTANCE);
-	}
-
-	@AfterAll
-	public static void deleteConfigDir() throws IOException {
-		TestUtil.deleteTempDir();
+	public static void initializeConfigDir() {
+		ENV = new ConfigEnvironment(TEMP, TomlSerializer.INSTANCE, Json5Serializer.INSTANCE);
 	}
 
 	@Test
@@ -81,10 +72,8 @@ public class ConfigTest {
 			}));
 			builder.section("super_awesome_section", section1 -> {
 				section1.metadata(Comment.TYPE, comments -> comments.add("This is a section comment!"));
-				section1.metadata(SerializedName.TYPE, name -> name.withName("super_duper_awesome_section"));
 				section1.field(TrackedValue.create(1, "before"));
 				section1.section("less_awesome_section", section2 -> {
-					section2.metadata(SerializedName.TYPE, name -> name.withName("much_less_awesome_section"));
 					section2.metadata(Comment.TYPE, comments -> comments.add("This is another section comment!"));
 					section2.section("regular_section", section3 -> {
 						section3.field(TrackedValue.create(0, "water"));
@@ -121,9 +110,17 @@ public class ConfigTest {
 
 	@Test
 	public void testValidation() {
-		Assertions.assertThrows(TrackedValueException.class, () -> Config.create(ENV, "testmod", "testConfig1", builder -> builder.field(TrackedValue.create(new ArrayList<Integer>(), "boop"))));
+		Assertions.assertThrows(TrackedValueException.class, () -> {
+			Config.create(ENV, "testmod", "testConfig1", builder -> {
+				builder.field(TrackedValue.create(new ArrayList<Integer>(), "boop"));
+			});
+		});
 
-		Assertions.assertThrows(TrackedValueException.class, () -> Config.create(ENV, "testmod", "testConfig2", builder -> builder.field(TrackedValue.create(ValueList.create(new ArrayList<Integer>()), "boop"))));
+		Assertions.assertThrows(TrackedValueException.class, () -> {
+			Config.create(ENV, "testmod", "testConfig2", builder -> {
+				builder.field(TrackedValue.create(ValueList.create(new ArrayList<Integer>()), "boop"));
+			});
+		});
 	}
 
 	@Test
@@ -142,7 +139,9 @@ public class ConfigTest {
 				section.field(TrackedValue.create("wooooh", "emote"));
 				section.field(TrackedValue.create("etrator", "perp"));
 			});
-			builder.callback(c -> System.out.println("We was updated!"));
+			builder.callback(c -> {
+				System.out.println("We was updated!");
+			});
 		});
 
 		TEST_STRING.registerCallback((value) ->
@@ -165,11 +164,13 @@ public class ConfigTest {
 	@Test
 	public void testMetadata() {
 		Config config = Config.create(ENV, "testmod", "testConfig4", builder -> {
-			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> creator.metadata(Comment.TYPE, comments -> comments.add(
-					"Comment one",
-					"Comment two",
-					"Comment three"
-			))));
+			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> {
+				creator.metadata(Comment.TYPE, comments -> comments.add(
+						"Comment one",
+						"Comment two",
+						"Comment three"
+				));
+			}));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
 			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
 		});
@@ -213,7 +214,9 @@ public class ConfigTest {
 
 		Assertions.assertThrows(TrackedValueException.class, () -> {
 			Config.create(ENV, "testmod", "testConfig7", builder -> {
-				builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> creator.constraint(Constraint.range(-10, 10))));
+				builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> {
+					creator.constraint(Constraint.range(-10, 10));
+				}));
 				builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
 				builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
 			});
@@ -223,23 +226,33 @@ public class ConfigTest {
 
 		Assertions.assertThrows(TrackedValueException.class, () -> {
 			Config.create(ENV, "testmod", "testConfig8", builder -> {
-				builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> creator.constraint(Constraint.range(-10, 10))));
+				builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> {
+					creator.constraint(Constraint.range(-10, 10));
+				}));
 				builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-				builder.field(TEST_STRING  = TrackedValue.create("blah", "test", creator -> creator.constraint(Constraint.matching("[a-zA-Z0-9]+:[a-zA-Z0-9]+"))));
+				builder.field(TEST_STRING  = TrackedValue.create("blah", "test", creator -> {
+					creator.constraint(Constraint.matching("[a-zA-Z0-9]+:[a-zA-Z0-9]+"));
+				}));
 			});
 
 			TEST_INTEGER.setValue(1000, true);
 		});
 
 		Config.create(ENV, "testmod", "testConfig9", builder -> {
-			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> creator.constraint(Constraint.range(-10, 10))));
+			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> {
+				creator.constraint(Constraint.range(-10, 10));
+			}));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-			builder.field(TEST_STRING  = TrackedValue.create("test:id", "test", creator -> creator.constraint(Constraint.matching("[a-zA-Z0-9]+:[a-zA-Z0-9]+"))));
+			builder.field(TEST_STRING  = TrackedValue.create("test:id", "test", creator -> {
+				creator.constraint(Constraint.matching("[a-zA-Z0-9]+:[a-zA-Z0-9]+"));
+			}));
 		});
 	}
 
 	public void testWrappedConfigs(String id, String format) {
-		TestReflectiveConfig config = ConfigFactory.create(ENV, "testmod", id, TestReflectiveConfig.class, builder -> builder.format(format));
+		TestWrappedConfig config = Config.create(ENV, "testmod", id, TestWrappedConfig.class, builder -> {
+			builder.format(format);
+		});
 
 		for (TrackedValue<?> value : config.values()) {
 			System.out.printf("\"%s\": %s%n", value.key(), value.value());
@@ -249,11 +262,17 @@ public class ConfigTest {
 			}
 		}
 
-		Assertions.assertThrows(ConfigCreationException.class, () -> ConfigFactory.create(ENV, "testmod", "testConfig", TestReflectiveConfig2.class)).printStackTrace();
+		Assertions.assertThrows(ConfigFieldException.class, () -> {
+			Config.create(ENV, "testmod", "testConfig", TestWrappedConfig2.class);
+		}).printStackTrace();
 
-		Assertions.assertThrows(ConfigFieldException.class, () -> ConfigFactory.create(ENV, "testmod", "testConfig", TestValueConfig3.class)).printStackTrace();
+		Assertions.assertThrows(ConfigFieldException.class, () -> {
+			Config.create(ENV, "testmod", "testConfig", TestValueConfig3.class);
+		}).printStackTrace();
 
-		Assertions.assertThrows(TrackedValueException.class, () -> ConfigFactory.create(ENV, "testmod", "testConfig", TestValueConfig4.class)).printStackTrace();
+		Assertions.assertThrows(TrackedValueException.class, () -> {
+			Config.create(ENV, "testmod", "testConfig", TestValueConfig4.class);
+		}).printStackTrace();
 	}
 
 	@Test
@@ -264,7 +283,9 @@ public class ConfigTest {
 
 	@Test
 	public void testTomlConfigs() {
-		TestReflectiveConfig config = ConfigFactory.create(ENV, "testmod", "testConfig12", TestReflectiveConfig.class, builder -> builder.format("toml"));
+		TestWrappedConfig config = Config.create(ENV, "testmod", "testConfig12", TestWrappedConfig.class, builder -> {
+			builder.format("toml");
+		});
 
 		for (TrackedValue<?> value : config.values()) {
 			System.out.printf("\"%s\": %s%n", value.key(), value.value());
@@ -277,16 +298,16 @@ public class ConfigTest {
 
 	@Test
 	public void testValueMapBehavior() {
-		TestValueMapConfig c = ConfigFactory.create(ENV, "testmod", "testConfig13", TestValueMapConfig.class);
+		TestValueMapConfig c = Config.create(ENV, "testmod", "testConfig13", TestValueMapConfig.class);
 
-		c.weights.value().put("" + c.weights.value().size(), c.weights.value().size());
+		c.weights.put("" + c.weights.size(), c.weights.size());
 	}
 
 	@Test
 	public void testValueListBehavior() {
-		TestValueListConfig c = ConfigFactory.create(ENV, "testmod", "testConfig14", TestValueListConfig.class);
+		TestValueListConfig c = Config.create(ENV, "testmod", "testConfig14", TestValueListConfig.class);
 
-		c.strings.value().add(c.strings.value().size() + "");
+		c.strings.add(c.strings.size() + "");
 	}
 
 	@Test
@@ -300,11 +321,13 @@ public class ConfigTest {
 		}, Comment.Builder::new);
 
 		Config config = Config.create(ENV, "testmod", "testConfig400", builder -> {
-			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> creator.metadata(TYPE, comments -> comments.add(
-					"Comment one",
-					"Comment two",
-					"Comment three"
-			))));
+			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> {
+				creator.metadata(TYPE, comments -> comments.add(
+						"Comment one",
+						"Comment two",
+						"Comment three"
+				));
+			}));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
 			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
 		});

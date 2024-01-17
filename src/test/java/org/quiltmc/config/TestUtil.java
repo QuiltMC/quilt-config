@@ -27,11 +27,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class TestUtil {
-	static final Path TEMP_DIR = Paths.get("temp");
-	static final ConfigEnvironment TOML_ENV = new ConfigEnvironment(TestUtil.TEMP_DIR, TomlSerializer.INSTANCE);
-	static final ConfigEnvironment JSON5_ENV = new ConfigEnvironment(TestUtil.TEMP_DIR, Json5Serializer.INSTANCE);
+	public static final Path TEMP_DIR = Paths.get("temp");
+	public static final ConfigEnvironment TOML_ENV = new ConfigEnvironment(TestUtil.TEMP_DIR, TomlSerializer.INSTANCE);
+	public static final ConfigEnvironment JSON5_ENV = new ConfigEnvironment(TestUtil.TEMP_DIR, Json5Serializer.INSTANCE);
 
-	static void deleteTempDir() throws IOException {
+	public static void deleteTempDir() throws IOException {
 		deleteDirectoryRecursively(TEMP_DIR.toFile());
 	}
 
