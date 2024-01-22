@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config.reflective;
+package org.quiltmc.config.reflective.input;
 
 import org.quiltmc.config.api.ReflectiveConfig;
 import org.quiltmc.config.api.annotations.SerializedName;

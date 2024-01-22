@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config;
+package org.quiltmc.config.reflective;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.quiltmc.config.TestUtil;
 import org.quiltmc.config.implementor_api.ConfigFactory;
-import org.quiltmc.config.reflective.TestEscapingConfig;
+import org.quiltmc.config.reflective.input.TestEscapingConfig;
 
 import java.io.IOException;
 import java.nio.file.Files;

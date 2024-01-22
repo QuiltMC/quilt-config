@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config;
+package org.quiltmc.config.reflective;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.quiltmc.config.TestUtil;
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.values.TrackedValue;
@@ -27,7 +28,7 @@ import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.util.ConfigsImpl;
 import org.quiltmc.config.implementor_api.ConfigFactory;
-import org.quiltmc.config.reflective.TestReflectiveConfig;
+import org.quiltmc.config.reflective.input.TestReflectiveConfig;
 
 import java.io.IOException;
 import java.util.Map;

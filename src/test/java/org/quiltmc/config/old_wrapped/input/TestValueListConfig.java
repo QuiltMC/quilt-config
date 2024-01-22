@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 QuiltMC
+ * Copyright 2022-2023 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,13 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config.reflective;
+package org.quiltmc.config.old_wrapped.input;
 
-import org.quiltmc.config.api.ReflectiveConfig;
-import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.config.api.WrappedConfig;
 import org.quiltmc.config.api.values.ValueList;
 
-public class TestValueListConfig extends ReflectiveConfig {
-	public final TrackedValue<String> test = this.value("watermark");
-	public final TrackedValue<Integer> thingy = this.value(1009);
-	public final TrackedValue<ValueList<String>> strings = this.list("");
+public class TestValueListConfig extends WrappedConfig {
+	public final String test = "watermark";
+	public final int thingy = 1009;
+	public final ValueList<String> strings = ValueList.create("");
 }
