@@ -1,21 +1,14 @@
 plugins {
-	id 'java'
-	id 'maven-publish'
-	id 'org.quiltmc.gradle.licenser' version '1.+'
+    id("java-library")
+	id("maven-publish")
 }
 
+group = "org.quiltmc.quilt-config.serializers"
+version = rootProject.version
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
-
-group 'org.quiltmc'
-version '1.2.0'
-
-java {
-	withSourcesJar()
-}
-
 repositories {
-	mavenCentral()
+    mavenCentral()
 	maven {
 		name = 'Quilt'
 		url = 'https://maven.quiltmc.org/repository/release'
@@ -23,27 +16,14 @@ repositories {
 }
 
 dependencies {
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
-	testImplementation(project(":toml"))
-	testImplementation(project(":json-family"))
-	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
-	implementation 'org.jetbrains:annotations:23.0.0'
+	implementation 'org.quiltmc.parsers:json:0.2.1'
+	api rootProject
+    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
-test {
-	useJUnitPlatform()
-}
-
-jar {
-	from ('.') {
-		include 'LICENSE'
-	}
-}
-
-license {
-	rule rootProject.file("codeformat/HEADER")
-
-	include "**/*.java"
+tasks.test {
+    useJUnitPlatform()
 }
 
 publishing {

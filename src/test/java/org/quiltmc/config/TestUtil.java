@@ -16,9 +16,9 @@
 
 package org.quiltmc.config;
 
-import org.quiltmc.config.api.serializer.Json5Serializer;
-import org.quiltmc.config.api.serializer.TomlSerializer;
 import org.quiltmc.config.implementor_api.ConfigEnvironment;
+import org.quiltmc.config.api.serializers.Json5Serializer;
+import org.quiltmc.config.api.serializers.TomlSerializer;
 
 import java.io.File;
 import java.io.IOException;

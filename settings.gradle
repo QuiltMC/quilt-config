@@ -15,3 +15,7 @@ pluginManagement {
 }
 
 rootProject.name = 'quilt-config'
+include("serializers-json-family")
+project(":serializers-json-family").setName("json-family")
+include("serializers-toml")
+project(":serializers-toml").setName("toml")

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config.api.serializer;
+package org.quiltmc.config.api.serializers;
 
 import com.electronwill.nightconfig.core.CommentedConfig;
 import com.electronwill.nightconfig.core.InMemoryCommentedFormat;

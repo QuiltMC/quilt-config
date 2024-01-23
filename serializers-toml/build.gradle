@@ -1,0 +1,53 @@
+plugins {
+    id("java-library")
+	id("maven-publish")
+}
+
+group = "org.quiltmc.quilt-config.serializers"
+version = rootProject.version
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+repositories {
+    mavenCentral()
+
+}
+
+dependencies {
+	implementation 'com.electronwill.night-config:core:3.6.6'
+	implementation 'com.electronwill.night-config:toml:3.6.6'
+	api rootProject
+    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+		}
+	}
+
+	// TODO: We should probably put this on central
+	repositories {
+		def ENV = System.getenv()
+
+		if (ENV.MAVEN_URL) {
+			project.logger.info("Publishing to " + ENV.MAVEN_URL)
+
+			repositories.maven {
+				url = ENV.MAVEN_URL
+
+				credentials {
+					username = ENV.MAVEN_USERNAME
+					password = ENV.MAVEN_PASSWORD
+				}
+			}
+		} else {
+			project.logger.info("No Maven destination configured.")
+		}
+	}
+}
