@@ -27,8 +27,8 @@ import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.api.exceptions.TrackedValueException;
 import org.quiltmc.config.api.metadata.Comments;
 import org.quiltmc.config.api.metadata.MetadataType;
-import org.quiltmc.config.api.serializer.Json5Serializer;
-import org.quiltmc.config.api.serializer.TomlSerializer;
+import org.quiltmc.config.api.serializers.Json5Serializer;
+import org.quiltmc.config.api.serializers.TomlSerializer;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
@@ -250,9 +250,7 @@ public class ConfigTest {
 	}
 
 	public void testWrappedConfigs(String id, String format) {
-		TestWrappedConfig config = Config.create(ENV, "testmod", id, TestWrappedConfig.class, builder -> {
-			builder.format(format);
-		});
+		TestWrappedConfig config = Config.create(ENV, "testmod", id, TestWrappedConfig.class, builder -> builder.format(format));
 
 		for (TrackedValue<?> value : config.values()) {
 			System.out.printf("\"%s\": %s%n", value.key(), value.value());
