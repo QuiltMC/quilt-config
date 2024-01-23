@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config.api.serializers;
+package org.quiltmc.config.api.serializer;
 
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.Constraint;
