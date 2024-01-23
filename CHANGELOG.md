@@ -1,0 +1,12 @@
+# 1.2.0
+-  published default serializers for **TOML** and **JSON5**, which you can use in your projects with [these instructions](<https://github.com/QuiltMC/quilt-config#usage>). these have a few benefits:
+- the user no longer has to implement their own serializers in a project using qconf. brilliant!
+- the builtin serializers will always support the latest annotations and features, instead of making you puzzle out how to add them to yours. neat!
+- implemented a new annotation: `@SerializedName(String)`. this allows you to have different names in code than the ones in the generated config files. for an example usage, you could name a field in your code `superCoolField` and then serialize it as `super_cool_field`, to conform to both java and toml conventions at the same time. wild!
+- migrated to the new [quilt parsers](<https://github.com/QuiltMC/quilt-parsers>) library instead of our deprecated quilt-json5 library for JSON5 parsing. cool!
+- added two new API methods:
+    - `Config#getNode(Iterable<String>)`, which will return a `ValueTreeNode` representing either a config section or a config value. this solves an API gap where there was no way to grab full sections, since the similar `getValue` method would always try to cast to a value and error on sections. awesome!
+    - `MetadataContainer#metadata`, which will return a typed map of all metadata on a value. solid!
+- fixed two extremely high profile bugs:
+    - metadata on sections was ignored. this means that you can now add serial names, comment on sections, do any metadata shenanigans to your heart's desire! fun!
+    - adding dots (`.`) to a key and saving to TOML would produce an unreadable disaster. no longer! yay!
