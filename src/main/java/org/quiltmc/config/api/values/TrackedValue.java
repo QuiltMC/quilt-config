@@ -58,10 +58,18 @@ public interface TrackedValue<T> extends ValueTreeNode {
 
 	/**
 	 * @param newValue the value to set
-	 * @param serialize whether or not to serialize this value's backing config file. Should be false only when deserializing
+	 * @param serialize whether to serialize this value's backing config file. Should be false only when deserializing
 	 * @return the old value that's been replaced
 	 */
 	T setValue(@NotNull T newValue, boolean serialize);
+
+	/**
+	 * @param newValue the value to set
+	 * @return the old value that's been replaced
+	 */
+	default T setValue(@NotNull T newValue) {
+		return this.setValue(newValue, true);
+	}
 
 	/**
 	 * Sets an override for this value to be returned by {@link #value} that is not serialized to disk
@@ -109,7 +117,7 @@ public interface TrackedValue<T> extends ValueTreeNode {
 	 *
 	 * Config values can be one of the following types:
 	 * <ul>
-	 *     <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
+	 *     <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 	 *     <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 * </ul>
 	 *
@@ -129,7 +137,7 @@ public interface TrackedValue<T> extends ValueTreeNode {
 	 *
 	 * Config values can be one of the following types:
 	 * <ul>
-	 *     <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
+	 *     <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 	 *     <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 * </ul>
 	 *
