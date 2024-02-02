@@ -23,7 +23,6 @@ import org.quiltmc.config.api.Serializer;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.annotations.SerializedName;
 import org.quiltmc.config.api.exceptions.ConfigParseException;
-import org.quiltmc.config.api.values.CompoundConfigValue;
 import org.quiltmc.config.api.values.ConfigSerializableObject;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
@@ -129,8 +128,9 @@ public final class Json5Serializer implements Serializer {
 				writer.comment(constraint.getRepresentation());
 			}
 
-			if (!(defaultValue instanceof CompoundConfigValue<?>)) {
-				writer.comment("default: " + defaultValue);
+			Optional<String> defaultComment = SerializerUtils.getDefaultValueString(defaultValue);
+			if (defaultComment.isPresent()) {
+				writer.comment("default: " + defaultComment);
 			}
 
 			String name = SerializerUtils.getSerializedName(trackedValue);
