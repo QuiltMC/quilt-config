@@ -19,6 +19,7 @@ package org.quiltmc.config.impl.util;
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.annotations.SerializedName;
 import org.quiltmc.config.api.values.CompoundConfigValue;
+import org.quiltmc.config.api.annotations.SerializedNameConvention;
 import org.quiltmc.config.api.values.ValueKey;
 import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.values.ValueKeyImpl;
@@ -85,6 +86,8 @@ public class SerializerUtils {
 	public static String getSerializedName(ValueTreeNode value) {
 		if (value.hasMetadata(SerializedName.TYPE)) {
 			return value.metadata(SerializedName.TYPE).getName();
+		} else if (value.hasMetadata(SerializedNameConvention.TYPE)) {
+			return value.metadata(SerializedNameConvention.TYPE).coerce(value.key().getLastComponent());
 		} else {
 			return value.key().getLastComponent();
 		}

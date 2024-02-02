@@ -21,13 +21,8 @@ import org.quiltmc.config.api.Constraint;
 import org.quiltmc.config.api.MarshallingUtils;
 import org.quiltmc.config.api.Serializer;
 import org.quiltmc.config.api.annotations.Comment;
-import org.quiltmc.config.api.annotations.SerializedName;
 import org.quiltmc.config.api.exceptions.ConfigParseException;
-import org.quiltmc.config.api.values.ConfigSerializableObject;
-import org.quiltmc.config.api.values.TrackedValue;
-import org.quiltmc.config.api.values.ValueList;
-import org.quiltmc.config.api.values.ValueMap;
-import org.quiltmc.config.api.values.ValueTreeNode;
+import org.quiltmc.config.api.values.*;
 import org.quiltmc.config.impl.tree.TrackedValueImpl;
 import org.quiltmc.config.impl.util.SerializerUtils;
 import org.quiltmc.parsers.json.JsonReader;
@@ -168,18 +163,14 @@ public final class Json5Serializer implements Serializer {
 
 			for (TrackedValue<?> value : config.values()) {
 				Map<String, Object> m = values;
-
-				for (int i = 0; i < value.key().length(); ++i) {
-					String name = value.key().getKeyComponent(i);
-					if (value.hasMetadata(SerializedName.TYPE)) {
-						name = value.metadata(SerializedName.TYPE).getName();
-					}
-
-					if (m.containsKey(name) && i != value.key().length() - 1) {
+				ValueKey key = SerializerUtils.getSerializedKey(config, value);
+				for (int i = 0; i < key.length(); i++) {
+					String name = key.getKeyComponent(i);
+					if (m.containsKey(name) && i != key.length() - 1) {
 						m = (Map<String, Object>) m.get(name);
 					} else if (m.containsKey(name)) {
 						((TrackedValueImpl) value).setValue(MarshallingUtils.coerce(m.get(name), value.getDefaultValue(), (Map<String, ?> map, MarshallingUtils.MapEntryConsumer entryConsumer) ->
-								map.forEach(entryConsumer::put)), false);
+							map.forEach(entryConsumer::put)), false);
 					}
 				}
 			}
