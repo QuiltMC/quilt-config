@@ -2,13 +2,20 @@ package org.quiltmc.config.api.metadata;
 
 import java.util.ArrayList;
 
+
 public enum NamingSchemes implements NamingScheme {
+	/**
+	 * Does not format the string at all. {@code "funnyStringAsAnExample"} becomes {@code "funnyStringAsAnExample"}
+	 */
 	PASSTHROUGH {
 		@Override
 		public String coerce(String input) {
 			return input;
 		}
 	},
+	/**
+	 * Formats the string as UpperCamelCase. {@code "funny string as an example"} becomes {@code "FunnyStringAsAnExample"}
+	 */
 	UPPER_CAMEL_CASE {
 		@Override
 		public String coerce(String input) {
@@ -22,6 +29,9 @@ public enum NamingSchemes implements NamingScheme {
 			return builder.toString();
 		}
 	},
+	/**
+	 * Formats the string as lowerCamelCase. {@code "funny string as an example"} becomes {@code "funnyStringAsAnExample"}
+	 */
 	LOWER_CAMEL_CASE {
 		@Override
 		public String coerce(String input) {
@@ -41,6 +51,9 @@ public enum NamingSchemes implements NamingScheme {
 			return builder.toString();
 		}
 	},
+	/**
+	 * Formats the string as kebab-case. {@code "funny string as an example"} becomes {@code "funny-string-as-an-example"}
+	 */
 	KEBAB_CASE {
 		@Override
 		public String coerce(String input) {
@@ -59,6 +72,9 @@ public enum NamingSchemes implements NamingScheme {
 			return builder.toString();
 		}
 	},
+	/**
+	 * Formats the string as snake_case. {@code "funny string as an example"} becomes {@code "funny_string_as_an_example"}
+	 */
 	SNAKE_CASE {
 		@Override
 		public String coerce(String input) {
@@ -77,6 +93,9 @@ public enum NamingSchemes implements NamingScheme {
 			return builder.toString();
 		}
 	},
+	/**
+	 * Formats the string as space separated lower case. {@code "funnyStringAsAnExample"} becomes {@code "funny string as an example"}
+	 */
 	SPACE_SEPARATED_LOWER_CASE {
 		@Override
 		public String coerce(String input) {
@@ -95,6 +114,9 @@ public enum NamingSchemes implements NamingScheme {
 			return builder.toString();
 		}
 	},
+	/**
+	 * Formats the string as space separated lower case with the initial letter being uppercase. {@code "funnyStringAsAnExample"} becomes {@code "Funny string as an example"}
+	 */
 	SPACE_SEPARATED_LOWER_CASE_INITIAL_UPPER_CASE {
 		@Override
 		public String coerce(String input) {
@@ -116,6 +138,9 @@ public enum NamingSchemes implements NamingScheme {
 		}
 
 	},
+	/**
+	 * Formats the string as title case, all words are capitalized. {@code "funnyStringAsAnExample"} becomes {@code "Funny String As An Example"}
+	 */
 	TITLE_CASE {
 		@Override
 		public String coerce(String input) {

@@ -12,7 +12,8 @@ import java.lang.annotation.Target;
 import java.util.Optional;
 
 /**
- * Used to tell the serializer what name should be used for this field when saving to disk
+ * Used to tell the serializer how properties should be formatted when saving to disk. Can be applied to configs, sections and properties. {@link SerializedName} should always take priority.
+ * @see SerializedName
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
@@ -22,7 +23,15 @@ public @interface SerializedNameConvention {
 	 */
 	MetadataType<NamingScheme, SerializedNameConvention.Builder> TYPE = MetadataType.create(Optional::empty, SerializedNameConvention.Builder::new);
 
+	/**
+	 * One of the included {@link NamingSchemes}. The naming schemes must not generate spaces. {@link SerializedNameConvention#custom()} takes priority when not empty
+	 * @see NamingSchemes
+	 */
 	NamingSchemes value() default NamingSchemes.PASSTHROUGH;
+
+	/**
+	 * A fully qualified name of a class implementing the {@link NamingScheme}. Ignored when empty, takes precedence over {@link SerializedNameConvention#value()} otherwise.
+	 */
 	String custom() default "";
 
 	final class Builder implements MetadataType.Builder<NamingScheme> {
