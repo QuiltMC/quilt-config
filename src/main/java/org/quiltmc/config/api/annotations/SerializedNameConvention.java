@@ -33,6 +33,9 @@ public @interface SerializedNameConvention {
 		}
 
 		public void set(NamingScheme scheme) {
+			if (scheme == NamingSchemes.SPACE_SEPARATED_LOWER_CASE || scheme == NamingSchemes.SPACE_SEPARATED_LOWER_CASE_INITIAL_UPPER_CASE || scheme == NamingSchemes.TITLE_CASE) {
+				throw new IllegalArgumentException("Scheme with spaces unsupported for serialized names");
+			}
 			this.scheme = scheme;
 		}
 
