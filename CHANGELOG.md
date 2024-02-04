@@ -1,7 +1,7 @@
 # 1.2.0
 -  published default serializers for **TOML** and **JSON5**, which you can use in your projects with [these instructions](<https://github.com/QuiltMC/quilt-config#usage>). these have a few benefits:
-  - the user no longer has to implement their own serializers in a project using qconf. brilliant!
-  - the builtin serializers will always support the latest annotations and features, instead of making you puzzle out how to add them to yours. neat!
+   - the user no longer has to implement their own serializers in a project using qconf. brilliant!
+   - the builtin serializers will always support the latest annotations and features, instead of making you puzzle out how to add them to yours. neat!
 - implemented a new annotation: `@SerializedName(String)`. this allows you to have different names in code than the ones in the generated config files. for an example usage, you could name a field in your code `superCoolField` and then serialize it as `super_cool_field`, to conform to both java and toml conventions at the same time. wild!
 - migrated to the new [quilt parsers](<https://github.com/QuiltMC/quilt-parsers>) library instead of our deprecated quilt-json5 library for JSON5 parsing. cool!
 - added two new API methods:
