@@ -52,6 +52,7 @@ public final class TestReflectiveConfig extends ReflectiveConfig {
 	@SerializedName("reallyAwesomeNested")
 	@Comment("comment!")
 	public final Nested nested1 = new Nested();
+	@Processor("processSection")
 	public final Nested nested3 = new Nested();
 
 	public final TrackedValue<ValueList<String>> enabled = this.list("");
@@ -86,6 +87,10 @@ public final class TestReflectiveConfig extends ReflectiveConfig {
 
 	public void processField(TrackedValue.Builder<Vec3i> process) {
 		System.out.println("Processing field!");
+	}
+
+	public void processSection2(SectionBuilder builder) {
+		System.out.println("Processing section!");
 	}
 
 	public static final class Nested extends Section {
