@@ -89,7 +89,7 @@ public final class TestReflectiveConfig extends ReflectiveConfig {
 		System.out.println("Processing field!");
 	}
 
-	public void processSection2(SectionBuilder builder) {
+	public void processSection(SectionBuilder builder) {
 		System.out.println("Processing section!");
 	}
 
