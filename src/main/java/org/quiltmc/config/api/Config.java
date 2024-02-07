@@ -155,7 +155,7 @@ public interface Config extends MetadataContainer {
 	 *     <li>Has a public no-argument constructor</li>
 	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
-	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
+	 *         <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
 	 *     </ul></li>
@@ -189,7 +189,7 @@ public interface Config extends MetadataContainer {
 	 *     <li>Has a public no-argument constructor</li>
 	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
-	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
+	 *         <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
 	 *     </ul></li>
@@ -222,7 +222,7 @@ public interface Config extends MetadataContainer {
 	 *     <li>Has a public no-argument constructor</li>
 	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
-	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
+	 *         <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
 	 *     </ul></li>
@@ -254,7 +254,7 @@ public interface Config extends MetadataContainer {
 	 *     <li>Has a public no-argument constructor</li>
 	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
-	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
+	 *         <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
 	 *     </ul></li>
@@ -286,7 +286,7 @@ public interface Config extends MetadataContainer {
 	 *     <li>Has a public no-argument constructor</li>
 	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
-	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
+	 *         <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
 	 *     </ul></li>
@@ -317,7 +317,7 @@ public interface Config extends MetadataContainer {
 	 *     <li>Has a public no-argument constructor</li>
 	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
-	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
+	 *         <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
 	 *     </ul></li>
@@ -347,7 +347,7 @@ public interface Config extends MetadataContainer {
 	 *     <li>Has a public no-argument constructor</li>
 	 *     <li>Each non-static non-transient field should be final, not null, and be one of the following types:
 	 *     <ul>
-	 *         <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
+	 *         <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 	 *         <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
 	 *         <li>An object whose class follows these rules</li>
 	 *     </ul></li>
@@ -377,7 +377,7 @@ public interface Config extends MetadataContainer {
 	 *     <li>Has a public no-argument constructor</li>
 	 *     <li>Each non-static field should be final and be one of the following types:
 	 *     <ul>
-	 *     	   <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
+	 *     	   <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 	 *     	   <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types)</li>
 	 *         <li>An object whose class follows these rules</li>
 	 *     </ul></li>
@@ -418,7 +418,7 @@ public interface Config extends MetadataContainer {
 		 *
 		 * A field should be either:
 		 * <ul>
-		 *     <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
+		 *     <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 		 *     <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types)</li>
 		 * </ul>
 		 * @return this
@@ -466,7 +466,7 @@ public interface Config extends MetadataContainer {
 		 *
 		 * A field should be either:
 		 * <ul>
-		 *     <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
+		 *     <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 		 *     <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types)</li>
 		 * </ul>
 		 * @return this

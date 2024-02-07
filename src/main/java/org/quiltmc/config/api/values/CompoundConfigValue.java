@@ -23,7 +23,7 @@ import org.jetbrains.annotations.ApiStatus;
  *
  * Will be either a {@link ValueList} or {@link ValueMap}
  *
- * Basic types: int, long, float, double, boolean, or String
+ * Basic types: {@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, or String
  * Complex types: a {@link ValueList} or {@link ValueMap} of basic or complex types
  */
 @ApiStatus.NonExtendable

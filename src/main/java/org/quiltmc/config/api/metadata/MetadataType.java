@@ -66,7 +66,7 @@ public final class MetadataType<T, B extends MetadataType.Builder<T>> {
 	 *
 	 * The {@link Type} passed to trackedValueDefaultFunction will always be one of the following:
 	 * <ul>
-	 *     <li>A basic type (int, long, float, double, boolean, String, or enum)</li>
+	 *     <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 	 *     <li>{@link ValueList} or {@link ValueMap}</li>
 	 * </ul>
 	 *
