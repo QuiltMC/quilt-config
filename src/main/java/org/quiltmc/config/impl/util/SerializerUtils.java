@@ -18,6 +18,7 @@ package org.quiltmc.config.impl.util;
 
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.annotations.SerializedName;
+import org.quiltmc.config.api.values.CompoundConfigValue;
 import org.quiltmc.config.api.values.ValueKey;
 import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.values.ValueKeyImpl;
@@ -27,6 +28,21 @@ import java.util.List;
 import java.util.Optional;
 
 public class SerializerUtils {
+	public static Optional<String> getDefaultValueString(Object defaultValue) {
+		try {
+			// we don't want to show the default toString method from object as it'll look something org.quiltmc.config.Vec3i@20527 and be nonsense to the user
+			if (defaultValue.getClass().getMethod("toString").getDeclaringClass() != Object.class
+					// similar story here: it'll be tough for the average user to parse a full map/list
+					&& !(defaultValue instanceof CompoundConfigValue<?>)) {
+				return Optional.of(defaultValue.toString());
+			}
+		} catch (NoSuchMethodException ignored) {
+			// all classes contain the method toString, so this will never be thrown
+		}
+
+		return Optional.empty();
+	}
+
 	public static Optional<String> createEnumOptionsComment(Object defaultValue) {
 		if (defaultValue.getClass().isEnum()) {
 			StringBuilder options = new StringBuilder("options: ");
