@@ -43,11 +43,13 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 	private void createField(Config.SectionBuilder builder, Object object, Field field) throws IllegalAccessException {
 		if (!Modifier.isStatic(field.getModifiers()) && !Modifier.isTransient(field.getModifiers())) {
 			if (!Modifier.isFinal(field.getModifiers())) {
-				throw new ConfigFieldException("Field '" + field.getType().getName() + ':' + field.getName() + "' is not final");
+				throw new ConfigFieldException("Field '" + field.getType().getName() + ':' + field.getName() + "' is not final!");
 			}
+
 			if (!Modifier.isPublic(field.getModifiers())) {
 				field.setAccessible(true);
 			}
+
 			Object defaultValue = field.get(object);
 
 			if (defaultValue instanceof TrackedValueImpl) {
@@ -67,7 +69,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 
 						method.invoke(object, delegateBuilder);
 					} catch (NoSuchMethodException e) {
-						throw new ConfigCreationException("Processor method '" + processor.value() + "' not found.");
+						throw new ConfigCreationException("Processor method '" + processor.value() + "' not found for config field '" + this.creatorClass.getName() + "#" + field.getName() + "'.");
 					} catch (InvocationTargetException | IllegalAccessException e) {
 						throw new ConfigCreationException("Exception invoking processor method '" + processor.value() + "': " + e.getLocalizedMessage());
 					}
@@ -75,19 +77,19 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 
 				TrackedValueImpl delegate = (TrackedValueImpl<?>) delegateBuilder.build();
 				if (value.key() != null) {
-					throw new IllegalStateException("Unexpected key set in TrackedValue. Please report this!");
+					throw new IllegalStateException("Unexpected key set in TrackedValue. Please report this at https://github.com/QuiltMC/quilt-config/issues!");
 				}
 				value.setKey(delegate.key());
 				if (!value.metadata.isEmpty()) {
-					throw new IllegalStateException("Unexpected metadata value set in TrackedValue. Please report this!");
+					throw new IllegalStateException("Unexpected metadata value set in TrackedValue. Please report this at https://github.com/QuiltMC/quilt-config/issues!");
 				}
 				value.metadata = delegate.metadata;
 				if (!value.constraints.isEmpty()) {
-					throw new IllegalStateException("Unexpected constraints value set in TrackedValue. Please report this!");
+					throw new IllegalStateException("Unexpected constraints value set in TrackedValue. Please report this at https://github.com/QuiltMC/quilt-config/issues!");
 				}
 				value.constraints = delegate.constraints;
 				if (!value.callbacks.isEmpty()) {
-					throw new IllegalStateException("Unexpected callback value set in TrackedValue. Please report this!");
+					throw new IllegalStateException("Unexpected callback value set in TrackedValue. Please report this at https://github.com/QuiltMC/quilt-config/issues!");
 				}
 				value.callbacks = delegate.callbacks;
 
@@ -96,6 +98,20 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				builder.section(field.getName(), b -> {
 					for (Annotation annotation : field.getAnnotations()) {
 						ConfigFieldAnnotationProcessors.applyAnnotationProcessors(annotation, b);
+					}
+
+					if (field.isAnnotationPresent(Processor.class)) {
+						Processor processor = field.getAnnotation(Processor.class);
+
+						try {
+							Method method = field.getDeclaringClass().getMethod(processor.value(), Config.SectionBuilder.class);
+
+							method.invoke(object, b);
+						} catch (NoSuchMethodException e) {
+							throw new ConfigCreationException("Processor method '" + processor.value() + "' not found for config section '" + this.creatorClass.getName() + "#" + field.getName() + "'.");
+						} catch (InvocationTargetException | IllegalAccessException e) {
+							throw new ConfigCreationException("Exception invoking processor method '" + processor.value() + "': " + e.getLocalizedMessage());
+						}
 					}
 
 					for (Field f : defaultValue.getClass().getDeclaredFields()) {
@@ -119,7 +135,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 
 	public void create(Config.Builder builder) {
 		if (this.instance != null) {
-			throw new ConfigCreationException("Reflective config creator used more than once");
+			throw new ConfigCreationException("Reflective config creator used more than once!");
 		}
 
 		try {
@@ -137,7 +153,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 
 					method.invoke(this.instance, builder);
 				} catch (NoSuchMethodException e) {
-					throw new ConfigCreationException("Processor method '" + processor.value() + "' not found.");
+					throw new ConfigCreationException("Processor method '" + processor.value() + "' not found for config class '" + this.creatorClass.getName() + "'.");
 				} catch (InvocationTargetException | IllegalAccessException e) {
 					throw new ConfigCreationException("Exception invoking processor method '" + processor.value() + "': " + e.getLocalizedMessage());
 				}
@@ -152,7 +168,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 
 	public C getInstance() {
 		if (this.instance == null) {
-			throw new RuntimeException("Config not built yet");
+			throw new RuntimeException("Config not built yet!");
 		}
 
 		return this.instance;
