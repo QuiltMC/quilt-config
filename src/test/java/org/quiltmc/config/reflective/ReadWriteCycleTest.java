@@ -16,9 +16,7 @@
 
 package org.quiltmc.config.reflective;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.quiltmc.config.TestUtil;
 import org.quiltmc.config.api.Config;
@@ -30,20 +28,9 @@ import org.quiltmc.config.impl.util.ConfigsImpl;
 import org.quiltmc.config.implementor_api.ConfigFactory;
 import org.quiltmc.config.reflective.input.TestReflectiveConfig;
 
-import java.io.IOException;
 import java.util.Map;
 
-public class ReadWriteCycleTest {
-	@BeforeAll
-	public static void initializeConfigDir() throws IOException {
-		TestUtil.deleteTempDir();
-	}
-
-	@AfterAll
-	public static void deleteConfigDir() throws IOException {
-		TestUtil.deleteTempDir();
-	}
-
+public class ReadWriteCycleTest extends AbstractConfigTest {
 	@Test
 	void testTomlReadWriteCycle() {
 		TestReflectiveConfig config = ConfigFactory.create(TestUtil.TOML_ENV, "testmod", "tomlTestConfig", TestReflectiveConfig.class);

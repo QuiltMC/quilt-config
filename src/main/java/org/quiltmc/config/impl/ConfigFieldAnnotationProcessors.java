@@ -32,6 +32,8 @@ public final class ConfigFieldAnnotationProcessors {
 	static {
 		register(Comment.class, new CommentProcessor());
 		register(Comments.class, new Comments.Processor());
+		register(Alias.class, new AliasProcessor());
+		register(Aliases.class, new Aliases.Processor());
 		register(IntegerRange.class, new IntegerRangeProcessor());
 		register(FloatRange.class, new FloatRangeProcessor());
 		register(Matches.class, new MatchesProcessor());
@@ -59,6 +61,15 @@ public final class ConfigFieldAnnotationProcessors {
 		public void process(Comment comment, MetadataContainerBuilder<?> builder) {
 			for (String c : comment.value()) {
 				builder.metadata(Comment.TYPE, comments -> comments.add(c));
+			}
+		}
+	}
+
+	private static final class AliasProcessor implements ConfigFieldAnnotationProcessor<Alias> {
+		@Override
+		public void process(Alias alias, MetadataContainerBuilder<?> builder) {
+			for (String c : alias.value()) {
+				builder.metadata(Alias.TYPE, aliases -> aliases.add(c));
 			}
 		}
 	}
