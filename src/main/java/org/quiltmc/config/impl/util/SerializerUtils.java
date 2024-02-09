@@ -17,6 +17,7 @@
 package org.quiltmc.config.impl.util;
 
 import org.quiltmc.config.api.Config;
+import org.quiltmc.config.api.annotations.Alias;
 import org.quiltmc.config.api.annotations.SerializedName;
 import org.quiltmc.config.api.values.CompoundConfigValue;
 import org.quiltmc.config.api.values.ValueKey;
@@ -62,6 +63,35 @@ public class SerializerUtils {
 		} else {
 			return Optional.empty();
 		}
+	}
+
+	/**
+	 * Gets all possible keys that the value could be serialized under,
+	 * including those resulting from {@link SerializedName} and {@link Alias}.
+	 */
+	public static List<ValueKey> getPossibleKeys(Config config, ValueTreeNode value) {
+		List<ValueKey> possibleKeys = new ArrayList<>();
+
+		// add default key
+		possibleKeys.add(SerializerUtils.getSerializedKey(config, value));
+
+		// add aliases
+		if (value.hasMetadata(Alias.TYPE)) {
+			for (String alias : value.metadata(Alias.TYPE)) {
+				List<String> aliasKey = new ArrayList<>();
+				for (int i = 0; i < value.key().length(); i++) {
+					if (i != value.key().length() - 1) {
+						aliasKey.add(value.key().getKeyComponent(i));
+					} else {
+						aliasKey.add(alias);
+					}
+				}
+
+				possibleKeys.add(new ValueKeyImpl(aliasKey.toArray(new String[0])));
+			}
+		}
+
+		return possibleKeys;
 	}
 
 	/**

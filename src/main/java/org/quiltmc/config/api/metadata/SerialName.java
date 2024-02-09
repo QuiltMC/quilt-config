@@ -25,6 +25,8 @@ public class SerialName {
 	public SerialName(String name) {
 		if (name == null || name.isEmpty()) {
 			throw new InvalidParameterException("Cannot set serialized name to an empty value!");
+		} else if (name.contains(" ")) {
+			throw new InvalidParameterException("Cannot set serialized name to a value with spaces!");
 		}
 
 		this.name = name;

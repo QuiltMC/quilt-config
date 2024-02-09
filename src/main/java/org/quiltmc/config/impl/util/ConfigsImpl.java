@@ -41,8 +41,8 @@ public final class ConfigsImpl {
 	}
 
 	@TestOnly
-	public static void remove(Config config) {
-		CONFIGS.get(config.family()).remove(config.id());
+	public static void removeAll() {
+		CONFIGS.clear();
 	}
 
 	public static Iterable<Config> getAll() {

@@ -78,28 +78,13 @@ public final class TomlSerializer implements Serializer {
 		CommentedConfig read = this.parser.parse(from);
 
 		for (TrackedValue<?> trackedValue : config.values()) {
-			List<String> keyOptions = new ArrayList<>();
-			// add default key
-			keyOptions.add(SerializerUtils.getSerializedKey(config, trackedValue).toString());
-			// add aliases
-			if (trackedValue.hasMetadata(Alias.TYPE)) {
-				for (String alias : trackedValue.metadata(Alias.TYPE)) {
-					List<String> aliasKey = new ArrayList<>();
-					for (int i = 0; i < trackedValue.key().length(); i++) {
-						if (i != trackedValue.key().length() - 1) {
-							aliasKey.add(trackedValue.key().getKeyComponent(i));
-						} else {
-							aliasKey.add(alias);
-						}
-					}
+			List<ValueKey> keyOptions = SerializerUtils.getPossibleKeys(config, trackedValue);
 
-					keyOptions.add(new ValueKeyImpl(aliasKey.toArray(new String[0])).toString());
-				}
-			}
+			for (ValueKey key : keyOptions) {
+				String stringKey = key.toString();
 
-			for (String key : keyOptions) {
-				if (read.contains(key)) {
-					((TrackedValue) trackedValue).setValue(MarshallingUtils.coerce(read.get(key), trackedValue.getDefaultValue(), (CommentedConfig c, MarshallingUtils.MapEntryConsumer entryConsumer) ->
+				if (read.contains(stringKey)) {
+					((TrackedValue) trackedValue).setValue(MarshallingUtils.coerce(read.get(stringKey), trackedValue.getDefaultValue(), (CommentedConfig c, MarshallingUtils.MapEntryConsumer entryConsumer) ->
 						c.entrySet().forEach(e -> entryConsumer.put(e.getKey(), e.getValue()))), false);
 				}
 			}

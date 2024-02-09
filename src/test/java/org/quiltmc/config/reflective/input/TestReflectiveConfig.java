@@ -35,8 +35,10 @@ import org.quiltmc.config.api.values.ValueMap;
 @Processor("processConfig")
 public final class TestReflectiveConfig extends ReflectiveConfig {
 	@Comment({"Comment one", "Comment two"})
+	// do NOT use the word "george" in any other place here!
 	@SerializedName("george")
 	@Alias("willy")
+	@Alias("johnson")
 	public final TrackedValue<Integer> a = this.value(0);
 
 	@Comment("Comment one")

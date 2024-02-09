@@ -64,6 +64,7 @@ public interface TrackedValue<T> extends ValueTreeNode {
 	T setValue(@NotNull T newValue, boolean serialize);
 
 	/**
+	 * Sets the value and serializes it.
 	 * @param newValue the value to set
 	 * @return the old value that's been replaced
 	 */

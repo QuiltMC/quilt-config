@@ -61,7 +61,7 @@ public class ReadWriteCycleTest extends AbstractConfigTest {
 		config.whatever.setValue("slaying", true);
 
 		// remove config from internal map to avoid errors when creating the read config
-		ConfigsImpl.remove(config);
+		ConfigsImpl.removeAll();
 	}
 
 	/**
