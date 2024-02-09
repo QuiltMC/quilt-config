@@ -16,38 +16,12 @@
 
 package org.quiltmc.config.impl;
 
-import org.jetbrains.annotations.NotNull;
 import org.quiltmc.config.api.metadata.Comments;
-import org.quiltmc.config.impl.util.ImmutableIterable;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
-public final class CommentsImpl implements Comments {
-	private final List<String> comments;
-
-	public CommentsImpl(List<String> comments) {
-		this.comments = new ArrayList<>(comments);
-	}
-
-	@NotNull
-	@Override
-	public Iterator<String> iterator() {
-		return new ImmutableIterable<>(this.comments).iterator();
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		CommentsImpl strings = (CommentsImpl) o;
-		return Objects.equals(comments, strings.comments);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(comments);
+public final class CommentsImpl extends StringIterator implements Comments {
+	public CommentsImpl(List<String> strings) {
+		super(strings);
 	}
 }

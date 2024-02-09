@@ -33,7 +33,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Used to annotate fields of classes that represent config files with comments that can be saved to disk or displayed
+ * Represents a past alias of this field's name.
+ * A field's aliases will be considered during deserialization, but the field will be saved as its name or {@link SerializedName serial name} when being serialized.
+ * This is useful for migrating old configs to newer names.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
@@ -53,9 +55,7 @@ public @interface Alias {
 		}
 
 		public void add(String... aliases) {
-			for (String alias : aliases) {
-				this.aliases.addAll(Arrays.asList(alias.split("\n")));
-			}
+			this.aliases.addAll(Arrays.asList(aliases));
 		}
 
 		@Override
