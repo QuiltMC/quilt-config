@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 QuiltMC
+ * Copyright 2022-2024 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -239,13 +239,9 @@ public class ConfigTest {
 		});
 
 		Config.create(ENV, "testmod", "testConfig9", builder -> {
-			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> {
-				creator.constraint(Constraint.range(-10, 10));
-			}));
+			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> creator.constraint(Constraint.range(-10, 10))));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-			builder.field(TEST_STRING  = TrackedValue.create("test:id", "test", creator -> {
-				creator.constraint(Constraint.matching("[a-zA-Z0-9]+:[a-zA-Z0-9]+"));
-			}));
+			builder.field(TEST_STRING  = TrackedValue.create("test:id", "test", creator -> creator.constraint(Constraint.matching("[a-zA-Z0-9]+:[a-zA-Z0-9]+"))));
 		});
 	}
 
@@ -260,17 +256,11 @@ public class ConfigTest {
 			}
 		}
 
-		Assertions.assertThrows(ConfigFieldException.class, () -> {
-			Config.create(ENV, "testmod", "testConfig", TestWrappedConfig2.class);
-		}).printStackTrace();
+		Assertions.assertThrows(ConfigFieldException.class, () -> Config.create(ENV, "testmod", "testConfig", TestWrappedConfig2.class)).printStackTrace();
 
-		Assertions.assertThrows(ConfigFieldException.class, () -> {
-			Config.create(ENV, "testmod", "testConfig", TestValueConfig3.class);
-		}).printStackTrace();
+		Assertions.assertThrows(ConfigFieldException.class, () -> Config.create(ENV, "testmod", "testConfig", TestValueConfig3.class)).printStackTrace();
 
-		Assertions.assertThrows(TrackedValueException.class, () -> {
-			Config.create(ENV, "testmod", "testConfig", TestValueConfig4.class);
-		}).printStackTrace();
+		Assertions.assertThrows(TrackedValueException.class, () -> Config.create(ENV, "testmod", "testConfig", TestValueConfig4.class)).printStackTrace();
 	}
 
 	@Test
