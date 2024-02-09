@@ -20,6 +20,7 @@ import org.quiltmc.config.Vec3i;
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.ReflectiveConfig;
 import org.quiltmc.config.api.annotations.Comment;
+import org.quiltmc.config.api.annotations.ConfigIgnored;
 import org.quiltmc.config.api.annotations.IntegerRange;
 import org.quiltmc.config.api.annotations.Matches;
 import org.quiltmc.config.api.annotations.Processor;
@@ -31,11 +32,17 @@ import org.quiltmc.config.api.values.ValueMap;
 /**
  * A test config designed to use absolutely every single possible feature.
  */
+@SuppressWarnings("unused")
 @Processor("processConfig")
 public final class TestReflectiveConfig extends ReflectiveConfig {
 	@Comment({"Comment one", "Comment two"})
 	@SerializedName("george")
 	public final TrackedValue<Integer> a = this.value(0);
+
+	// this value would throw an exception for being non-final if it was considered by the config
+	// if tests pass, this annotation is working!
+	@ConfigIgnored
+	public Integer gaming = 4897;
 
 	@Comment("Comment one")
 	@Comment("Comment two")

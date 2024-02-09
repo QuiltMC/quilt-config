@@ -18,6 +18,7 @@ package org.quiltmc.config.impl.builders;
 
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.ReflectiveConfig;
+import org.quiltmc.config.api.annotations.ConfigIgnored;
 import org.quiltmc.config.api.annotations.Processor;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.impl.ConfigFieldAnnotationProcessors;
@@ -41,7 +42,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	private void createField(Config.SectionBuilder builder, Object object, Field field) throws IllegalAccessException {
-		if (!Modifier.isStatic(field.getModifiers()) && !Modifier.isTransient(field.getModifiers())) {
+		if (!Modifier.isStatic(field.getModifiers()) && !Modifier.isTransient(field.getModifiers()) && !field.isAnnotationPresent(ConfigIgnored.class)) {
 			if (!Modifier.isFinal(field.getModifiers())) {
 				throw new ConfigFieldException("Field '" + field.getType().getName() + ':' + field.getName() + "' is not final!");
 			}
