@@ -70,7 +70,7 @@ public class AliasTest extends AbstractConfigTest {
 		}
 
 		//set the key to alias #2, "johnson"
-		newContent = newContent.replace("george", "willy");
+		newContent = newContent.replace("george", "johnson");
 		Files.write(configPath, newContent.getBytes());
 
 		// recheck a
