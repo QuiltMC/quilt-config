@@ -41,9 +41,10 @@ public class WrappedConfigCreator<C> implements Config.Creator {
 
 	private void createField(Config.SectionBuilder builder, Object object, Field field) throws IllegalAccessException {
 		if (!Modifier.isStatic(field.getModifiers()) && !Modifier.isTransient(field.getModifiers())) {
-			if (!Modifier.isFinal(field.getModifiers())) {
-				throw new ConfigFieldException("Field '" + field.getType().getName() + ':' + field.getName() + "' is not final");
+			if (Modifier.isFinal(field.getModifiers())) {
+				System.out.println("(Quilt Config) Field '" + field.getType().getName() + ':' + field.getName() + "' is final! This may cause broken behaviour, and is not recommended. Either move to the new ReflectiveConfig API or remove the final modifier.");
 			}
+
 			if (!Modifier.isPublic(field.getModifiers())) {
 				field.setAccessible(true);
 			}
