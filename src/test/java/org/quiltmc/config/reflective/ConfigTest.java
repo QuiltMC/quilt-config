@@ -358,4 +358,11 @@ public class ConfigTest {
 			}
 		}
 	}
+
+	@Test
+	public void testReflectiveConfigAnnotatedMetadata() {
+		TestReflectiveConfig testReflectiveConfig = ConfigFactory.create(ENV, "wrapped", "testConfig16", TestReflectiveConfig.class);
+		Assertions.assertEquals(NamingSchemes.SNAKE_CASE, testReflectiveConfig.helloWorld.metadata(SerializedNameConvention.TYPE));
+		Assertions.assertEquals(NamingSchemes.LOWER_CAMEL_CASE, testReflectiveConfig.hello_world.metadata(SerializedNameConvention.TYPE));
+	}
 }
