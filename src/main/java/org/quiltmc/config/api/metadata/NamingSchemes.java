@@ -110,7 +110,7 @@ public enum NamingSchemes implements NamingScheme {
 		}
 	},
 	/**
-	 * Formats the string as space separated lower case. {@code "funnyStringAsAnExample"} becomes {@code "funny string as an example"}
+	 * Formats the string as {@code space separated lower case}. {@code "funnyStringAsAnExample"} becomes {@code "funny string as an example"}
 	 */
 	SPACE_SEPARATED_LOWER_CASE {
 		@Override
@@ -131,7 +131,7 @@ public enum NamingSchemes implements NamingScheme {
 		}
 	},
 	/**
-	 * Formats the string as space separated lower case with the first word being capitalized. {@code "funnyStringAsAnExample"} becomes {@code "Funny string as an example"}
+	 * Formats the string as {@code Space separated lower case} with the first word being capitalized. {@code "funnyStringAsAnExample"} becomes {@code "Funny string as an example"}
 	 */
 	SPACE_SEPARATED_LOWER_CASE_INITIAL_UPPER_CASE {
 		@Override

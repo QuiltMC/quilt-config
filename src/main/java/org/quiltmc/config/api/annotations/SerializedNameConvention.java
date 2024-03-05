@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
 import java.util.Optional;
 
 /**
- * Used to tell the serializer how properties should be formatted when saving to disk. Can be applied to configs, sections and properties. {@link SerializedName} should always take priority.
+ * Used to tell the serializer how properties should be formatted when saving to disk. Can be applied to configs, sections and properties. {@link SerializedName} must always take priority.
  * @see SerializedName
  */
 @Retention(RetentionPolicy.RUNTIME)
