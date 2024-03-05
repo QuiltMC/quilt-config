@@ -38,7 +38,7 @@ public enum NamingSchemes implements NamingScheme {
 			final StringBuilder builder = new StringBuilder();
 			for (String word : NamingSchemes.extractWords(input)) {
 				if (!word.isEmpty()) {
-					builder.append(Character.toUpperCase(word.codePointAt(0)));
+					builder.appendCodePoint(Character.toUpperCase(word.codePointAt(0)));
 					builder.append(word.substring(1));
 				}
 			}
@@ -59,7 +59,7 @@ public enum NamingSchemes implements NamingScheme {
 						builder.append(word);
 						first = false;
 					} else {
-						builder.append(Character.toUpperCase(word.codePointAt(0)));
+						builder.appendCodePoint(Character.toUpperCase(word.codePointAt(0)));
 						builder.append(word.substring(1));
 					}
 				}
@@ -141,7 +141,7 @@ public enum NamingSchemes implements NamingScheme {
 			for (String word : NamingSchemes.extractWords(input)) {
 				if (!word.isEmpty()) {
 					if (first) {
-						builder.append(Character.toUpperCase(word.codePointAt(0)));
+						builder.appendCodePoint(Character.toUpperCase(word.codePointAt(0)));
 						builder.append(word.substring(1));
 						first = false;
 					} else {
@@ -169,7 +169,7 @@ public enum NamingSchemes implements NamingScheme {
 					} else {
 						builder.append(" ");
 					}
-					builder.append(Character.toUpperCase(word.codePointAt(0)));
+					builder.appendCodePoint(Character.toUpperCase(word.codePointAt(0)));
 					builder.append(word.substring(1));
 				}
 			}
