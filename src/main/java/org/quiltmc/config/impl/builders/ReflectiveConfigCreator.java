@@ -19,15 +19,11 @@ package org.quiltmc.config.impl.builders;
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.ReflectiveConfig;
 import org.quiltmc.config.api.annotations.Processor;
-import org.quiltmc.config.api.annotations.SerializedNameConvention;
-import org.quiltmc.config.api.metadata.NamingScheme;
-import org.quiltmc.config.api.metadata.NamingSchemes;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.impl.ConfigFieldAnnotationProcessors;
 import org.quiltmc.config.api.exceptions.ConfigCreationException;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.impl.tree.TrackedValueImpl;
-import org.quiltmc.config.impl.util.NamingSchemeHelper;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -37,18 +33,14 @@ import java.lang.reflect.Modifier;
 
 public class ReflectiveConfigCreator<C> implements Config.Creator {
 	private final Class<C> creatorClass;
-	private final NamingSchemeHelper namingSchemeHelper;
-	private final NamingScheme defaultSerializedNamingScheme;
 	private C instance;
 
 	public ReflectiveConfigCreator(Class<C> creatorClass) {
 		this.creatorClass = creatorClass;
-		this.namingSchemeHelper = new NamingSchemeHelper(creatorClass.getClassLoader());
-		this.defaultSerializedNamingScheme = namingSchemeHelper.getNamingScheme(NamingSchemes.PASSTHROUGH, creatorClass, ConfigCreationException::new);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	private void createField(Config.SectionBuilder builder, Object object, Field field, NamingScheme defaultSerializedNamingScheme) throws IllegalAccessException {
+	private void createField(Config.SectionBuilder builder, Object object, Field field) throws IllegalAccessException {
 		if (!Modifier.isStatic(field.getModifiers()) && !Modifier.isTransient(field.getModifiers())) {
 			if (!Modifier.isFinal(field.getModifiers())) {
 				throw new ConfigFieldException("Field '" + field.getType().getName() + ':' + field.getName() + "' is not final!");
@@ -64,9 +56,6 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				TrackedValueImpl<?> value = (TrackedValueImpl<?>) defaultValue;
 
 				TrackedValueBuilderImpl<?> delegateBuilder = new TrackedValueBuilderImpl<>(value.getDefaultValue(), field.getName());
-
-				NamingScheme fieldNamingScheme = namingSchemeHelper.getNamingScheme(defaultSerializedNamingScheme, field, ConfigFieldException::new);
-				delegateBuilder.metadata(SerializedNameConvention.TYPE, b -> b.set(fieldNamingScheme));
 
 				for (Annotation annotation : field.getAnnotations()) {
 					ConfigFieldAnnotationProcessors.applyAnnotationProcessors(annotation, delegateBuilder);
@@ -106,11 +95,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 
 				builder.field(value);
 			} else if (defaultValue instanceof ReflectiveConfig.Section) {
-				NamingScheme sectionDefaultFieldNamingScheme = namingSchemeHelper.getNamingScheme(defaultSerializedNamingScheme, defaultValue.getClass(), ConfigFieldException::new);
-				NamingScheme sectionFieldNamingScheme = namingSchemeHelper.getNamingScheme(sectionDefaultFieldNamingScheme, field, ConfigFieldException::new);
 				builder.section(field.getName(), b -> {
-					b.metadata(SerializedNameConvention.TYPE, mb -> mb.set(sectionFieldNamingScheme));
-
 					for (Annotation annotation : field.getAnnotations()) {
 						ConfigFieldAnnotationProcessors.applyAnnotationProcessors(annotation, b);
 					}
@@ -132,7 +117,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 					for (Field f : defaultValue.getClass().getDeclaredFields()) {
 						if (!f.isSynthetic()) {
 							try {
-								this.createField(b, defaultValue, f, sectionFieldNamingScheme);
+								this.createField(b, defaultValue, f);
 							} catch (IllegalAccessException e) {
 								throw new RuntimeException(e);
 							}
@@ -156,10 +141,8 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 		try {
 			this.instance = this.creatorClass.getDeclaredConstructor().newInstance();
 
-			builder.metadata(SerializedNameConvention.TYPE, b -> b.set(this.defaultSerializedNamingScheme));
-
 			for (Field field : this.creatorClass.getDeclaredFields()) {
-				this.createField(builder, this.instance, field, this.defaultSerializedNamingScheme);
+				this.createField(builder, this.instance, field);
 			}
 
 			if (this.creatorClass.isAnnotationPresent(Processor.class)) {

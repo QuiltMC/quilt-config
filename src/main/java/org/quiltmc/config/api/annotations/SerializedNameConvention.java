@@ -37,7 +37,7 @@ public @interface SerializedNameConvention {
 	/**
 	 * A {@link MetadataType} to supply to {@link Config.Builder#metadata}
 	 */
-	MetadataType<NamingScheme, SerializedNameConvention.Builder> TYPE = MetadataType.create(Optional::empty, SerializedNameConvention.Builder::new);
+	MetadataType<NamingScheme, SerializedNameConvention.Builder> TYPE = MetadataType.create(Optional::empty, SerializedNameConvention.Builder::new, true);
 
 	/**
 	 * One of the included {@link NamingSchemes}. The naming schemes must not generate spaces. {@link SerializedNameConvention#custom()} takes priority when not empty

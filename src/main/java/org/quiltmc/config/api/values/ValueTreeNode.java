@@ -18,6 +18,9 @@ package org.quiltmc.config.api.values;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.config.api.metadata.MetadataContainer;
+import org.quiltmc.config.api.metadata.MetadataType;
+
+import java.util.Map;
 
 /**
  * An element in a config's value tree.
@@ -29,6 +32,11 @@ public interface ValueTreeNode extends MetadataContainer {
 	 * @return this value's key
 	 */
 	ValueKey key();
+
+	/**
+	 * Applies the inherited metadata to itself, and propagates its inherited metadata to its children.
+	 */
+	void propagateInheritedMetadata(Map<MetadataType<?, ?>, Object> inheritedMetadata);
 
 	/**
 	 * A node that contains any number of child nodes.
