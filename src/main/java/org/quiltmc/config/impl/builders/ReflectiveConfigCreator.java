@@ -141,6 +141,10 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 		try {
 			this.instance = this.creatorClass.getDeclaredConstructor().newInstance();
 
+			for (Annotation annotation : this.creatorClass.getAnnotations()) {
+				ConfigFieldAnnotationProcessors.applyAnnotationProcessors(annotation, builder);
+			}
+
 			for (Field field : this.creatorClass.getDeclaredFields()) {
 				this.createField(builder, this.instance, field);
 			}
