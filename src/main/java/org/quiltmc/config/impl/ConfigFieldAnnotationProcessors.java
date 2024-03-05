@@ -22,6 +22,7 @@ import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.api.metadata.MetadataContainerBuilder;
 import org.quiltmc.config.api.values.CompoundConfigValue;
 import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.config.impl.util.NamingSchemeHelper;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -36,6 +37,7 @@ public final class ConfigFieldAnnotationProcessors {
 		register(FloatRange.class, new FloatRangeProcessor());
 		register(Matches.class, new MatchesProcessor());
 		register(SerializedName.class, new SerialNameProcessor());
+		register(SerializedNameConvention.class, new SerializedNameConventionProcessor());
 	}
 
 	public static <T extends Annotation> void register(Class<T> annotationClass, ConfigFieldAnnotationProcessor<T> processor) {
@@ -67,6 +69,16 @@ public final class ConfigFieldAnnotationProcessors {
 		@Override
 		public void process(SerializedName name, MetadataContainerBuilder<?> builder) {
 			builder.metadata(SerializedName.TYPE, nameBuilder -> nameBuilder.withName(name.value()));
+		}
+	}
+
+	private static final class SerializedNameConventionProcessor implements ConfigFieldAnnotationProcessor<SerializedNameConvention> {
+		private final NamingSchemeHelper namingSchemeHelper = new NamingSchemeHelper();
+
+		@Override
+		public void process(SerializedNameConvention annotation, MetadataContainerBuilder<?> builder) {
+			builder.metadata(SerializedNameConvention.TYPE, nameConventionBuilder -> nameConventionBuilder.set(
+				namingSchemeHelper.getNamingScheme(annotation, ConfigFieldException::new)));
 		}
 	}
 
