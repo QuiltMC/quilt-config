@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 QuiltMC
+ * Copyright 2024 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config.old_wrapped.input;
+package org.quiltmc.config.api.metadata;
 
-import org.quiltmc.config.api.WrappedConfig;
-import org.quiltmc.config.api.values.ValueList;
-
-public class TestValueListConfig extends WrappedConfig {
-	public final String test = "watermark";
-	public final int thingy = 1009;
-	public final ValueList<String> strings = ValueList.create("");
+/**
+ * A naming scheme to indicate how a string should be formatted.
+ * <p>
+ * Common formats are exposed in {@link NamingSchemes}.
+ * </p>
+ * @see org.quiltmc.config.api.annotations.SerializedNameConvention
+ */
+@FunctionalInterface
+public interface NamingScheme {
+	String coerce(String input);
 }

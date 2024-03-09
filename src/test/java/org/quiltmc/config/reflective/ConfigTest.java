@@ -26,11 +26,13 @@ import org.quiltmc.config.api.ConfigEnvironment;
 import org.quiltmc.config.api.Constraint;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.annotations.SerializedName;
+import org.quiltmc.config.api.annotations.SerializedNameConvention;
 import org.quiltmc.config.api.exceptions.ConfigCreationException;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.api.exceptions.TrackedValueException;
 import org.quiltmc.config.api.metadata.Comments;
 import org.quiltmc.config.api.metadata.MetadataType;
+import org.quiltmc.config.api.metadata.NamingSchemes;
 import org.quiltmc.config.api.serializers.Json5Serializer;
 import org.quiltmc.config.api.serializers.TomlSerializer;
 import org.quiltmc.config.api.values.TrackedValue;
@@ -315,5 +317,52 @@ public class ConfigTest {
 				System.out.printf("%s: %s%n", value.key(), comment);
 			}
 		}
+	}
+
+	@Test
+	public void testInheritedMetadata() {
+		final TrackedValue[] testSectionTestA = new TrackedValue[1];
+		final TrackedValue[] testSection2TestA = new TrackedValue[1];
+		final TrackedValue[] testSection3TestA = new TrackedValue[1];
+		final TrackedValue[] testSection3TestB = new TrackedValue[1];
+		Config config = Config.create(ENV, "wrapped", "testConfig15", builder -> {
+			builder.metadata(SerializedNameConvention.TYPE, builder1 -> builder1.set(NamingSchemes.KEBAB_CASE));
+			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", c -> c.metadata(SerializedNameConvention.TYPE, b -> b.set(NamingSchemes.KEBAB_CASE))));
+			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
+			builder.metadata(SerializedNameConvention.TYPE, builder1 -> builder1.set(NamingSchemes.SNAKE_CASE));
+			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
+			builder.section("testSection", b -> {
+				b.field(testSectionTestA[0] = TrackedValue.create(0, "testA"));
+				b.metadata(SerializedNameConvention.TYPE, builder1 -> builder1.set(NamingSchemes.LOWER_CAMEL_CASE));
+				b.section("testSection2", b2 -> b2.field(testSection2TestA[0] = TrackedValue.create(0, "testA")));
+				b.section("testSection3", b2 -> {
+					b2.field(testSection3TestA[0] = TrackedValue.create(0, "testA"));
+					b2.metadata(SerializedNameConvention.TYPE, b3 -> b3.set(NamingSchemes.UPPER_CAMEL_CASE));
+					b2.field(testSection3TestB[0] = TrackedValue.create(0, "testB", b4 -> b4.metadata(SerializedNameConvention.TYPE, b5 -> b5.set(NamingSchemes.PASSTHROUGH))));
+				});
+			});
+		});
+		Assertions.assertEquals(NamingSchemes.KEBAB_CASE, TEST_INTEGER.metadata(SerializedNameConvention.TYPE));
+		Assertions.assertEquals(NamingSchemes.SNAKE_CASE, TEST_BOOLEAN.metadata(SerializedNameConvention.TYPE));
+		Assertions.assertEquals(NamingSchemes.SNAKE_CASE, TEST_STRING.metadata(SerializedNameConvention.TYPE));
+		Assertions.assertEquals(NamingSchemes.LOWER_CAMEL_CASE, testSectionTestA[0].metadata(SerializedNameConvention.TYPE));
+		Assertions.assertEquals(NamingSchemes.LOWER_CAMEL_CASE, testSection2TestA[0].metadata(SerializedNameConvention.TYPE));
+		Assertions.assertEquals(NamingSchemes.UPPER_CAMEL_CASE, testSection3TestA[0].metadata(SerializedNameConvention.TYPE));
+		Assertions.assertEquals(NamingSchemes.PASSTHROUGH, testSection3TestB[0].metadata(SerializedNameConvention.TYPE));
+
+		for (TrackedValue<?> value : config.values()) {
+			System.out.printf("\"%s\": %s%n", value.key(), value.value());
+
+			for (String comment : value.metadata(Comment.TYPE)) {
+				System.out.printf("\t// %s%n", comment);
+			}
+		}
+	}
+
+	@Test
+	public void testReflectiveConfigAnnotatedMetadata() {
+		TestReflectiveConfig testReflectiveConfig = ConfigFactory.create(ENV, "wrapped", "testConfig16", TestReflectiveConfig.class);
+		Assertions.assertEquals(NamingSchemes.SNAKE_CASE, testReflectiveConfig.helloWorld.metadata(SerializedNameConvention.TYPE));
+		Assertions.assertEquals(NamingSchemes.LOWER_CAMEL_CASE, testReflectiveConfig.hello_world.metadata(SerializedNameConvention.TYPE));
 	}
 }

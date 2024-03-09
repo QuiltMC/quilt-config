@@ -33,11 +33,13 @@ public final class MetadataType<T, B extends MetadataType.Builder<T>> {
 	private final Supplier<Optional<T>> defaultValueSupplier;
 	private final Function<Type, Optional<T>> trackedValueDefaultValueSupplier;
 	private final Supplier<B> builderSupplier;
+	private final boolean inherited;
 
-	private MetadataType(Supplier<Optional<T>> defaultValueSupplier, Function<Type, Optional<T>> trackedValueDefaultValueSupplier, Supplier<B> builderSupplier) {
+	private MetadataType(Supplier<Optional<T>> defaultValueSupplier, Function<Type, Optional<T>> trackedValueDefaultValueSupplier, Supplier<B> builderSupplier, boolean inherited) {
 		this.defaultValueSupplier = defaultValueSupplier;
 		this.trackedValueDefaultValueSupplier = trackedValueDefaultValueSupplier;
 		this.builderSupplier = builderSupplier;
+		this.inherited = inherited;
 	}
 
 	/**
@@ -61,6 +63,10 @@ public final class MetadataType<T, B extends MetadataType.Builder<T>> {
 		return this.builderSupplier.get();
 	}
 
+	public boolean isInherited() {
+		return inherited;
+	}
+
 	/**
 	 * Creates a new {@link MetadataType} with the given parameters.
 	 *
@@ -76,7 +82,7 @@ public final class MetadataType<T, B extends MetadataType.Builder<T>> {
 	 * @return a new {@link MetadataType}
 	 */
 	public static <T, B extends Builder<T>> MetadataType<T, B> create(Supplier<Optional<T>> defaultSupplier, Function<Type, Optional<T>> trackedValueDefaultFunction, Supplier<B> builderSupplier) {
-		return new MetadataType<>(defaultSupplier, trackedValueDefaultFunction, builderSupplier);
+		return new MetadataType<>(defaultSupplier, trackedValueDefaultFunction, builderSupplier, false);
 	}
 
 	/**
@@ -85,7 +91,7 @@ public final class MetadataType<T, B extends MetadataType.Builder<T>> {
 	 * @return a new {@link MetadataType}
 	 */
 	public static <T, B extends Builder<T>> MetadataType<T, B> create(Supplier<Optional<T>> defaultSupplier, Supplier<B> builderSupplier) {
-		return new MetadataType<>(defaultSupplier, t -> defaultSupplier.get(), builderSupplier);
+		return create(defaultSupplier, builderSupplier, false);
 	}
 
 	/**
@@ -93,7 +99,44 @@ public final class MetadataType<T, B extends MetadataType.Builder<T>> {
 	 * @return a new {@link MetadataType}
 	 */
 	public static <T, B extends Builder<T>> MetadataType<T, B> create(Supplier<B> builderSupplier) {
-		return create(Optional::empty, builderSupplier);
+		return create(builderSupplier, false);
+	}
+	/**
+	 * Creates a new {@link MetadataType} with the given parameters.
+	 *
+	 * The {@link Type} passed to trackedValueDefaultFunction will always be one of the following:
+	 * <ul>
+	 *     <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
+	 *     <li>{@link ValueList} or {@link ValueMap}</li>
+	 * </ul>
+	 *
+	 * @param defaultSupplier should provide the default value for the metadata for non-values
+	 * @param trackedValueDefaultFunction can infer the default metadata based on the type of a {@link TrackedValue}
+	 * @param builderSupplier supplies a new instance of the {@link MetadataType}'s builder class
+	 * @param inherited true if the metadata should be inherited to containers when using the builder or reflective config
+	 * @return a new {@link MetadataType}
+	 */
+	public static <T, B extends Builder<T>> MetadataType<T, B> create(Supplier<Optional<T>> defaultSupplier, Function<Type, Optional<T>> trackedValueDefaultFunction, Supplier<B> builderSupplier, boolean inherited) {
+		return new MetadataType<>(defaultSupplier, trackedValueDefaultFunction, builderSupplier, inherited);
+	}
+
+	/**
+	 * @param defaultSupplier should provide the default value for the metadata for non-values
+	 * @param builderSupplier supplies a new instance of the {@link MetadataType}'s builder class
+	 * @param inherited true if the metadata should be inherited when using the builder or reflective config
+	 * @return a new {@link MetadataType}
+	 */
+	public static <T, B extends Builder<T>> MetadataType<T, B> create(Supplier<Optional<T>> defaultSupplier, Supplier<B> builderSupplier, boolean inherited) {
+		return new MetadataType<>(defaultSupplier, t -> defaultSupplier.get(), builderSupplier, inherited);
+	}
+
+	/**
+	 * @param builderSupplier supplies a new instance of the {@link MetadataType}'s builder class
+	 * @param inherited true if the metadata should be inherited when using the builder or reflective config
+	 * @return a new {@link MetadataType}
+	 */
+	public static <T, B extends Builder<T>> MetadataType<T, B> create(Supplier<B> builderSupplier, boolean inherited) {
+		return create(Optional::empty, builderSupplier, inherited);
 	}
 
 	public interface Builder<T> {

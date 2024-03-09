@@ -33,6 +33,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,6 +53,15 @@ public final class ConfigImpl extends AbstractMetadataContainer implements Confi
 		this.path = path;
 		this.callbacks = callbacks;
 		this.values = values;
+		Map<MetadataType<?, ?>, Object> inheritedMetadata = new LinkedHashMap<>();
+		for (Map.Entry<MetadataType<?, ?>, Object> entry: metadata.entrySet()) {
+			if (entry.getKey().isInherited()) {
+				inheritedMetadata.put(entry.getKey(), entry.getValue());
+			}
+		}
+		for (ValueTreeNode node : this.values.nodes()) {
+			node.propagateInheritedMetadata(inheritedMetadata);
+		}
 		this.defaultFileType = defaultFileType;
 	}
 
