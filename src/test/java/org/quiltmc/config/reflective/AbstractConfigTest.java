@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 QuiltMC
+ * Copyright 2024 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,25 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config.impl;
+package org.quiltmc.config.reflective;
 
-import org.quiltmc.config.api.metadata.Comments;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.quiltmc.config.TestUtil;
+import org.quiltmc.config.impl.util.ConfigsImpl;
 
-import java.util.List;
+import java.io.IOException;
 
-public final class CommentsImpl extends StringIterator implements Comments {
-	public CommentsImpl(List<String> strings) {
-		super(strings);
+public abstract class AbstractConfigTest {
+	@BeforeAll
+	public static void initialize() throws IOException {
+		TestUtil.deleteTempDir();
+		ConfigsImpl.removeAll();
+	}
+
+	@AfterAll
+	public static void cleanUp() throws IOException {
+		TestUtil.deleteTempDir();
+		ConfigsImpl.removeAll();
 	}
 }

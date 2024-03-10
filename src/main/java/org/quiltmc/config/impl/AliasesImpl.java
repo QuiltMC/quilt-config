@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 QuiltMC
+ * Copyright 2024 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,19 @@
 
 package org.quiltmc.config.impl;
 
-import org.quiltmc.config.api.metadata.Comments;
+import org.quiltmc.config.api.metadata.Aliases;
 
+import java.security.InvalidParameterException;
 import java.util.List;
 
-public final class CommentsImpl extends StringIterator implements Comments {
-	public CommentsImpl(List<String> strings) {
-		super(strings);
+public final class AliasesImpl extends StringIterator implements Aliases {
+	public AliasesImpl(List<String> aliases) {
+		super(aliases);
+
+		for (String alias : aliases) {
+			if (alias.contains(" ")) {
+				throw new InvalidParameterException("Cannot create an alias that contains a space!");
+			}
+		}
 	}
 }

@@ -16,9 +16,7 @@
 
 package org.quiltmc.config.reflective;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.quiltmc.config.TestUtil;
 import org.quiltmc.config.implementor_api.ConfigFactory;
@@ -27,17 +25,7 @@ import org.quiltmc.config.reflective.input.TestEscapingConfig;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public class TestSerializerEscaping {
-	@BeforeAll
-	public static void initializeConfigDir() throws IOException {
-		TestUtil.deleteTempDir();
-	}
-
-	@AfterAll
-	public static void deleteConfigDir() throws IOException {
-		TestUtil.deleteTempDir();
-	}
-
+public class TestSerializerEscaping extends AbstractConfigTest {
 	@Test
 	void testTomlReadWriteCycle() throws IOException {
 		TestEscapingConfig config = ConfigFactory.create(TestUtil.TOML_ENV, "testmod", "tomlEscapingTestConfig", TestEscapingConfig.class);

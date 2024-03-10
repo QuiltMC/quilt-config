@@ -27,6 +27,7 @@ import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.Constraint;
 import org.quiltmc.config.api.MarshallingUtils;
 import org.quiltmc.config.api.Serializer;
+import org.quiltmc.config.api.annotations.Alias;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.values.ConfigSerializableObject;
 import org.quiltmc.config.api.values.TrackedValue;
@@ -35,6 +36,7 @@ import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.util.SerializerUtils;
+import org.quiltmc.config.impl.values.ValueKeyImpl;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -76,11 +78,15 @@ public final class TomlSerializer implements Serializer {
 		CommentedConfig read = this.parser.parse(from);
 
 		for (TrackedValue<?> trackedValue : config.values()) {
-			String key = SerializerUtils.getSerializedKey(config, trackedValue).toString();
+			List<ValueKey> keyOptions = SerializerUtils.getPossibleKeys(config, trackedValue);
 
-			if (read.contains(key)) {
-				((TrackedValue) trackedValue).setValue(MarshallingUtils.coerce(read.get(key), trackedValue.getDefaultValue(), (CommentedConfig c, MarshallingUtils.MapEntryConsumer entryConsumer) ->
-					c.entrySet().forEach(e -> entryConsumer.put(e.getKey(), e.getValue()))), false);
+			for (ValueKey key : keyOptions) {
+				String stringKey = key.toString();
+
+				if (read.contains(stringKey)) {
+					((TrackedValue) trackedValue).setValue(MarshallingUtils.coerce(read.get(stringKey), trackedValue.getDefaultValue(), (CommentedConfig c, MarshallingUtils.MapEntryConsumer entryConsumer) ->
+						c.entrySet().forEach(e -> entryConsumer.put(e.getKey(), e.getValue()))), false);
+				}
 			}
 		}
 	}

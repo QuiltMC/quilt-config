@@ -22,7 +22,12 @@ import org.quiltmc.config.api.MarshallingUtils;
 import org.quiltmc.config.api.Serializer;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.exceptions.ConfigParseException;
-import org.quiltmc.config.api.values.*;
+import org.quiltmc.config.api.values.ConfigSerializableObject;
+import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.config.api.values.ValueKey;
+import org.quiltmc.config.api.values.ValueList;
+import org.quiltmc.config.api.values.ValueMap;
+import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.tree.TrackedValueImpl;
 import org.quiltmc.config.impl.util.SerializerUtils;
 import org.quiltmc.parsers.json.JsonReader;
@@ -163,14 +168,17 @@ public final class Json5Serializer implements Serializer {
 
 			for (TrackedValue<?> value : config.values()) {
 				Map<String, Object> m = values;
-				ValueKey key = SerializerUtils.getSerializedKey(config, value);
-				for (int i = 0; i < key.length(); i++) {
-					String name = key.getKeyComponent(i);
-					if (m.containsKey(name) && i != key.length() - 1) {
-						m = (Map<String, Object>) m.get(name);
-					} else if (m.containsKey(name)) {
-						((TrackedValueImpl) value).setValue(MarshallingUtils.coerce(m.get(name), value.getDefaultValue(), (Map<String, ?> map, MarshallingUtils.MapEntryConsumer entryConsumer) ->
-							map.forEach(entryConsumer::put)), false);
+				List<ValueKey> keyOptions = SerializerUtils.getPossibleKeys(config, value);
+
+				for (ValueKey key : keyOptions) {
+					for (int i = 0; i < key.length(); i++) {
+						String name = key.getKeyComponent(i);
+						if (m.containsKey(name) && i != key.length() - 1) {
+							m = (Map<String, Object>) m.get(name);
+						} else if (m.containsKey(name)) {
+							((TrackedValueImpl) value).setValue(MarshallingUtils.coerce(m.get(name), value.getDefaultValue(), (Map<String, ?> map, MarshallingUtils.MapEntryConsumer entryConsumer) ->
+								map.forEach(entryConsumer::put)), false);
+						}
 					}
 				}
 			}

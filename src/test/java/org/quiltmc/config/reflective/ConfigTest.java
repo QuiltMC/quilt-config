@@ -16,9 +16,7 @@
 
 package org.quiltmc.config.reflective;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.quiltmc.config.TestUtil;
 import org.quiltmc.config.api.Config;
@@ -47,32 +45,19 @@ import org.quiltmc.config.reflective.input.TestValueMapConfig;
 import org.quiltmc.config.reflective.input.TestReflectiveConfig;
 import org.quiltmc.config.reflective.input.TestReflectiveConfig2;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 
 @SuppressWarnings("deprecation")
-public class ConfigTest {
-	static ConfigEnvironment ENV;
+public class ConfigTest extends AbstractConfigTest {
+	static ConfigEnvironment ENV = new ConfigEnvironment(TestUtil.TEMP_DIR, TomlSerializer.INSTANCE, Json5Serializer.INSTANCE);
 
 	static TrackedValue<String> TEST;
 	static TrackedValue<Integer> TEST_INTEGER;
 	static TrackedValue<Boolean> TEST_BOOLEAN;
 	static TrackedValue<String> TEST_STRING;
 	static TrackedValue<ValueList<Integer>> TEST_LIST;
-
-	@BeforeAll
-	public static void initializeConfigDir() throws IOException {
-		TestUtil.deleteTempDir();
-
-		ENV = new ConfigEnvironment(TestUtil.TEMP_DIR, TomlSerializer.INSTANCE, Json5Serializer.INSTANCE);
-	}
-
-	@AfterAll
-	public static void deleteConfigDir() throws IOException {
-		TestUtil.deleteTempDir();
-	}
 
 	@Test
 	public void testSerializer() {

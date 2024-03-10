@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2024 QuiltMC
+ * Copyright 2024 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config.impl;
+package org.quiltmc.config.api.metadata;
 
-import org.quiltmc.config.api.metadata.Comments;
-
-import java.util.List;
-
-public final class CommentsImpl extends StringIterator implements Comments {
-	public CommentsImpl(List<String> strings) {
-		super(strings);
-	}
+public interface Aliases extends Iterable<String> {
 }

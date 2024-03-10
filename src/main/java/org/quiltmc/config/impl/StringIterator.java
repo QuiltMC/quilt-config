@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 QuiltMC
+ * Copyright 2024 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,38 +14,39 @@
  * limitations under the License.
  */
 
-package org.quiltmc.config.api.metadata;
+package org.quiltmc.config.impl;
 
-import java.security.InvalidParameterException;
+import org.jetbrains.annotations.NotNull;
+import org.quiltmc.config.impl.util.ImmutableIterable;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
-public class SerialName {
-	private final String name;
+public class StringIterator implements Iterable<String> {
+	private final List<String> strings;
 
-	public SerialName(String name) {
-		if (name == null || name.isEmpty()) {
-			throw new InvalidParameterException("Cannot set serialized name to an empty value!");
-		} else if (name.contains(" ")) {
-			throw new InvalidParameterException("Cannot set serialized name to a value with spaces!");
-		}
-
-		this.name = name;
+	public StringIterator(List<String> strings) {
+		this.strings = new ArrayList<>(strings);
 	}
 
-	public String getName() {
-		return name;
+	@NotNull
+	@Override
+	public Iterator<String> iterator() {
+		return new ImmutableIterable<>(this.strings).iterator();
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		SerialName that = (SerialName) o;
-		return Objects.equals(name, that.name);
+		StringIterator iterator = (StringIterator) o;
+		return Objects.equals(this.strings, iterator.strings);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name);
+		return Objects.hash(strings);
 	}
 }

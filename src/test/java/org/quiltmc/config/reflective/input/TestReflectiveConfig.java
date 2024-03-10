@@ -19,6 +19,7 @@ package org.quiltmc.config.reflective.input;
 import org.quiltmc.config.Vec3i;
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.ReflectiveConfig;
+import org.quiltmc.config.api.annotations.Alias;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.annotations.IntegerRange;
 import org.quiltmc.config.api.annotations.Matches;
@@ -37,7 +38,10 @@ import org.quiltmc.config.api.values.ValueMap;
 @SerializedNameConvention(NamingSchemes.LOWER_CAMEL_CASE)
 public final class TestReflectiveConfig extends ReflectiveConfig {
 	@Comment({"Comment one", "Comment two"})
+	// do NOT use the word "george" in any other place here!
 	@SerializedName("george")
+	@Alias("willy")
+	@Alias("johnson")
 	public final TrackedValue<Integer> a = this.value(0);
 
 	@Comment("Comment one")
@@ -48,6 +52,7 @@ public final class TestReflectiveConfig extends ReflectiveConfig {
 	@IntegerRange(min=0, max=10)
 	public final TrackedValue<Integer> d = this.value(3);
 	@SerializedName("custom_serialized_name_vec")
+	@Alias("boring_name_vec")
 	public final TrackedValue<Vec3i> vec = this.value(new Vec3i(100, 200, 300));
 
 	@Matches("[a-zA-Z]+")
