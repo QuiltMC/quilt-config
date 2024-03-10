@@ -23,6 +23,7 @@ import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.AbstractMetadataContainer;
 
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class SectionTreeNode extends AbstractMetadataContainer implements ValueTreeNode.Section {
@@ -36,6 +37,22 @@ public final class SectionTreeNode extends AbstractMetadataContainer implements 
 	@Override
 	public ValueKey key() {
 		return this.node.getKey();
+	}
+
+	@Override
+	public void propagateInheritedMetadata(Map<MetadataType<?, ?>, Object> inheritedMetadata) {
+		for (Map.Entry<MetadataType<?,?>, Object> entry: inheritedMetadata.entrySet()) {
+			this.metadata.putIfAbsent(entry.getKey(), entry.getValue());
+		}
+		Map<MetadataType<?, ?>, Object> inheritorMetadata = new LinkedHashMap<>();
+		for (Map.Entry<MetadataType<?, ?>, Object> entry: metadata.entrySet()) {
+			if (entry.getKey().isInherited()) {
+				inheritorMetadata.put(entry.getKey(), entry.getValue());
+			}
+		}
+		for (ValueTreeNode node : this) {
+			node.propagateInheritedMetadata(inheritorMetadata);
+		}
 	}
 
 	@NotNull

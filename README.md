@@ -7,6 +7,8 @@ management of config files.
 
 ## Usage
 
+### Importing via Gradle
+
 Quilt Config can be imported from the [Quilt maven](https://maven.quiltmc.org/repository/release/) using the following code in your `build.gradle`:
 
 ```groovy
@@ -25,3 +27,7 @@ dependencies {
     implementation("org.quiltmc.quilt-config.serializers:<serializer>:<version>")
 }
 ```
+
+### Documentation
+
+Quilt Config has extensive javadoc, as well as tutorials on the [Quilt Wiki](https://wiki.quiltmc.org/en). We recommend going to the [Getting Started tutorial](https://wiki.quiltmc.org/en/configuration/getting-started) to begin using out Quilt Config.

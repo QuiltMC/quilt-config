@@ -83,6 +83,13 @@ public final class TrackedValueImpl<T> extends AbstractMetadataContainer impleme
 	}
 
 	@Override
+	public void propagateInheritedMetadata(Map<MetadataType<?, ?>, Object> inheritedMetadata) {
+		for (Map.Entry<MetadataType<?,?>, Object> entry: inheritedMetadata.entrySet()) {
+			this.metadata.putIfAbsent(entry.getKey(), entry.getValue());
+		}
+	}
+
+	@Override
 	public T value() {
 		return this.isBeingOverridden ? this.valueOverride : this.value;
 	}

@@ -25,6 +25,8 @@ import org.quiltmc.config.api.annotations.IntegerRange;
 import org.quiltmc.config.api.annotations.Matches;
 import org.quiltmc.config.api.annotations.Processor;
 import org.quiltmc.config.api.annotations.SerializedName;
+import org.quiltmc.config.api.annotations.SerializedNameConvention;
+import org.quiltmc.config.api.metadata.NamingSchemes;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
@@ -33,6 +35,7 @@ import org.quiltmc.config.api.values.ValueMap;
  * A test config designed to use absolutely every single possible feature.
  */
 @Processor("processConfig")
+@SerializedNameConvention(NamingSchemes.LOWER_CAMEL_CASE)
 public final class TestReflectiveConfig extends ReflectiveConfig {
 	@Comment({"Comment one", "Comment two"})
 	// do NOT use the word "george" in any other place here!
@@ -75,6 +78,13 @@ public final class TestReflectiveConfig extends ReflectiveConfig {
 	@Comment("Test section comment 4")
 	public final Nested nested4 = new Nested();
 
+	@SerializedNameConvention(NamingSchemes.SNAKE_CASE)
+	public final Nested nameConventionTest1 = new Nested();
+	public final Nested nameConventionTest2 = new Nested();
+	public final TrackedValue<Integer> hello_world = this.value(4);
+	@SerializedNameConvention(NamingSchemes.SNAKE_CASE)
+	public final TrackedValue<Integer> helloWorld = this.value(5);
+
 	public final TrackedValue<ValueMap<ValueList<String>>> key_binds = this.map(ValueList.create("")).build();
 
 	@IntegerRange(min=0, max=10)
@@ -98,11 +108,14 @@ public final class TestReflectiveConfig extends ReflectiveConfig {
 		System.out.println("Processing section!");
 	}
 
+	@SerializedNameConvention(NamingSchemes.UPPER_CAMEL_CASE)
 	public static final class Nested extends Section {
 		@SerializedName("custom_serialized_name_a")
 		public final TrackedValue<Integer> a = this.value(0);
 		public final TrackedValue<Integer> b = this.value(1);
+		@SerializedNameConvention(NamingSchemes.LOWER_CAMEL_CASE)
 		public final TrackedValue<Integer> c = this.value(2);
 		public final TrackedValue<Integer> d = this.value(3);
+		public final TrackedValue<Integer> hello_world = this.value(4);
 	}
 }
