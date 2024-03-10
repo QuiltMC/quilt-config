@@ -49,7 +49,7 @@ public final class TestReflectiveConfig extends ReflectiveConfig {
 	public final TrackedValue<Integer> b = this.value(1);
 	public final TrackedValue<Integer> c = this.value(2);
 
-	@IntegerRange(min=0, max=10)
+	@IntegerRange(min = 0, max = 10)
 	public final TrackedValue<Integer> d = this.value(3);
 	@SerializedName("custom_serialized_name_vec")
 	@Alias("boring_name_vec")
@@ -87,7 +87,7 @@ public final class TestReflectiveConfig extends ReflectiveConfig {
 
 	public final TrackedValue<ValueMap<ValueList<String>>> key_binds = this.map(ValueList.create("")).build();
 
-	@IntegerRange(min=0, max=10)
+	@IntegerRange(min = 0, max = 10)
 	public final TrackedValue<ValueList<Integer>> ints = this.list(0, 1, 2, 3, 4);
 
 	public final TrackedValue<ValueList<ValueMap<Integer>>> listOfNestedObjects = this.list(ValueMap.builder(0).build(),

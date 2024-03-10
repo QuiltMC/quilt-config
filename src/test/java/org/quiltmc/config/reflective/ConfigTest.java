@@ -80,7 +80,6 @@ public class ConfigTest extends AbstractConfigTest {
 						section3.field(TrackedValue.create(0, "fire", creator -> {
 							creator.metadata(Comment.TYPE, comments -> comments.add("This is a field comment!"));
 							creator.metadata(Comment.TYPE, comments -> comments.add("This is another field comment!"));
-
 						}));
 						section3.field(TrackedValue.create(0, "air"));
 					});
@@ -119,7 +118,7 @@ public class ConfigTest extends AbstractConfigTest {
 		Config config = Config.create(ENV, "wrapped", "testConfig3", builder -> {
 			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger"));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
+			builder.field(TEST_STRING = TrackedValue.create("blah", "testString"));
 			builder.field(TEST_LIST = TrackedValue.create(
 					ValueList.create(0, 1, 2, 3, 4), "testList"
 			));
@@ -159,7 +158,7 @@ public class ConfigTest extends AbstractConfigTest {
 					"Comment three"
 			))));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
+			builder.field(TEST_STRING = TrackedValue.create("blah", "testString"));
 		});
 
 		for (TrackedValue<?> value : config.values()) {
@@ -176,7 +175,7 @@ public class ConfigTest extends AbstractConfigTest {
 		Config config = Config.create(ENV, "wrapped", "testConfig5", builder -> {
 			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger"));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
+			builder.field(TEST_STRING = TrackedValue.create("blah", "testString"));
 		});
 
 		for (TrackedValue<?> value : config.values()) {
@@ -196,14 +195,14 @@ public class ConfigTest extends AbstractConfigTest {
 				creator.constraint(Constraint.range(5, 10));
 			}));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
+			builder.field(TEST_STRING = TrackedValue.create("blah", "testString"));
 		}));
 
 		Assertions.assertThrows(TrackedValueException.class, () -> {
 			Config.create(ENV, "wrapped", "testConfig7", builder -> {
 				builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> creator.constraint(Constraint.range(-10, 10))));
 				builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-				builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
+				builder.field(TEST_STRING = TrackedValue.create("blah", "testString"));
 			});
 
 			TEST_INTEGER.setValue(1000, true);
@@ -213,7 +212,7 @@ public class ConfigTest extends AbstractConfigTest {
 			Config.create(ENV, "wrapped", "testConfig8", builder -> {
 				builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> creator.constraint(Constraint.range(-10, 10))));
 				builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-				builder.field(TEST_STRING  = TrackedValue.create("blah", "test", creator -> creator.constraint(Constraint.matching("[a-zA-Z0-9]+:[a-zA-Z0-9]+"))));
+				builder.field(TEST_STRING = TrackedValue.create("blah", "test", creator -> creator.constraint(Constraint.matching("[a-zA-Z0-9]+:[a-zA-Z0-9]+"))));
 			});
 
 			TEST_INTEGER.setValue(1000, true);
@@ -222,11 +221,11 @@ public class ConfigTest extends AbstractConfigTest {
 		Config.create(ENV, "wrapped", "testConfig9", builder -> {
 			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> creator.constraint(Constraint.range(-10, 10))));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-			builder.field(TEST_STRING  = TrackedValue.create("test:id", "test", creator -> creator.constraint(Constraint.matching("[a-zA-Z0-9]+:[a-zA-Z0-9]+"))));
+			builder.field(TEST_STRING = TrackedValue.create("test:id", "test", creator -> creator.constraint(Constraint.matching("[a-zA-Z0-9]+:[a-zA-Z0-9]+"))));
 		});
 	}
 
-	public void testWrappedConfigs(String id, String format) {
+	public void testReflectiveConfigs(String id, String format) {
 		TestReflectiveConfig config = ConfigFactory.create(ENV, "wrapped", id, TestReflectiveConfig.class, builder -> builder.format(format));
 
 		for (TrackedValue<?> value : config.values()) {
@@ -245,9 +244,9 @@ public class ConfigTest extends AbstractConfigTest {
 	}
 
 	@Test
-	public void testWrappedConfigs() {
-		testWrappedConfigs("testConfig10", "toml");
-		testWrappedConfigs("testConfig11", "json5");
+	public void testReflectiveConfigs() {
+		this.testReflectiveConfigs("testConfig10", "toml");
+		this.testReflectiveConfigs("testConfig11", "json5");
 	}
 
 	@Test
@@ -294,7 +293,7 @@ public class ConfigTest extends AbstractConfigTest {
 					"Comment three"
 			))));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
+			builder.field(TEST_STRING = TrackedValue.create("blah", "testString"));
 		});
 
 		for (TrackedValue<?> value : config.values()) {
@@ -315,7 +314,7 @@ public class ConfigTest extends AbstractConfigTest {
 			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", c -> c.metadata(SerializedNameConvention.TYPE, b -> b.set(NamingSchemes.KEBAB_CASE))));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
 			builder.metadata(SerializedNameConvention.TYPE, builder1 -> builder1.set(NamingSchemes.SNAKE_CASE));
-			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
+			builder.field(TEST_STRING = TrackedValue.create("blah", "testString"));
 			builder.section("testSection", b -> {
 				b.field(testSectionTestA[0] = TrackedValue.create(0, "testA"));
 				b.metadata(SerializedNameConvention.TYPE, builder1 -> builder1.set(NamingSchemes.LOWER_CAMEL_CASE));

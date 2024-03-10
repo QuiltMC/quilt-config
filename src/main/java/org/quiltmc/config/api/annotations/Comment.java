@@ -49,7 +49,7 @@ public @interface Comment {
 	final class Builder implements MetadataType.Builder<Comments> {
 		private final List<String> comments = new ArrayList<>(0);
 
-		Builder() {
+		public Builder() {
 		}
 
 		public void add(String... comments) {

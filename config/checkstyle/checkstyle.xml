@@ -134,7 +134,6 @@
 		<module name="StringLiteralEquality"/>
 
 		<module name="ModifierOrder"/>
-		<module name="RedundantModifier"/>
 
 		<module name="AnnotationLocation"/>
 		<module name="MissingOverride"/>

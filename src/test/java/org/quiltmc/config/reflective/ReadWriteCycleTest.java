@@ -34,19 +34,19 @@ public class ReadWriteCycleTest extends AbstractConfigTest {
 	@Test
 	void testTomlReadWriteCycle() {
 		TestReflectiveConfig config = ConfigFactory.create(TestUtil.TOML_ENV, "testmod", "tomlTestConfig", TestReflectiveConfig.class);
-		setUpConfig(config);
+		this.setUpConfig(config);
 
 		TestReflectiveConfig readConfig = ConfigFactory.create(TestUtil.TOML_ENV, "testmod", "tomlTestConfig", TestReflectiveConfig.class);
-		matchConfigs(config, readConfig);
+		this.matchConfigs(config, readConfig);
 	}
 
 	@Test
 	void testJson5ReadWriteCycle() {
 		TestReflectiveConfig config = ConfigFactory.create(TestUtil.JSON5_ENV, "testmod", "json5TestConfig", TestReflectiveConfig.class);
-		setUpConfig(config);
+		this.setUpConfig(config);
 
 		TestReflectiveConfig readConfig = ConfigFactory.create(TestUtil.JSON5_ENV, "testmod", "json5TestConfig", TestReflectiveConfig.class);
-		matchConfigs(config, readConfig);
+		this.matchConfigs(config, readConfig);
 	}
 
 	/**
@@ -81,7 +81,7 @@ public class ReadWriteCycleTest extends AbstractConfigTest {
 				}
 			}
 
-			if (aNode instanceof TrackedValue<?>)  {
+			if (aNode instanceof TrackedValue<?>) {
 				TrackedValue<?> aValue = a.getValue(aNode.key());
 				TrackedValue<?> bValue = b.getValue(aNode.key());
 

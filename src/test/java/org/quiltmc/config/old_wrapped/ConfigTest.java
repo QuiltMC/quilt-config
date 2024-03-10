@@ -81,7 +81,6 @@ public class ConfigTest {
 						section3.field(TrackedValue.create(0, "fire", creator -> {
 							creator.metadata(Comment.TYPE, comments -> comments.add("This is a field comment!"));
 							creator.metadata(Comment.TYPE, comments -> comments.add("This is another field comment!"));
-
 						}));
 						section3.field(TrackedValue.create(0, "air"));
 					});
@@ -128,7 +127,7 @@ public class ConfigTest {
 		Config config = Config.create(ENV, "testmod", "testConfig3", builder -> {
 			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger"));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
+			builder.field(TEST_STRING = TrackedValue.create("blah", "testString"));
 			builder.field(TEST_LIST = TrackedValue.create(
 					ValueList.create(0, 1, 2, 3, 4), "testList"
 			));
@@ -172,7 +171,7 @@ public class ConfigTest {
 				));
 			}));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
+			builder.field(TEST_STRING = TrackedValue.create("blah", "testString"));
 		});
 
 		for (TrackedValue<?> value : config.values()) {
@@ -189,7 +188,7 @@ public class ConfigTest {
 		Config config = Config.create(ENV, "testmod", "testConfig5", builder -> {
 			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger"));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
+			builder.field(TEST_STRING = TrackedValue.create("blah", "testString"));
 		});
 
 		for (TrackedValue<?> value : config.values()) {
@@ -209,7 +208,7 @@ public class ConfigTest {
 				creator.constraint(Constraint.range(5, 10));
 			}));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
+			builder.field(TEST_STRING = TrackedValue.create("blah", "testString"));
 		}));
 
 		Assertions.assertThrows(TrackedValueException.class, () -> {
@@ -218,7 +217,7 @@ public class ConfigTest {
 					creator.constraint(Constraint.range(-10, 10));
 				}));
 				builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-				builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
+				builder.field(TEST_STRING = TrackedValue.create("blah", "testString"));
 			});
 
 			TEST_INTEGER.setValue(1000, true);
@@ -230,7 +229,7 @@ public class ConfigTest {
 					creator.constraint(Constraint.range(-10, 10));
 				}));
 				builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-				builder.field(TEST_STRING  = TrackedValue.create("blah", "test", creator -> {
+				builder.field(TEST_STRING = TrackedValue.create("blah", "test", creator -> {
 					creator.constraint(Constraint.matching("[a-zA-Z0-9]+:[a-zA-Z0-9]+"));
 				}));
 			});
@@ -241,7 +240,7 @@ public class ConfigTest {
 		Config.create(ENV, "testmod", "testConfig9", builder -> {
 			builder.field(TEST_INTEGER = TrackedValue.create(0, "testInteger", creator -> creator.constraint(Constraint.range(-10, 10))));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-			builder.field(TEST_STRING  = TrackedValue.create("test:id", "test", creator -> creator.constraint(Constraint.matching("[a-zA-Z0-9]+:[a-zA-Z0-9]+"))));
+			builder.field(TEST_STRING = TrackedValue.create("test:id", "test", creator -> creator.constraint(Constraint.matching("[a-zA-Z0-9]+:[a-zA-Z0-9]+"))));
 		});
 	}
 
@@ -265,8 +264,8 @@ public class ConfigTest {
 
 	@Test
 	public void testWrappedConfigs() {
-		testWrappedConfigs("testConfig10", "toml");
-		testWrappedConfigs("testConfig11", "json5");
+		this.testWrappedConfigs("testConfig10", "toml");
+		this.testWrappedConfigs("testConfig11", "json5");
 	}
 
 	@Test
@@ -317,7 +316,7 @@ public class ConfigTest {
 				));
 			}));
 			builder.field(TEST_BOOLEAN = TrackedValue.create(false, "testBoolean"));
-			builder.field(TEST_STRING  = TrackedValue.create("blah", "testString"));
+			builder.field(TEST_STRING = TrackedValue.create("blah", "testString"));
 		});
 
 		for (TrackedValue<?> value : config.values()) {

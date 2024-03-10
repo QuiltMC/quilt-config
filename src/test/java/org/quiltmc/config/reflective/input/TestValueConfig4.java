@@ -35,7 +35,7 @@ public final class TestValueConfig4 extends ReflectiveConfig {
 	public final TrackedValue<Integer> b = this.value(1);
 	public final TrackedValue<Integer> c = this.value(2);
 
-	@IntegerRange(min=0, max=10)
+	@IntegerRange(min = 0, max = 10)
 	public final TrackedValue<Integer> d = this.value(3);
 	public final TrackedValue<Vec3i> vec = this.value(new Vec3i(100, 200, 300));
 
@@ -55,7 +55,7 @@ public final class TestValueConfig4 extends ReflectiveConfig {
 	@Comment("Test section comment 4")
 	public final Nested nested4 = new Nested();
 
-	@IntegerRange(min=0, max=10)
+	@IntegerRange(min = 0, max = 10)
 	public final TrackedValue<ValueList<Integer>> ints = this.list(0, 1, 2, 3, 4);
 
 	public final TrackedValue<ValueList<ValueMap<Integer>>> listOfNestedObjects = this.list(ValueMap.builder(0).build(),

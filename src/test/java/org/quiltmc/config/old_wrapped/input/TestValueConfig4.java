@@ -33,7 +33,7 @@ public final class TestValueConfig4 extends WrappedConfig {
 	public final int b = 1;
 	public final int c = 2;
 
-	@IntegerRange(min=0, max=10)
+	@IntegerRange(min = 0, max = 10)
 	public final int d = 3;
 	public final Vec3i vec = new Vec3i(100, 200, 300);
 
@@ -53,7 +53,7 @@ public final class TestValueConfig4 extends WrappedConfig {
 	@Comment("Test section comment 4")
 	public final Nested nested4 = new Nested(30, 31, 32, 33);
 
-	@IntegerRange(min=0, max=10)
+	@IntegerRange(min = 0, max = 10)
 	public final ValueList<Integer> ints = ValueList.create(0, 1, 2, 3, 4);
 
 	public final ValueList<ValueMap<Integer>> listOfNestedObjects = ValueList.create(ValueMap.builder(0).build(),

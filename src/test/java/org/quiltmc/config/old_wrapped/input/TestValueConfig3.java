@@ -28,7 +28,7 @@ public final class TestValueConfig3 extends WrappedConfig {
 	public final int a = 0;
 	public final int b = 1;
 	public final int c = 2;
-	@FloatRange(min=0, max=10)
+	@FloatRange(min = 0, max = 10)
 	public final int d = 3;
 	public final Vec3i vec = new Vec3i(100, 200, 300);
 	public final String whatever = "Riesling";

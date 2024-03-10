@@ -30,7 +30,7 @@ public final class TestValueConfig3 extends ReflectiveConfig {
 	public final TrackedValue<Integer> a = this.value(0);
 	public final TrackedValue<Integer> b = this.value(1);
 	public final TrackedValue<Integer> c = this.value(2);
-	@FloatRange(min=0, max=10)
+	@FloatRange(min = 0, max = 10)
 	public final TrackedValue<Integer> d = this.value(3);
 	public final TrackedValue<Vec3i> vec = this.value(new Vec3i(100, 200, 300));
 	public final TrackedValue<String> whatever = this.value("Riesling");
