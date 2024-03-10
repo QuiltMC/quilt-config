@@ -79,18 +79,22 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				if (value.key() != null) {
 					throw new IllegalStateException("Unexpected key set in TrackedValue. Please report this at https://github.com/QuiltMC/quilt-config/issues!");
 				}
+
 				value.setKey(delegate.key());
 				if (!value.metadata.isEmpty()) {
 					throw new IllegalStateException("Unexpected metadata value set in TrackedValue. Please report this at https://github.com/QuiltMC/quilt-config/issues!");
 				}
+
 				value.metadata = delegate.metadata;
 				if (!value.constraints.isEmpty()) {
 					throw new IllegalStateException("Unexpected constraints value set in TrackedValue. Please report this at https://github.com/QuiltMC/quilt-config/issues!");
 				}
+
 				value.constraints = delegate.constraints;
 				if (!value.callbacks.isEmpty()) {
 					throw new IllegalStateException("Unexpected callback value set in TrackedValue. Please report this at https://github.com/QuiltMC/quilt-config/issues!");
 				}
+
 				value.callbacks = delegate.callbacks;
 
 				builder.field(value);
@@ -127,8 +131,8 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 			} else if (defaultValue == null) {
 				throw new ConfigFieldException("Default value for field '" + field.getName() + "' cannot be null");
 			} else {
-				throw new ConfigFieldException("Class '" + defaultValue.getClass().getName() + "' of field '" + field.getName() + "' " +
-						"of config class '" + field.getDeclaringClass().getName() + "'is not a valid config value: it must be a TrackedValue or implement org.quiltmc.loader.api.Config.Section");
+				throw new ConfigFieldException("Class '" + defaultValue.getClass().getName() + "' of field '" + field.getName() + "' "
+						+ "of config class '" + field.getDeclaringClass().getName() + "'is not a valid config value: it must be a TrackedValue or implement org.quiltmc.loader.api.Config.Section");
 			}
 		}
 	}
@@ -161,7 +165,8 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 				} catch (InvocationTargetException | IllegalAccessException e) {
 					throw new ConfigCreationException("Exception invoking processor method '" + processor.value() + "': " + e.getLocalizedMessage());
 				}
-			}		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+			}
+		} catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
 			throw new ConfigCreationException(e);
 		}
 	}

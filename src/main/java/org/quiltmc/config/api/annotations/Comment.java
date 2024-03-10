@@ -21,8 +21,16 @@ import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.impl.CommentsImpl;
 
-import java.lang.annotation.*;
-import java.util.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Used to annotate fields of classes that represent config files with comments that can be saved to disk or displayed
@@ -41,7 +49,7 @@ public @interface Comment {
 	final class Builder implements MetadataType.Builder<Comments> {
 		private final List<String> comments = new ArrayList<>(0);
 
-		public Builder() {
+		Builder() {
 		}
 
 		public void add(String... comments) {

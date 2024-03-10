@@ -105,7 +105,7 @@ public abstract class ReflectiveConfig implements Config {
 
 	@SafeVarargs
 	public final <T> TrackedValue<ValueList<T>> list(T defaultValue, T... values) {
-		return value(ValueList.create(defaultValue, values));
+		return this.value(ValueList.create(defaultValue, values));
 	}
 
 	public final <T> ValueMap.TrackedBuilder<T> map(T defaultValue) {
@@ -121,7 +121,7 @@ public abstract class ReflectiveConfig implements Config {
 
 		@SafeVarargs
 		public final <T> TrackedValue<ValueList<T>> list(T defaultValue, T... values) {
-			return value(ValueList.create(defaultValue, values));
+			return this.value(ValueList.create(defaultValue, values));
 		}
 
 		public final <T> ValueMap.TrackedBuilder<T> map(T defaultValue) {

@@ -41,15 +41,17 @@ public final class SectionTreeNode extends AbstractMetadataContainer implements 
 
 	@Override
 	public void propagateInheritedMetadata(Map<MetadataType<?, ?>, Object> inheritedMetadata) {
-		for (Map.Entry<MetadataType<?,?>, Object> entry: inheritedMetadata.entrySet()) {
+		for (Map.Entry<MetadataType<?, ?>, Object> entry: inheritedMetadata.entrySet()) {
 			this.metadata.putIfAbsent(entry.getKey(), entry.getValue());
 		}
+
 		Map<MetadataType<?, ?>, Object> inheritorMetadata = new LinkedHashMap<>();
-		for (Map.Entry<MetadataType<?, ?>, Object> entry: metadata.entrySet()) {
+		for (Map.Entry<MetadataType<?, ?>, Object> entry: this.metadata.entrySet()) {
 			if (entry.getKey().isInherited()) {
 				inheritorMetadata.put(entry.getKey(), entry.getValue());
 			}
 		}
+
 		for (ValueTreeNode node : this) {
 			node.propagateInheritedMetadata(inheritorMetadata);
 		}
@@ -63,12 +65,12 @@ public final class SectionTreeNode extends AbstractMetadataContainer implements 
 
 			@Override
 			public boolean hasNext() {
-				return itr.hasNext();
+				return this.itr.hasNext();
 			}
 
 			@Override
 			public ValueTreeNode next() {
-				return itr.next().getValue();
+				return this.itr.next().getValue();
 			}
 		};
 	}

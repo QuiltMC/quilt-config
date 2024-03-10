@@ -17,7 +17,11 @@
 package org.quiltmc.config.api.metadata;
 
 import org.quiltmc.config.api.Config;
-import org.quiltmc.config.api.values.*;
+import org.quiltmc.config.api.values.ConfigSerializableObject;
+import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.config.api.values.ValueList;
+import org.quiltmc.config.api.values.ValueMap;
+import org.quiltmc.config.api.values.ValueTreeNode;
 
 import java.lang.reflect.Type;
 import java.util.Optional;
@@ -64,13 +68,13 @@ public final class MetadataType<T, B extends MetadataType.Builder<T>> {
 	}
 
 	public boolean isInherited() {
-		return inherited;
+		return this.inherited;
 	}
 
 	/**
 	 * Creates a new {@link MetadataType} with the given parameters.
 	 *
-	 * The {@link Type} passed to trackedValueDefaultFunction will always be one of the following:
+	 * <p>The {@link Type} passed to trackedValueDefaultFunction will always be one of the following:
 	 * <ul>
 	 *     <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 	 *     <li>{@link ValueList} or {@link ValueMap}</li>
@@ -101,10 +105,11 @@ public final class MetadataType<T, B extends MetadataType.Builder<T>> {
 	public static <T, B extends Builder<T>> MetadataType<T, B> create(Supplier<B> builderSupplier) {
 		return create(builderSupplier, false);
 	}
+
 	/**
 	 * Creates a new {@link MetadataType} with the given parameters.
 	 *
-	 * The {@link Type} passed to trackedValueDefaultFunction will always be one of the following:
+	 * <p>The {@link Type} passed to trackedValueDefaultFunction will always be one of the following:
 	 * <ul>
 	 *     <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 	 *     <li>{@link ValueList} or {@link ValueMap}</li>

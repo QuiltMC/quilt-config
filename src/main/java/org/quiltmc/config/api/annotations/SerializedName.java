@@ -20,8 +20,11 @@ import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.metadata.SerialName;
 
-import java.lang.annotation.*;
-import java.util.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.Optional;
 
 /**
  * Used to tell the serializer what name should be used for this field when saving to disk
@@ -39,7 +42,7 @@ public @interface SerializedName {
 	final class Builder implements MetadataType.Builder<SerialName> {
 		private String name;
 
-		public Builder() {
+		Builder() {
 		}
 
 		public void withName(String name) {

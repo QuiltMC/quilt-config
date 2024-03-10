@@ -17,7 +17,10 @@
 package org.quiltmc.config.impl;
 
 import org.jetbrains.annotations.NotNull;
-import org.quiltmc.config.api.*;
+import org.quiltmc.config.api.Config;
+import org.quiltmc.config.api.InternalsHelper;
+import org.quiltmc.config.api.ReflectiveConfig;
+import org.quiltmc.config.api.WrappedConfig;
 import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueTreeNode;
@@ -59,9 +62,11 @@ public final class ConfigImpl extends AbstractMetadataContainer implements Confi
 				inheritedMetadata.put(entry.getKey(), entry.getValue());
 			}
 		}
+
 		for (ValueTreeNode node : this.values.nodes()) {
 			node.propagateInheritedMetadata(inheritedMetadata);
 		}
+
 		this.defaultFileType = defaultFileType;
 	}
 
@@ -131,7 +136,7 @@ public final class ConfigImpl extends AbstractMetadataContainer implements Confi
 							this.next = this.itr.next();
 						}
 
-						return next != null;
+						return this.next != null;
 					}
 
 					@Override

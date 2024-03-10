@@ -24,7 +24,6 @@ import org.quiltmc.config.api.values.ValueTreeNode;
 import java.nio.file.Path;
 import java.util.Map;
 
-
 /**
  * @deprecated for removal: use {@link ReflectiveConfig} instead.
  */

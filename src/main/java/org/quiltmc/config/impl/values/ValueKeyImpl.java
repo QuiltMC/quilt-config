@@ -172,7 +172,7 @@ public final class ValueKeyImpl implements ValueKey {
 
 		@Override
 		public String next() {
-			return ValueKeyImpl.this.keys[i++];
+			return ValueKeyImpl.this.keys[this.i++];
 		}
 	}
 }

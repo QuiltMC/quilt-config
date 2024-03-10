@@ -69,7 +69,7 @@ public interface Constraint<T> {
 
 			@Override
 			public Optional<String> test(String value) {
-				if (pattern.matcher(value).matches()) {
+				if (this.pattern.matcher(value).matches()) {
 					return Optional.empty();
 				} else {
 					return Optional.of(String.format("Value '%s' does not match pattern '%s'", value, regex));

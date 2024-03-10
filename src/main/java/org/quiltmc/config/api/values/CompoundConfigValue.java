@@ -21,10 +21,10 @@ import org.jetbrains.annotations.ApiStatus;
 /**
  * A collection of any number of basic or complex types that can be grown on demand.
  *
- * Will be either a {@link ValueList} or {@link ValueMap}
+ * <p>Will be either a {@link ValueList} or {@link ValueMap}
  *
- * Basic types: {@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, or String
- * Complex types: a {@link ValueList} or {@link ValueMap} of basic or complex types
+ * <p>Basic types: {@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, or String
+ * <br>Complex types: a {@link ValueList} or {@link ValueMap} of basic or complex types
  */
 @ApiStatus.NonExtendable
 public interface CompoundConfigValue<T> extends ComplexConfigValue {

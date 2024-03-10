@@ -47,6 +47,6 @@ public class StringIterator implements Iterable<String> {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(strings);
+		return Objects.hash(this.strings);
 	}
 }

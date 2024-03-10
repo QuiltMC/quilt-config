@@ -51,7 +51,7 @@ public @interface Alias {
 	final class Builder implements MetadataType.Builder<Aliases> {
 		private final List<String> aliases = new ArrayList<>(0);
 
-		public Builder() {
+		Builder() {
 		}
 
 		public void add(String... aliases) {

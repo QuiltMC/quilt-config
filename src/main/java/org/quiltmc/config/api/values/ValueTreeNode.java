@@ -43,6 +43,5 @@ public interface ValueTreeNode extends MetadataContainer {
 	 */
 	@ApiStatus.NonExtendable
 	interface Section extends ValueTreeNode, Iterable<ValueTreeNode> {
-
 	}
 }

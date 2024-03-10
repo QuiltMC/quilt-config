@@ -44,9 +44,7 @@ public class ValueMapBuilderImpl<T> implements ValueMap.Builder<T> {
 		return new ValueMapImpl<>(this.defaultValue, this.values);
 	}
 
-
 	public static class TrackedValueMapBuilderImpl<T> implements ValueMap.TrackedBuilder<T> {
-
 		private final T defaultValue;
 		private final Map<String, T> values = new LinkedHashMap<>();
 		private final Function<ValueMap<T>, TrackedValue<ValueMap<T>>> trackedValueFactory;
@@ -64,8 +62,7 @@ public class ValueMapBuilderImpl<T> implements ValueMap.Builder<T> {
 
 		@Override
 		public TrackedValue<ValueMap<T>> build() {
-			return trackedValueFactory.apply(new ValueMapImpl<>(this.defaultValue, this.values));
+			return this.trackedValueFactory.apply(new ValueMapImpl<>(this.defaultValue, this.values));
 		}
-
 	}
 }

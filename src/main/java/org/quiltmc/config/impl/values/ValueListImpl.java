@@ -23,7 +23,14 @@ import org.quiltmc.config.api.values.CompoundConfigValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.impl.tree.TrackedValueImpl;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Spliterator;
 import java.util.function.UnaryOperator;
 
 public final class ValueListImpl<T> implements ValueList<T>, CompoundConfigValue<T> {
@@ -86,38 +93,38 @@ public final class ValueListImpl<T> implements ValueList<T>, CompoundConfigValue
 
 	@Override
 	public int size() {
-		return values.size();
+		return this.values.size();
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return values.isEmpty();
+		return this.values.isEmpty();
 	}
 
 	@Override
 	public boolean contains(Object o) {
-		return values.contains(o);
+		return this.values.contains(o);
 	}
 
 	@NotNull
 	@Override
 	public Iterator<T> iterator() {
-		return values.iterator();
+		return this.values.iterator();
 	}
 
 	@Override
 	public Object @NotNull [] toArray() {
-		return values.toArray();
+		return this.values.toArray();
 	}
 
 	@Override
 	public <T1> T1 @NotNull [] toArray(@NotNull T1 @NotNull [] a) {
-		return values.toArray(a);
+		return this.values.toArray(a);
 	}
 
 	@Override
 	public boolean add(T t) {
-		values.add(t);
+		this.values.add(t);
 
 		this.configValue.serializeAndInvokeCallbacks();
 
@@ -126,7 +133,7 @@ public final class ValueListImpl<T> implements ValueList<T>, CompoundConfigValue
 
 	@Override
 	public boolean remove(Object o) {
-		boolean r = values.remove(o);
+		boolean r = this.values.remove(o);
 
 		if (r) {
 			this.configValue.serializeAndInvokeCallbacks();
@@ -137,12 +144,12 @@ public final class ValueListImpl<T> implements ValueList<T>, CompoundConfigValue
 
 	@Override
 	public boolean containsAll(@NotNull Collection<?> c) {
-		return new HashSet<>(values).containsAll(c);
+		return new HashSet<>(this.values).containsAll(c);
 	}
 
 	@Override
 	public boolean addAll(@NotNull Collection<? extends T> c) {
-		boolean v = values.addAll(c);
+		boolean v = this.values.addAll(c);
 
 		if (v) {
 			this.configValue.serializeAndInvokeCallbacks();
@@ -153,7 +160,7 @@ public final class ValueListImpl<T> implements ValueList<T>, CompoundConfigValue
 
 	@Override
 	public boolean addAll(int index, @NotNull Collection<? extends T> c) {
-		boolean v = values.addAll(index, c);
+		boolean v = this.values.addAll(index, c);
 
 		if (v) {
 			this.configValue.serializeAndInvokeCallbacks();
@@ -164,7 +171,7 @@ public final class ValueListImpl<T> implements ValueList<T>, CompoundConfigValue
 
 	@Override
 	public boolean removeAll(@NotNull Collection<?> c) {
-		boolean v = values.removeAll(c);
+		boolean v = this.values.removeAll(c);
 
 		if (v) {
 			this.configValue.serializeAndInvokeCallbacks();
@@ -175,7 +182,7 @@ public final class ValueListImpl<T> implements ValueList<T>, CompoundConfigValue
 
 	@Override
 	public boolean retainAll(@NotNull Collection<?> c) {
-		boolean v = values.retainAll(c);
+		boolean v = this.values.retainAll(c);
 
 		if (v) {
 			this.configValue.serializeAndInvokeCallbacks();
@@ -186,14 +193,14 @@ public final class ValueListImpl<T> implements ValueList<T>, CompoundConfigValue
 
 	@Override
 	public void replaceAll(UnaryOperator<T> operator) {
-		values.replaceAll(operator);
+		this.values.replaceAll(operator);
 
 		this.configValue.serializeAndInvokeCallbacks();
 	}
 
 	@Override
 	public void sort(Comparator<? super T> c) {
-		values.sort(c);
+		this.values.sort(c);
 
 		this.configValue.serializeAndInvokeCallbacks();
 	}
@@ -201,9 +208,9 @@ public final class ValueListImpl<T> implements ValueList<T>, CompoundConfigValue
 	@Override
 	public void clear() {
 		if (this.isEmpty()) {
-			values.clear();
+			this.values.clear();
 		} else {
-			values.clear();
+			this.values.clear();
 			this.configValue.serializeAndInvokeCallbacks();
 		}
 	}
@@ -221,17 +228,17 @@ public final class ValueListImpl<T> implements ValueList<T>, CompoundConfigValue
 
 	@Override
 	public int hashCode() {
-		return values.hashCode();
+		return this.values.hashCode();
 	}
 
 	@Override
 	public T get(int index) {
-		return values.get(index);
+		return this.values.get(index);
 	}
 
 	@Override
 	public T set(int index, T value) {
-		T v = values.set(index, value);
+		T v = this.values.set(index, value);
 
 		if (value instanceof ComplexConfigValue) {
 			((ComplexConfigValue) value).setValue(this.configValue);
@@ -246,14 +253,14 @@ public final class ValueListImpl<T> implements ValueList<T>, CompoundConfigValue
 
 	@Override
 	public void add(int index, T value) {
-		values.add(index, value);
+		this.values.add(index, value);
 
 		this.configValue.serializeAndInvokeCallbacks();
 	}
 
 	@Override
 	public T remove(int index) {
-		T v = values.remove(index);
+		T v = this.values.remove(index);
 
 		this.configValue.serializeAndInvokeCallbacks();
 
@@ -262,35 +269,35 @@ public final class ValueListImpl<T> implements ValueList<T>, CompoundConfigValue
 
 	@Override
 	public int indexOf(Object o) {
-		return values.indexOf(o);
+		return this.values.indexOf(o);
 	}
 
 	@Override
 	public int lastIndexOf(Object o) {
-		return values.lastIndexOf(o);
+		return this.values.lastIndexOf(o);
 	}
 
 	@NotNull
 	@Override
 	public ListIterator<T> listIterator() {
-		return values.listIterator();
+		return this.values.listIterator();
 	}
 
 	@NotNull
 	@Override
 	public ListIterator<T> listIterator(int index) {
-		return values.listIterator(index);
+		return this.values.listIterator(index);
 	}
 
 	@NotNull
 	@Override
 	public List<T> subList(int fromIndex, int toIndex) {
-		return values.subList(fromIndex, toIndex);
+		return this.values.subList(fromIndex, toIndex);
 	}
 
 	@Override
 	public Spliterator<T> spliterator() {
-		return values.spliterator();
+		return this.values.spliterator();
 	}
 
 	@Override

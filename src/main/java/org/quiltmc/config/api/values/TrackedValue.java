@@ -116,7 +116,7 @@ public interface TrackedValue<T> extends ValueTreeNode {
 	/**
 	 * Add a config value to be tracked.
 	 *
-	 * Config values can be one of the following types:
+	 * <p>Config values can be one of the following types:
 	 * <ul>
 	 *     <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 	 *     <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
@@ -136,7 +136,7 @@ public interface TrackedValue<T> extends ValueTreeNode {
 	/**
 	 * Add a config value to be tracked.
 	 *
-	 * Config values can be one of the following types:
+	 * <p>Config values can be one of the following types:
 	 * <ul>
 	 *     <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 	 *     <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types or a {@link org.quiltmc.config.api.values.ConfigSerializableObject})</li>
@@ -173,7 +173,7 @@ public interface TrackedValue<T> extends ValueTreeNode {
 		/**
 		 * Adds an additional key to this values key
 		 *
-		 * e.g. if this {@link TrackedValue}'s current key is "appearance.gui", calling this method with
+		 * <p>e.g. if this {@link TrackedValue}'s current key is "appearance.gui", calling this method with
 		 * "inventory" would result in a key of "appearance.gui.inventory".
 		 *
 		 * @param key the key to append

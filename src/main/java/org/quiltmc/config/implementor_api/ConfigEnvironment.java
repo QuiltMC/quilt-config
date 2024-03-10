@@ -53,11 +53,11 @@ public class ConfigEnvironment {
 	}
 
 	public String getGlobalFormat() {
-		return globalSerializer;
+		return this.globalSerializer;
 	}
 
 	public Serializer registerSerializer(Serializer serializer) {
-		return serializers.put(serializer.getFileExtension(), serializer);
+		return this.serializers.put(serializer.getFileExtension(), serializer);
 	}
 
 	public Serializer getActualSerializer(String fileType) {
@@ -69,6 +69,6 @@ public class ConfigEnvironment {
 	}
 
 	public Serializer getSerializer(String fileType) {
-		return getActualSerializer(this.globalSerializer == null ? fileType : this.globalSerializer);
+		return this.getActualSerializer(this.globalSerializer == null ? fileType : this.globalSerializer);
 	}
 }

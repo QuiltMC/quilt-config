@@ -18,7 +18,6 @@ package org.quiltmc.config.api.metadata;
 
 import java.util.ArrayList;
 
-
 public enum NamingSchemes implements NamingScheme {
 	/**
 	 * Does not format the string at all. {@code "funnyStringAsAnExample"} becomes {@code "funnyStringAsAnExample"}
@@ -42,6 +41,7 @@ public enum NamingSchemes implements NamingScheme {
 					builder.append(word.substring(1));
 				}
 			}
+
 			return builder.toString();
 		}
 	},
@@ -64,6 +64,7 @@ public enum NamingSchemes implements NamingScheme {
 					}
 				}
 			}
+
 			return builder.toString();
 		}
 	},
@@ -82,9 +83,11 @@ public enum NamingSchemes implements NamingScheme {
 					} else {
 						builder.append("-");
 					}
+
 					builder.append(word);
 				}
 			}
+
 			return builder.toString();
 		}
 	},
@@ -103,9 +106,11 @@ public enum NamingSchemes implements NamingScheme {
 					} else {
 						builder.append("_");
 					}
+
 					builder.append(word);
 				}
 			}
+
 			return builder.toString();
 		}
 	},
@@ -124,9 +129,11 @@ public enum NamingSchemes implements NamingScheme {
 					} else {
 						builder.append(" ");
 					}
+
 					builder.append(word);
 				}
 			}
+
 			return builder.toString();
 		}
 	},
@@ -150,9 +157,9 @@ public enum NamingSchemes implements NamingScheme {
 					}
 				}
 			}
+
 			return builder.toString();
 		}
-
 	},
 	/**
 	 * Formats the string as {@code Title Case}, all words are capitalized. {@code "funnyStringAsAnExample"} becomes {@code "Funny String As An Example"}
@@ -169,10 +176,12 @@ public enum NamingSchemes implements NamingScheme {
 					} else {
 						builder.append(" ");
 					}
+
 					builder.appendCodePoint(Character.toUpperCase(word.codePointAt(0)));
 					builder.append(word.substring(1));
 				}
 			}
+
 			return builder.toString();
 		}
 	};
@@ -200,9 +209,11 @@ public enum NamingSchemes implements NamingScheme {
 				} else {
 					state[0] = 2;
 				}
+
 				builder[0].appendCodePoint(Character.toLowerCase(point));
 			}
 		});
+
 		list.add(builder[0].toString());
 		return list.toArray(new String[0]);
 	}

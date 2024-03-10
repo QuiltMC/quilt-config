@@ -16,7 +16,6 @@
 
 package org.quiltmc.config.impl.util;
 
-
 import org.quiltmc.config.api.annotations.SerializedNameConvention;
 import org.quiltmc.config.api.metadata.NamingScheme;
 
@@ -41,15 +40,15 @@ public final class NamingSchemeHelper {
 		if (annotation.custom().isEmpty()) {
 			return annotation.value();
 		} else {
-			return createCustomNamingScheme(annotation.custom(), exceptionFactory);
+			return this.createCustomNamingScheme(annotation.custom(), exceptionFactory);
 		}
 	}
 
 	private NamingScheme createCustomNamingScheme(String className, BiFunction<String, Throwable, RuntimeException> exceptionFactory) {
-		return customSchemeCache.computeIfAbsent(className, customSchemeName -> {
+		return this.customSchemeCache.computeIfAbsent(className, customSchemeName -> {
 			NamingScheme customScheme;
 			try {
-				Class<?> customSchemeClass = Class.forName(customSchemeName, true, classLoader);
+				Class<?> customSchemeClass = Class.forName(customSchemeName, true, this.classLoader);
 				customScheme = (NamingScheme) customSchemeClass.newInstance();
 			} catch (ClassNotFoundException e) {
 				throw exceptionFactory.apply("Couldn't find custom naming scheme class '" + customSchemeName + "'", e);
@@ -58,6 +57,7 @@ public final class NamingSchemeHelper {
 			} catch (ClassCastException e) {
 				throw exceptionFactory.apply("Class '" + customSchemeName + "' does not implement '" + NamingScheme.class.getName() + "'", e);
 			}
+
 			return customScheme;
 		});
 	}

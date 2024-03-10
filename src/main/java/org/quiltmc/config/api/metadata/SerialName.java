@@ -33,7 +33,7 @@ public class SerialName {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	@Override
@@ -41,11 +41,11 @@ public class SerialName {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		SerialName that = (SerialName) o;
-		return Objects.equals(name, that.name);
+		return Objects.equals(this.name, that.name);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name);
+		return Objects.hash(this.name);
 	}
 }

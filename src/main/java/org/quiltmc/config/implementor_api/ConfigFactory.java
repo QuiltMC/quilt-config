@@ -28,6 +28,7 @@ import java.nio.file.Paths;
 
 public final class ConfigFactory {
 	private ConfigFactory() {}
+
 	/**
 	 * Creates and registers a config file
 	 *

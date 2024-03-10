@@ -21,7 +21,11 @@ import org.quiltmc.config.api.annotations.ConfigFieldAnnotationProcessor;
 import org.quiltmc.config.api.metadata.MetadataContainer;
 import org.quiltmc.config.api.metadata.MetadataContainerBuilder;
 import org.quiltmc.config.api.metadata.MetadataType;
-import org.quiltmc.config.api.values.*;
+import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.config.api.values.ValueKey;
+import org.quiltmc.config.api.values.ValueList;
+import org.quiltmc.config.api.values.ValueMap;
+import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.ConfigImpl;
 
 import java.nio.file.Path;
@@ -106,7 +110,6 @@ public interface Config extends MetadataContainer {
 	 *     <li>ValueTreeNode.Section("gui")</li>
 	 *     <li>TrackedValue("count", 100)</li>
 	 * </ul>
-	 *
 	 * iterating over children would need to be done by checking <pre>node instanceof ValueTreeNode.Section</pre>
 	 * and iterating over that node as well, recursively.
 	 */
@@ -402,21 +405,19 @@ public interface Config extends MetadataContainer {
 		void create(Builder builder);
 	}
 
-
 	/**
 	 * @deprecated for removal; use {@link ReflectiveConfig.Section}
 	 */
 	@Deprecated
 	interface Section {
-
 	}
 
 	@ApiStatus.NonExtendable
 	interface Builder extends SectionBuilder {
 		/**
-		 * Adds a value to this config file
+		 * Adds a value to this config file.
 		 *
-		 * A field should be either:
+		 * <p>A field should be either:
 		 * <ul>
 		 *     <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 		 *     <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types)</li>
@@ -433,7 +434,7 @@ public interface Config extends MetadataContainer {
 		Builder section(String key, Consumer<SectionBuilder> creator);
 
 		/**
-		 * Create or configure a piece of metadata
+		 * Create or configure a piece of metadata.
 		 *
 		 * @param type the type of metadata to configure
 		 * @param builderConsumer the modifications to be made to the piece of metadata
@@ -442,7 +443,7 @@ public interface Config extends MetadataContainer {
 		<M, B extends MetadataType.Builder<M>> Builder metadata(MetadataType<M, B> type, Consumer<B> builderConsumer);
 
 		/**
-		 * Adds a default listener to the resulting {@link Config} that's called whenever any of its values updated
+		 * Adds a default listener to the resulting {@link Config} that's called whenever any of its values updated.
 		 *
 		 * @param callback an update listener
 		 * @return this
@@ -450,9 +451,9 @@ public interface Config extends MetadataContainer {
 		Builder callback(UpdateCallback callback);
 
 		/**
-		 * Sets the default file type for the config file this config will be saved to
+		 * Sets the default file type for the config file this config will be saved to.
 		 *
-		 * Note that this can be overridden by the end user with a launch parameter
+		 * <p>Note that this can be overridden by the end user with a launch parameter
 		 *
 		 * @return this
 		 */
@@ -462,9 +463,9 @@ public interface Config extends MetadataContainer {
 	@ApiStatus.NonExtendable
 	interface SectionBuilder extends MetadataContainerBuilder<SectionBuilder> {
 		/**
-		 * Adds a value to this config file
+		 * Adds a value to this config file.
 		 *
-		 * A field should be either:
+		 * <p>A field should be either:
 		 * <ul>
 		 *     <li>A basic type ({@link Integer}, {@link Long}, {@link Float}, {@link Double}, {@link Boolean}, {@link String}, or enum)</li>
 		 *     <li>A complex type (a {@link ValueList} or {@link ValueMap} of basic or complex types)</li>

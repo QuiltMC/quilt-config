@@ -14,4 +14,4 @@ jobs:
           distribution: "temurin"
           java-version: ${{ matrix.java }}
       - uses: gradle/wrapper-validation-action@v1
-      - run: ./gradlew build test publishToMavenLocal --stacktrace
+      - run: ./gradlew build checkstyleMain test publishToMavenLocal --stacktrace

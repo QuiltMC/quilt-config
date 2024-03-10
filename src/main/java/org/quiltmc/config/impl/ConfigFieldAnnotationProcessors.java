@@ -17,7 +17,14 @@
 package org.quiltmc.config.impl;
 
 import org.quiltmc.config.api.Constraint;
-import org.quiltmc.config.api.annotations.*;
+import org.quiltmc.config.api.annotations.Alias;
+import org.quiltmc.config.api.annotations.Comment;
+import org.quiltmc.config.api.annotations.ConfigFieldAnnotationProcessor;
+import org.quiltmc.config.api.annotations.FloatRange;
+import org.quiltmc.config.api.annotations.IntegerRange;
+import org.quiltmc.config.api.annotations.Matches;
+import org.quiltmc.config.api.annotations.SerializedName;
+import org.quiltmc.config.api.annotations.SerializedNameConvention;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.api.metadata.MetadataContainerBuilder;
 import org.quiltmc.config.api.values.CompoundConfigValue;
@@ -25,7 +32,11 @@ import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.impl.util.NamingSchemeHelper;
 
 import java.lang.annotation.Annotation;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class ConfigFieldAnnotationProcessors {
 	private static final Map<Class<? extends Annotation>, List<ConfigFieldAnnotationProcessor<?>>> PROCESSORS = new HashMap<>();
@@ -89,7 +100,7 @@ public final class ConfigFieldAnnotationProcessors {
 		@Override
 		public void process(SerializedNameConvention annotation, MetadataContainerBuilder<?> builder) {
 			builder.metadata(SerializedNameConvention.TYPE, nameConventionBuilder -> nameConventionBuilder.set(
-				namingSchemeHelper.getNamingScheme(annotation, ConfigFieldException::new)));
+					this.namingSchemeHelper.getNamingScheme(annotation, ConfigFieldException::new)));
 		}
 	}
 

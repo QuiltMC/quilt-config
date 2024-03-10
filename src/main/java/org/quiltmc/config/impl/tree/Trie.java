@@ -23,7 +23,13 @@ import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.builders.SectionBuilderImpl;
 import org.quiltmc.config.impl.values.ValueKeyImpl;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ConcurrentModificationException;
+import java.util.Deque;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * This is an implementation of the <a href="https://en.wikipedia.org/wiki/Trie">trie</a> data structure for efficient

@@ -48,6 +48,7 @@ public class WrappedConfigCreator<C> implements Config.Creator {
 			if (!Modifier.isPublic(field.getModifiers())) {
 				field.setAccessible(true);
 			}
+
 			Object defaultValue = field.get(object);
 
 			if (ConfigUtils.isValidValue(defaultValue)) {
@@ -131,7 +132,8 @@ public class WrappedConfigCreator<C> implements Config.Creator {
 				} catch (InvocationTargetException | IllegalAccessException e) {
 					throw new ConfigCreationException("Exception invoking processor method '" + processor.value() + "': " + e.getLocalizedMessage());
 				}
-			}		} catch (InstantiationException | IllegalAccessException e) {
+			}
+		} catch (InstantiationException | IllegalAccessException e) {
 			throw new ConfigCreationException(e);
 		}
 	}

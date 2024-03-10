@@ -1,6 +1,7 @@
 plugins {
 	id 'java'
 	id 'maven-publish'
+	id 'checkstyle'
 	id 'org.quiltmc.gradle.licenser' version '1.+'
 }
 

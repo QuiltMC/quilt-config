@@ -55,11 +55,11 @@ public class Vec3i implements ConfigSerializableObject<ValueMap<Integer>> {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		Vec3i vec3i = (Vec3i) o;
-		return x == vec3i.x && y == vec3i.y && z == vec3i.z;
+		return this.x == vec3i.x && this.y == vec3i.y && this.z == vec3i.z;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(x, y, z);
+		return Objects.hash(this.x, this.y, this.z);
 	}
 }

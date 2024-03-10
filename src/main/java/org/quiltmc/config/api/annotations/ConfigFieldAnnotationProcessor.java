@@ -21,7 +21,6 @@ import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.impl.ConfigFieldAnnotationProcessors;
 
 import java.lang.annotation.Annotation;
-import java.util.Collections;
 
 /**
  * Converts data in an annotation on a field to metadata on a {@link TrackedValue}.
@@ -33,7 +32,6 @@ public interface ConfigFieldAnnotationProcessor<T extends Annotation> {
 
 	static <T extends Annotation> void register(Class<T> annotationClass, ConfigFieldAnnotationProcessor<T> processor) {
 		ConfigFieldAnnotationProcessors.register(annotationClass, processor);
-
 	}
 
 	static void applyAnnotationProcessors(Annotation annotation, MetadataContainerBuilder<?> builder) {

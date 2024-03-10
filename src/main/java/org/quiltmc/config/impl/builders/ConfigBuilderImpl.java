@@ -16,7 +16,8 @@
 
 package org.quiltmc.config.impl.builders;
 
-import org.quiltmc.config.api.*;
+import org.quiltmc.config.api.Config;
+import org.quiltmc.config.api.Serializer;
 import org.quiltmc.config.api.exceptions.ConfigParseException;
 import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.values.TrackedValue;
@@ -106,7 +107,7 @@ public final class ConfigBuilderImpl implements Config.Builder {
 
 		ConfigImpl config = new ConfigImpl(this.environment, this.id, this.path, metadata, this.familyId, this.callbacks, this.values, this.format);
 
-		ConfigsImpl.put(familyId, config);
+		ConfigsImpl.put(this.familyId, config);
 
 		for (TrackedValue<?> value : config.values()) {
 			((TrackedValueImpl<?>) value).setConfig(config);

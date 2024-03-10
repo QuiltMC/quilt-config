@@ -34,7 +34,6 @@ import java.lang.annotation.Target;
  * </ul>
  *
  * <h3>Examples:</h3>
- *
  * Tracked value:
  * <pre>
  * {@code
@@ -47,7 +46,7 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  *
- * Config class:
+ * <p>Config class:
  * <pre>
  * {@code
  * @Processor("processConfig")
@@ -59,7 +58,7 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  *
- * Section:
+ * <p>Section:
  * <pre>
  * {@code
  * @Processor("processCoolSection")

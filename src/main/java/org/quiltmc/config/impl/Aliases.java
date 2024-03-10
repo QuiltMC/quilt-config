@@ -16,7 +16,6 @@
 
 package org.quiltmc.config.impl;
 
-
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.config.api.annotations.Alias;
 import org.quiltmc.config.api.annotations.ConfigFieldAnnotationProcessor;

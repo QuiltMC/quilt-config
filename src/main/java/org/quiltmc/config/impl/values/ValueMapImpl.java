@@ -24,7 +24,12 @@ import org.quiltmc.config.api.values.CompoundConfigValue;
 import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.impl.tree.TrackedValueImpl;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public final class ValueMapImpl<T> implements ValueMap<T>, CompoundConfigValue<T> {
 	private final T defaultValue;
@@ -189,11 +194,11 @@ public final class ValueMapImpl<T> implements ValueMap<T>, CompoundConfigValue<T
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		ValueMapImpl<?> valueMap = (ValueMapImpl<?>) o;
-		return Objects.equals(defaultValue, valueMap.defaultValue) && Objects.equals(values, valueMap.values);
+		return Objects.equals(this.defaultValue, valueMap.defaultValue) && Objects.equals(this.values, valueMap.values);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(defaultValue, values, configValue);
+		return Objects.hash(this.defaultValue, this.values, this.configValue);
 	}
 }
