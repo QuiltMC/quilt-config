@@ -17,7 +17,17 @@
 package org.quiltmc.config.impl;
 
 import org.quiltmc.config.api.Constraint;
-import org.quiltmc.config.api.annotations.*;
+import org.quiltmc.config.api.annotations.Alias;
+import org.quiltmc.config.api.annotations.ChangeWarning;
+import org.quiltmc.config.api.annotations.Comment;
+import org.quiltmc.config.api.annotations.ConfigFieldAnnotationProcessor;
+import org.quiltmc.config.api.annotations.DisplayName;
+import org.quiltmc.config.api.annotations.DisplayNameConvention;
+import org.quiltmc.config.api.annotations.FloatRange;
+import org.quiltmc.config.api.annotations.IntegerRange;
+import org.quiltmc.config.api.annotations.Matches;
+import org.quiltmc.config.api.annotations.SerializedName;
+import org.quiltmc.config.api.annotations.SerializedNameConvention;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.api.metadata.MetadataContainerBuilder;
 import org.quiltmc.config.api.values.CompoundConfigValue;
@@ -116,7 +126,7 @@ public final class ConfigFieldAnnotationProcessors {
 		@Override
 		public void process(DisplayNameConvention annotation, MetadataContainerBuilder<?> builder) {
 			builder.metadata(DisplayNameConvention.TYPE, nameConventionBuilder -> nameConventionBuilder.set(
-				namingSchemeHelper.getNamingScheme(annotation, ConfigFieldException::new)));
+					this.namingSchemeHelper.getNamingScheme(annotation, ConfigFieldException::new)));
 		}
 	}
 

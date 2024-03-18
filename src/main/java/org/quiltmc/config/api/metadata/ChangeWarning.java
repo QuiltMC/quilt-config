@@ -28,11 +28,11 @@ public class ChangeWarning {
 	}
 
 	public String getCustomMessage() {
-		return customMessage;
+		return this.customMessage;
 	}
 
 	public Type getType() {
-		return type;
+		return this.type;
 	}
 
 	@Override
@@ -40,16 +40,18 @@ public class ChangeWarning {
 		if (this == o) {
 			return true;
 		}
+
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
+
 		ChangeWarning that = (ChangeWarning) o;
-		return Objects.equals(customMessage, that.customMessage) && type == that.type;
+		return Objects.equals(this.customMessage, that.customMessage) && this.type == that.type;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(customMessage, type);
+		return Objects.hash(this.customMessage, this.type);
 	}
 
 	public enum Type {

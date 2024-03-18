@@ -46,7 +46,6 @@ public @interface ChangeWarning {
 	 */
 	String customMessage() default "";
 
-
 	final class Builder implements MetadataType.Builder<org.quiltmc.config.api.metadata.ChangeWarning> {
 		private String message;
 		private org.quiltmc.config.api.metadata.ChangeWarning.Type type;

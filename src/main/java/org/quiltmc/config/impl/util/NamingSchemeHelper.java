@@ -49,7 +49,7 @@ public final class NamingSchemeHelper {
 		if (annotation.custom().isEmpty()) {
 			return annotation.value();
 		} else {
-			return createCustomNamingScheme(annotation.custom(), exceptionFactory);
+			return this.createCustomNamingScheme(annotation.custom(), exceptionFactory);
 		}
 	}
 

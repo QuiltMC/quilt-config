@@ -35,8 +35,8 @@ public @interface DisplayName {
 	 * A {@link MetadataType} to supply to {@link Config.Builder#metadata}
 	 */
 	MetadataType<org.quiltmc.config.api.metadata.DisplayName, DisplayName.Builder> TYPE = MetadataType.create(
-		Optional::empty,
-		DisplayName.Builder::new
+			Optional::empty,
+			DisplayName.Builder::new
 	);
 
 	/**

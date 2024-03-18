@@ -54,7 +54,7 @@ public @interface DisplayNameConvention {
 		private NamingScheme scheme;
 
 		public Builder() {
-			scheme = NamingSchemes.PASSTHROUGH;
+			this.scheme = NamingSchemes.PASSTHROUGH;
 		}
 
 		public void set(NamingScheme scheme) {
@@ -63,7 +63,7 @@ public @interface DisplayNameConvention {
 
 		@Override
 		public NamingScheme build() {
-			return scheme;
+			return this.scheme;
 		}
 	}
 }

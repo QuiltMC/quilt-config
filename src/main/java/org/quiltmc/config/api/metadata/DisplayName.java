@@ -33,11 +33,11 @@ public class DisplayName {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public boolean isTranslatable() {
-		return translatable;
+		return this.translatable;
 	}
 
 	@Override
@@ -45,15 +45,17 @@ public class DisplayName {
 		if (this == o) {
 			return true;
 		}
+
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
+
 		DisplayName that = (DisplayName) o;
-		return translatable == that.translatable && Objects.equals(name, that.name);
+		return this.translatable == that.translatable && Objects.equals(this.name, that.name);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(name, translatable);
+		return Objects.hash(this.name, this.translatable);
 	}
 }
