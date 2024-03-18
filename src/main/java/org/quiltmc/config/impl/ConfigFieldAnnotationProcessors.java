@@ -17,16 +17,7 @@
 package org.quiltmc.config.impl;
 
 import org.quiltmc.config.api.Constraint;
-import org.quiltmc.config.api.annotations.Alias;
-import org.quiltmc.config.api.annotations.Comment;
-import org.quiltmc.config.api.annotations.ConfigFieldAnnotationProcessor;
-import org.quiltmc.config.api.annotations.DisplayName;
-import org.quiltmc.config.api.annotations.DisplayNameConvention;
-import org.quiltmc.config.api.annotations.FloatRange;
-import org.quiltmc.config.api.annotations.IntegerRange;
-import org.quiltmc.config.api.annotations.Matches;
-import org.quiltmc.config.api.annotations.SerializedName;
-import org.quiltmc.config.api.annotations.SerializedNameConvention;
+import org.quiltmc.config.api.annotations.*;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
 import org.quiltmc.config.api.metadata.MetadataContainerBuilder;
 import org.quiltmc.config.api.values.CompoundConfigValue;
@@ -55,6 +46,7 @@ public final class ConfigFieldAnnotationProcessors {
 		register(SerializedNameConvention.class, new SerializedNameConventionProcessor());
 		register(DisplayName.class, new DisplayNameProcessor());
 		register(DisplayNameConvention.class, new DisplayNameConventionProcessor());
+		register(ChangeWarning.class, new ChangeWarningProcessor());
 	}
 
 	public static <T extends Annotation> void register(Class<T> annotationClass, ConfigFieldAnnotationProcessor<T> processor) {
@@ -125,6 +117,17 @@ public final class ConfigFieldAnnotationProcessors {
 		public void process(DisplayNameConvention annotation, MetadataContainerBuilder<?> builder) {
 			builder.metadata(DisplayNameConvention.TYPE, nameConventionBuilder -> nameConventionBuilder.set(
 				namingSchemeHelper.getNamingScheme(annotation, ConfigFieldException::new)));
+		}
+	}
+
+	private static final class ChangeWarningProcessor implements ConfigFieldAnnotationProcessor<ChangeWarning> {
+		@Override
+		public void process(ChangeWarning name, MetadataContainerBuilder<?> builder) {
+			builder.metadata(ChangeWarning.TYPE, nameBuilder -> {
+				// Order matters because setMessage sets the type
+				nameBuilder.setMessage(name.customMessage());
+				nameBuilder.setType(name.value());
+			});
 		}
 	}
 
