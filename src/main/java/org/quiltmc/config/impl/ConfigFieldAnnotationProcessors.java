@@ -21,6 +21,7 @@ import org.quiltmc.config.api.annotations.Alias;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.annotations.ConfigFieldAnnotationProcessor;
 import org.quiltmc.config.api.annotations.DisplayName;
+import org.quiltmc.config.api.annotations.DisplayNameConvention;
 import org.quiltmc.config.api.annotations.FloatRange;
 import org.quiltmc.config.api.annotations.IntegerRange;
 import org.quiltmc.config.api.annotations.Matches;
@@ -53,6 +54,7 @@ public final class ConfigFieldAnnotationProcessors {
 		register(SerializedName.class, new SerialNameProcessor());
 		register(SerializedNameConvention.class, new SerializedNameConventionProcessor());
 		register(DisplayName.class, new DisplayNameProcessor());
+		register(DisplayNameConvention.class, new DisplayNameConventionProcessor());
 	}
 
 	public static <T extends Annotation> void register(Class<T> annotationClass, ConfigFieldAnnotationProcessor<T> processor) {
@@ -113,6 +115,16 @@ public final class ConfigFieldAnnotationProcessors {
 				nameBuilder.setName(name.value());
 				nameBuilder.setTranslatable(name.translatable());
 			});
+		}
+	}
+
+	private static final class DisplayNameConventionProcessor implements ConfigFieldAnnotationProcessor<DisplayNameConvention> {
+		private final NamingSchemeHelper namingSchemeHelper = new NamingSchemeHelper();
+
+		@Override
+		public void process(DisplayNameConvention annotation, MetadataContainerBuilder<?> builder) {
+			builder.metadata(DisplayNameConvention.TYPE, nameConventionBuilder -> nameConventionBuilder.set(
+				namingSchemeHelper.getNamingScheme(annotation, ConfigFieldException::new)));
 		}
 	}
 
