@@ -18,7 +18,7 @@ public @interface ChangeWarning {
 	/**
 	 * A {@link MetadataType} to supply to {@link Config.Builder#metadata}
 	 */
-	MetadataType<org.quiltmc.config.api.metadata.ChangeWarning, ChangeWarning.Builder> TYPE = MetadataType.create(Optional::empty, ChangeWarning.Builder::new);
+	MetadataType<org.quiltmc.config.api.metadata.ChangeWarning, ChangeWarning.Builder> TYPE = MetadataType.create(Optional::empty, ChangeWarning.Builder::new, true);
 
 	/**
 	 * The {@link org.quiltmc.config.api.metadata.ChangeWarning.Type ChangeWarning.Type} of the change warning
