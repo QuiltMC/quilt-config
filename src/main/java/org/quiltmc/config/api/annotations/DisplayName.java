@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 import java.util.Optional;
 
 /**
- * Used to tell config screen libraries what name should be used for the annotated element when displaying it
+ * Used to tell config screen libraries what name should be used for the annotated element when displaying it. Can be applied to configs, sections and properties.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
@@ -40,7 +40,7 @@ public @interface DisplayName {
 	);
 
 	/**
-	 * The name for the config screen to use if {@link #translatable} is false. A translation key pointing to the name to be used otherwise
+	 * The name for the config screen to use if {@link #translatable} is false. A translation key pointing to the name to be used otherwise. Metadata processors (like config screens) may define generated translation keys taking precedence if it isn't translatable.
 	 */
 	String value();
 

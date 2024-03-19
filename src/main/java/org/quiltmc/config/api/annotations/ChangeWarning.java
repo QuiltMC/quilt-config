@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 import java.util.Optional;
 
 /**
- * Used to tell config screen libraries that a warning should be displayed before applying changes
+ * Used to tell config screen libraries that a warning should be displayed before applying changes. Can be applied to configs, sections and properties.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
@@ -42,7 +42,7 @@ public @interface ChangeWarning {
 	org.quiltmc.config.api.metadata.ChangeWarning.Type value();
 
 	/**
-	 * The message to display if the type is {@link org.quiltmc.config.api.metadata.ChangeWarning.Type#Custom ChangeWarning.Type.Custom}, or the translation key if it is {@link org.quiltmc.config.api.metadata.ChangeWarning.Type#CustomTranslatable ChangeWarning.Type.CustomTranslatable}
+	 * The message to display if the type is {@link org.quiltmc.config.api.metadata.ChangeWarning.Type#Custom ChangeWarning.Type.Custom}. In that case, Metadata processors (like config screens) may define translation keys that take precedence, else the translation key if it is {@link org.quiltmc.config.api.metadata.ChangeWarning.Type#CustomTranslatable ChangeWarning.Type.CustomTranslatable}.
 	 */
 	String customMessage() default "";
 

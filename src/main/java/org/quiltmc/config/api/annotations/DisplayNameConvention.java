@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
 import java.util.Optional;
 
 /**
- * Used to tell config screen libraries how properties should be formatted when displaying them. Can be applied to configs, sections and properties. {@link DisplayName} must always take priority.
+ * Used to tell config screen libraries how properties should be formatted when displaying them. Metadata processors (like config screens) may define generated translation keys taking precedence. Can be applied to configs, sections and properties. {@link DisplayName} must always take priority.
  * @see org.quiltmc.config.api.annotations.DisplayName
  */
 @Retention(RetentionPolicy.RUNTIME)
