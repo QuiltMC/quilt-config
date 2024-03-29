@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 import java.util.Optional;
 
 /**
- * Used to tell config screen libraries that a warning should be displayed before applying changes. Can be applied to configs, sections and properties.
+ * Used to tell config screen libraries that a warning should be displayed before applying changes. Can be applied to configs, sections and fields.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})

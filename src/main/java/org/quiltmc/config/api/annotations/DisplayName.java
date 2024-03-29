@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 import java.util.Optional;
 
 /**
- * Used to tell config screen libraries what name should be used for the annotated element when displaying it. Can be applied to configs, sections and properties.
+ * Used to tell config screen libraries what name should be used for the annotated element when displaying it. Can be applied to configs, sections and fields.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
