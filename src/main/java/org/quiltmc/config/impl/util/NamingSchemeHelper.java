@@ -16,6 +16,7 @@
 
 package org.quiltmc.config.impl.util;
 
+import org.quiltmc.config.api.annotations.DisplayNameConvention;
 import org.quiltmc.config.api.annotations.SerializedNameConvention;
 import org.quiltmc.config.api.metadata.NamingScheme;
 
@@ -37,6 +38,14 @@ public final class NamingSchemeHelper {
 	}
 
 	public NamingScheme getNamingScheme(SerializedNameConvention annotation, BiFunction<String, Throwable, RuntimeException> exceptionFactory) {
+		if (annotation.custom().isEmpty()) {
+			return annotation.value();
+		} else {
+			return this.createCustomNamingScheme(annotation.custom(), exceptionFactory);
+		}
+	}
+
+	public NamingScheme getNamingScheme(DisplayNameConvention annotation, BiFunction<String, Throwable, RuntimeException> exceptionFactory) {
 		if (annotation.custom().isEmpty()) {
 			return annotation.value();
 		} else {

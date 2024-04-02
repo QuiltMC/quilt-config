@@ -18,8 +18,11 @@ package org.quiltmc.config.impl;
 
 import org.quiltmc.config.api.Constraint;
 import org.quiltmc.config.api.annotations.Alias;
+import org.quiltmc.config.api.annotations.ChangeWarning;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.annotations.ConfigFieldAnnotationProcessor;
+import org.quiltmc.config.api.annotations.DisplayName;
+import org.quiltmc.config.api.annotations.DisplayNameConvention;
 import org.quiltmc.config.api.annotations.FloatRange;
 import org.quiltmc.config.api.annotations.IntegerRange;
 import org.quiltmc.config.api.annotations.Matches;
@@ -51,6 +54,9 @@ public final class ConfigFieldAnnotationProcessors {
 		register(Matches.class, new MatchesProcessor());
 		register(SerializedName.class, new SerialNameProcessor());
 		register(SerializedNameConvention.class, new SerializedNameConventionProcessor());
+		register(DisplayName.class, new DisplayNameProcessor());
+		register(DisplayNameConvention.class, new DisplayNameConventionProcessor());
+		register(ChangeWarning.class, new ChangeWarningProcessor());
 	}
 
 	public static <T extends Annotation> void register(Class<T> annotationClass, ConfigFieldAnnotationProcessor<T> processor) {
@@ -101,6 +107,37 @@ public final class ConfigFieldAnnotationProcessors {
 		public void process(SerializedNameConvention annotation, MetadataContainerBuilder<?> builder) {
 			builder.metadata(SerializedNameConvention.TYPE, nameConventionBuilder -> nameConventionBuilder.set(
 					this.namingSchemeHelper.getNamingScheme(annotation, ConfigFieldException::new)));
+		}
+	}
+
+	private static final class DisplayNameProcessor implements ConfigFieldAnnotationProcessor<DisplayName> {
+		@Override
+		public void process(DisplayName name, MetadataContainerBuilder<?> builder) {
+			builder.metadata(DisplayName.TYPE, nameBuilder -> {
+				nameBuilder.setName(name.value());
+				nameBuilder.setTranslatable(name.translatable());
+			});
+		}
+	}
+
+	private static final class DisplayNameConventionProcessor implements ConfigFieldAnnotationProcessor<DisplayNameConvention> {
+		private final NamingSchemeHelper namingSchemeHelper = new NamingSchemeHelper();
+
+		@Override
+		public void process(DisplayNameConvention annotation, MetadataContainerBuilder<?> builder) {
+			builder.metadata(DisplayNameConvention.TYPE, nameConventionBuilder -> nameConventionBuilder.set(
+					this.namingSchemeHelper.getNamingScheme(annotation, ConfigFieldException::new)));
+		}
+	}
+
+	private static final class ChangeWarningProcessor implements ConfigFieldAnnotationProcessor<ChangeWarning> {
+		@Override
+		public void process(ChangeWarning name, MetadataContainerBuilder<?> builder) {
+			builder.metadata(ChangeWarning.TYPE, nameBuilder -> {
+				// Order matters because setMessage sets the type
+				nameBuilder.setMessage(name.customMessage());
+				nameBuilder.setType(name.value());
+			});
 		}
 	}
 
