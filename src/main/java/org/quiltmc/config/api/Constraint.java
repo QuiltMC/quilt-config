@@ -93,6 +93,14 @@ public interface Constraint<T> {
 			this.comparator = comparator;
 		}
 
+		public T min() {
+			return this.min;
+		}
+
+		public T max() {
+			return this.max;
+		}
+
 		@Override
 		public Optional<String> test(T value) {
 			int minTest = this.comparator.compare(this.min, value);
