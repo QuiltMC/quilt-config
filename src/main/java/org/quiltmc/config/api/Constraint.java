@@ -107,7 +107,7 @@ public interface Constraint<T> {
 
 		@Override
 		public String getRepresentation() {
-			return "range[" + this.min + ", " + this.max + "]";
+			return "range: " + this.min + " - " + this.max;
 		}
 	}
 
