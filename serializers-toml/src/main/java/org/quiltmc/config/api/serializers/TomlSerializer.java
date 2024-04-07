@@ -27,7 +27,6 @@ import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.Constraint;
 import org.quiltmc.config.api.MarshallingUtils;
 import org.quiltmc.config.api.Serializer;
-import org.quiltmc.config.api.annotations.Alias;
 import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.values.ConfigSerializableObject;
 import org.quiltmc.config.api.values.TrackedValue;
@@ -36,7 +35,6 @@ import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.api.values.ValueTreeNode;
 import org.quiltmc.config.impl.util.SerializerUtils;
-import org.quiltmc.config.impl.values.ValueKeyImpl;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -148,9 +146,7 @@ public final class TomlSerializer implements Serializer {
 				}
 
 				Optional<String> defaultValueComment = SerializerUtils.getDefaultValueString(defaultValue);
-				if (defaultValueComment.isPresent()) {
-					comments.add("default: " + defaultValueComment);
-				}
+				defaultValueComment.ifPresent(s -> comments.add("default: " + s));
 
 				commentedConfig.add(toNightConfigSerializable(key), convertAny(value.getRealValue()));
 			} else {

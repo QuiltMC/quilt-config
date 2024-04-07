@@ -130,7 +130,7 @@ public final class Json5Serializer implements Serializer {
 
 			Optional<String> defaultComment = SerializerUtils.getDefaultValueString(defaultValue);
 			if (defaultComment.isPresent()) {
-				writer.comment("default: " + defaultComment);
+				writer.comment("default: " + defaultComment.get());
 			}
 
 			String name = SerializerUtils.getSerializedName(trackedValue);
