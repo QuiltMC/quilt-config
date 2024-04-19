@@ -1,3 +1,10 @@
+# 1.3.1
+Quilt Config 1.3.1 is a quick bugfix release. One step closer to the bug free experience.
+
+- add `min()` and `max()` API methods for getting those values on range constraints
+- add pretty printing for range comments
+- fix `default:` comments being surrounded by an `Optional[]` block
+
 # 1.3.0
 Quilt Config 1.3.0 brings a veritable treasure trove of new annotations, bringing a whopping 5 new metadata options! It also brings improvements to processors, fixes for the old `WrappedConfig` API, and some brand-new API to top it all off. With the new features added in this update, it should finally be viable to build the automatic config screen generator we've been dreaming of!
 
