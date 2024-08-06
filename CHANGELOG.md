@@ -1,3 +1,8 @@
+# 1.3.2
+Quilt Config `1.3.2` is an even quicker release than the last one.
+
+- bump night-config to `3.8.1`
+
 # 1.3.1
 Quilt Config 1.3.1 is a quick bugfix release. One step closer to the bug free experience.
 
