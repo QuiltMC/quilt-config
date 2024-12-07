@@ -16,9 +16,8 @@
 
 package org.quiltmc.config;
 
+import org.quiltmc.config.api.serializers.*;
 import org.quiltmc.config.implementor_api.ConfigEnvironment;
-import org.quiltmc.config.api.serializers.Json5Serializer;
-import org.quiltmc.config.api.serializers.TomlSerializer;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +29,8 @@ public class TestUtil {
 	public static final Path TEMP_DIR = Paths.get("temp");
 	public static final ConfigEnvironment TOML_ENV = new ConfigEnvironment(TestUtil.TEMP_DIR, TomlSerializer.INSTANCE);
 	public static final ConfigEnvironment JSON5_ENV = new ConfigEnvironment(TestUtil.TEMP_DIR, Json5Serializer.INSTANCE);
+	public static final ConfigEnvironment JSONC_ENV = new ConfigEnvironment(TestUtil.TEMP_DIR, JsonCSerializer.INSTANCE);
+	public static final ConfigEnvironment JSON_ENV = new ConfigEnvironment(TestUtil.TEMP_DIR, JsonSerializer.INSTANCE);
 
 	public static void deleteTempDir() throws IOException {
 		deleteDirectoryRecursively(TEMP_DIR.toFile());

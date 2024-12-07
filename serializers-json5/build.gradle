@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.quiltmc.parsers:json:0.2.1'
+	implementation 'org.quiltmc.parsers:json:0.3.1'
 	api rootProject
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
