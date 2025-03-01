@@ -17,6 +17,8 @@
 package org.quiltmc.config.api;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.quiltmc.config.api.values.ValueTreeNode;
+import org.quiltmc.config.impl.builders.ReflectiveConfigCreator;
 
 /**
  * Provides the implementation packages access to package-private methods. <strong>DO NOT USE THIS CLASS</strong>
@@ -29,5 +31,14 @@ public final class InternalsHelper {
 
 	public static <T extends ReflectiveConfig> void setWrappedConfig(T wrapped, Config config) {
 		wrapped.setWrappedConfig(config);
+		for (ValueTreeNode node : config.nodes()) {
+			if (node instanceof ValueTreeNode.Section) {
+				ValueTreeNode.Section section = (ValueTreeNode.Section) node;
+				ReflectiveConfigCreator.Reflective marker = section.metadata(ReflectiveConfigCreator.Reflective.TYPE);
+				if (marker != null) {
+					marker.self.setWrappedSection(section);
+				}
+			}
+		}
 	}
 }

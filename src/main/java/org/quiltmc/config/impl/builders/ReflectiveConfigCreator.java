@@ -23,6 +23,7 @@ import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.impl.ConfigFieldAnnotationProcessors;
 import org.quiltmc.config.api.exceptions.ConfigCreationException;
 import org.quiltmc.config.api.exceptions.ConfigFieldException;
+import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.impl.tree.TrackedValueImpl;
 
 import java.lang.annotation.Annotation;
@@ -30,6 +31,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Objects;
 
 public class ReflectiveConfigCreator<C> implements Config.Creator {
 	private final Class<C> creatorClass;
@@ -37,6 +39,31 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 
 	public ReflectiveConfigCreator(Class<C> creatorClass) {
 		this.creatorClass = creatorClass;
+	}
+
+	public static class Reflective {
+		public static MetadataType<Reflective, Builder> TYPE = MetadataType.create(Builder::new);
+		public final ReflectiveConfig.Section self;
+
+		private Reflective(ReflectiveConfig.Section self) {
+			this.self = self;
+		}
+
+		// HACK: ReadWriteCycleTest doesn't like that different instances of this aren't equal, so we just lie!
+		@Override
+		public boolean equals(Object obj) {
+			return true;
+		}
+
+		public static class Builder implements MetadataType.Builder<Reflective> {
+			private ReflectiveConfig.Section self;
+
+			@Override
+			public ReflectiveConfigCreator.Reflective build() {
+				Objects.requireNonNull(this.self);
+				return new Reflective(this.self);
+			}
+		}
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
@@ -127,6 +154,8 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 							}
 						}
 					}
+
+					b.metadata(Reflective.TYPE, metaBuilder -> metaBuilder.self = (ReflectiveConfig.Section) defaultValue);
 				});
 			} else if (defaultValue == null) {
 				throw new ConfigFieldException("Default value for field '" + field.getName() + "' cannot be null");
