@@ -41,27 +41,27 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 		this.creatorClass = creatorClass;
 	}
 
-	public static class Reflective {
-		public static MetadataType<Reflective, Builder> TYPE = MetadataType.create(Builder::new);
+	public static class SectionMarker {
+		public static MetadataType<SectionMarker, Builder> TYPE = MetadataType.create(Builder::new);
 		public final ReflectiveConfig.Section self;
 
-		private Reflective(ReflectiveConfig.Section self) {
+		private SectionMarker(ReflectiveConfig.Section self) {
 			this.self = self;
 		}
 
-		// HACK: ReadWriteCycleTest doesn't like that different instances of this aren't equal, so we just lie!
+		// ReadWriteCycleTest needs these to be equal
 		@Override
 		public boolean equals(Object obj) {
-			return true;
+			return obj instanceof SectionMarker && ((SectionMarker) obj).self.getClass().equals(this.self.getClass());
 		}
 
-		public static class Builder implements MetadataType.Builder<Reflective> {
+		public static class Builder implements MetadataType.Builder<SectionMarker> {
 			private ReflectiveConfig.Section self;
 
 			@Override
-			public ReflectiveConfigCreator.Reflective build() {
+			public ReflectiveConfigCreator.SectionMarker build() {
 				Objects.requireNonNull(this.self);
-				return new Reflective(this.self);
+				return new SectionMarker(this.self);
 			}
 		}
 	}
@@ -155,7 +155,7 @@ public class ReflectiveConfigCreator<C> implements Config.Creator {
 						}
 					}
 
-					b.metadata(Reflective.TYPE, metaBuilder -> metaBuilder.self = (ReflectiveConfig.Section) defaultValue);
+					b.metadata(SectionMarker.TYPE, metaBuilder -> metaBuilder.self = (ReflectiveConfig.Section) defaultValue);
 				});
 			} else if (defaultValue == null) {
 				throw new ConfigFieldException("Default value for field '" + field.getName() + "' cannot be null");

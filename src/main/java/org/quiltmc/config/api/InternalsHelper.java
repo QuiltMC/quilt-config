@@ -34,7 +34,7 @@ public final class InternalsHelper {
 		for (ValueTreeNode node : config.nodes()) {
 			if (node instanceof ValueTreeNode.Section) {
 				ValueTreeNode.Section section = (ValueTreeNode.Section) node;
-				ReflectiveConfigCreator.Reflective marker = section.metadata(ReflectiveConfigCreator.Reflective.TYPE);
+				ReflectiveConfigCreator.SectionMarker marker = section.metadata(ReflectiveConfigCreator.SectionMarker.TYPE);
 				if (marker != null) {
 					marker.self.setWrappedSection(section);
 				}
