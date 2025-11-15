@@ -18,6 +18,7 @@ package org.quiltmc.config.api;
 
 import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.values.TrackedValue;
+import org.quiltmc.config.api.values.ValueKey;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.api.values.ValueTreeNode;
@@ -27,6 +28,7 @@ import org.quiltmc.config.impl.util.ConfigUtils;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -112,7 +114,9 @@ public abstract class ReflectiveConfig implements Config {
 		return new ValueMapBuilderImpl.TrackedValueMapBuilderImpl<>(defaultValue, this::value);
 	}
 
-	public static class Section {
+	public static class Section implements ValueTreeNode.Section {
+		private ValueTreeNode.Section wrapped;
+
 		public final <T> TrackedValue<T> value(T defaultValue) {
 			ConfigUtils.assertValueType(defaultValue);
 
@@ -126,6 +130,40 @@ public abstract class ReflectiveConfig implements Config {
 
 		public final <T> ValueMap.TrackedBuilder<T> map(T defaultValue) {
 			return new ValueMapBuilderImpl.TrackedValueMapBuilderImpl<>(defaultValue, this::value);
+		}
+
+		@Override
+		public ValueKey key() {
+			return this.wrapped.key();
+		}
+
+		@Override
+		public void propagateInheritedMetadata(Map<MetadataType<?, ?>, Object> inheritedMetadata) {
+			this.wrapped.propagateInheritedMetadata(inheritedMetadata);
+		}
+
+		@Override
+		public <M> M metadata(MetadataType<M, ?> type) {
+			return this.wrapped.metadata(type);
+		}
+
+		@Override
+		public <M> boolean hasMetadata(MetadataType<M, ?> type) {
+			return this.wrapped.hasMetadata(type);
+		}
+
+		@Override
+		public Map<MetadataType<?, ?>, Object> metadata() {
+			return this.wrapped.metadata();
+		}
+
+		@Override
+		public Iterator<ValueTreeNode> iterator() {
+			return this.wrapped.iterator();
+		}
+
+		final void setWrappedSection(ValueTreeNode.Section section) {
+			this.wrapped = section;
 		}
 	}
 }
