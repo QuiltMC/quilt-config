@@ -18,6 +18,7 @@ package org.quiltmc.config.api.serializers;
 
 import org.quiltmc.config.api.Config;
 import org.quiltmc.config.api.Serializer;
+import org.quiltmc.parsers.json.JsonFormat;
 import org.quiltmc.parsers.json.JsonReader;
 import org.quiltmc.parsers.json.JsonWriter;
 
@@ -28,25 +29,25 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 /**
- * A default serializer that writes in the <a href="https://json5.org/">JSON5 format</a>.
+ * A default serializer that writes in the <a href="https://code.visualstudio.com/docs/languages/json#_json-with-comments">JSON with Comments format</a>.
  */
-public final class Json5Serializer extends AbstractJsonSerializer implements Serializer {
-	public static final Json5Serializer INSTANCE = new Json5Serializer();
+public final class JsonCSerializer extends AbstractJsonSerializer implements Serializer {
+	public static final JsonCSerializer INSTANCE = new JsonCSerializer();
 
-	private Json5Serializer() {}
+	private JsonCSerializer() {}
 
 	@Override
 	public String getFileExtension() {
-		return "json5";
+		return "jsonc";
 	}
 
 	@Override
 	public void serialize(Config config, OutputStream to) throws IOException {
-		this.serialize(config, JsonWriter.json5(new OutputStreamWriter(to)));
+		this.serialize(config, JsonWriter.jsonc(new OutputStreamWriter(to)));
 	}
 
 	@Override
 	public void deserialize(Config config, InputStream from) {
-		this.deserialize(config, JsonReader.json5(new InputStreamReader(from)));
+		this.deserialize(config, JsonReader.create(new InputStreamReader(from), JsonFormat.JSONC));
 	}
 }

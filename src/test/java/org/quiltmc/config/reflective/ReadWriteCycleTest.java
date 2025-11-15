@@ -49,6 +49,24 @@ public class ReadWriteCycleTest extends AbstractConfigTest {
 		this.matchConfigs(config, readConfig);
 	}
 
+	@Test
+	void testJsonCReadWriteCycle() {
+		TestReflectiveConfig config = ConfigFactory.create(TestUtil.JSONC_ENV, "testmod", "jsoncTestConfig", TestReflectiveConfig.class);
+		this.setUpConfig(config);
+
+		TestReflectiveConfig readConfig = ConfigFactory.create(TestUtil.JSONC_ENV, "testmod", "jsoncTestConfig", TestReflectiveConfig.class);
+		this.matchConfigs(config, readConfig);
+	}
+
+	@Test
+	void testJsonReadWriteCycle() {
+		TestReflectiveConfig config = ConfigFactory.create(TestUtil.JSON_ENV, "testmod", "jsonTestConfig", TestReflectiveConfig.class);
+		this.setUpConfig(config);
+
+		TestReflectiveConfig readConfig = ConfigFactory.create(TestUtil.JSON_ENV, "testmod", "jsonTestConfig", TestReflectiveConfig.class);
+		this.matchConfigs(config, readConfig);
+	}
+
 	/**
 	 * Sets a bunch of nonsense on the config so that it isn't default: if all values were default we wouldn't be able to tell if they were deserialized or not.
 	 */

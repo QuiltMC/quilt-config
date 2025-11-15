@@ -31,8 +31,7 @@ import org.quiltmc.config.api.exceptions.TrackedValueException;
 import org.quiltmc.config.api.metadata.Comments;
 import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.metadata.NamingSchemes;
-import org.quiltmc.config.api.serializers.Json5Serializer;
-import org.quiltmc.config.api.serializers.TomlSerializer;
+import org.quiltmc.config.api.serializers.*;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
 import org.quiltmc.config.api.values.ValueMap;
@@ -51,7 +50,7 @@ import java.util.Optional;
 
 @SuppressWarnings("deprecation")
 public class ConfigTest extends AbstractConfigTest {
-	static ConfigEnvironment ENV = new ConfigEnvironment(TestUtil.TEMP_DIR, TomlSerializer.INSTANCE, Json5Serializer.INSTANCE);
+	static ConfigEnvironment ENV = new ConfigEnvironment(TestUtil.TEMP_DIR, TomlSerializer.INSTANCE, Json5Serializer.INSTANCE, JsonCSerializer.INSTANCE, JsonSerializer.INSTANCE);
 
 	static TrackedValue<String> TEST;
 	static TrackedValue<Integer> TEST_INTEGER;
