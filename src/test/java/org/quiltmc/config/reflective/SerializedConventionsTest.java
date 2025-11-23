@@ -23,11 +23,8 @@ import org.quiltmc.config.impl.util.ConfigsImpl;
 import org.quiltmc.config.implementor_api.ConfigEnvironment;
 import org.quiltmc.config.implementor_api.ConfigFactory;
 import org.quiltmc.config.reflective.input.TestConventionConfig;
-import org.quiltmc.config.reflective.input.TestReflectiveConfig;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class SerializedConventionsTest extends AbstractConfigTest {
 	@Test
