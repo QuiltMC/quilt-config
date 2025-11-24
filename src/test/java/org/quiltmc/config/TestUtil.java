@@ -16,7 +16,10 @@
 
 package org.quiltmc.config;
 
-import org.quiltmc.config.api.serializers.*;
+import org.quiltmc.config.api.serializers.Json5Serializer;
+import org.quiltmc.config.api.serializers.JsonCSerializer;
+import org.quiltmc.config.api.serializers.JsonSerializer;
+import org.quiltmc.config.api.serializers.TomlSerializer;
 import org.quiltmc.config.implementor_api.ConfigEnvironment;
 
 import java.io.File;
