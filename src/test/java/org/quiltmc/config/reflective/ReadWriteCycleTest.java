@@ -24,6 +24,7 @@ import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueMap;
 import org.quiltmc.config.api.values.ValueTreeNode;
+import org.quiltmc.config.impl.tree.SectionTreeNode;
 import org.quiltmc.config.impl.util.ConfigsImpl;
 import org.quiltmc.config.implementor_api.ConfigFactory;
 import org.quiltmc.config.reflective.input.TestReflectiveConfig;
@@ -77,6 +78,11 @@ public class ReadWriteCycleTest extends AbstractConfigTest {
 		config.listOfNestedObjects.value().add(ValueMap.builder(0).put("gaming", 123).build());
 		config.c.setValue(-2000, true);
 		config.whatever.setValue("slaying", true);
+		config.nameConventionTest1.longName.setValue(5000);
+		config.doubleNested.innerInteger.setValue(400);
+		config.doubleNested.innerNested.veryDeepInteger.setValue(400);
+		config.doubleNestedNamingScheme.innerInteger.setValue(400);
+		config.doubleNestedNamingScheme.innerNested.veryDeepInteger.setValue(400);
 
 		// remove config from internal map to avoid errors when creating the read config
 		ConfigsImpl.removeAll();
@@ -85,27 +91,43 @@ public class ReadWriteCycleTest extends AbstractConfigTest {
 	/**
 	 * Verifies that both metadata and values match in both configs.
 	 */
-	private void matchConfigs(Config a, Config b) {
+	private static void matchConfigs(Config a, Config b) {
 		for (ValueTreeNode aNode : a.nodes()) {
-			ValueTreeNode bNode = b.getNode(aNode.key());
+			matchNodeRecursively(a, b, aNode);
+		}
+	}
 
-			for (Map.Entry<MetadataType<?, ?>, Object> metadataEntry : aNode.metadata().entrySet()) {
-				if (!bNode.hasMetadata(metadataEntry.getKey())) {
-					throw new RuntimeException(String.format("Missing metadata of type '%s' on node '%s'!", metadataEntry.getKey(), aNode.key().toString()));
+	private static void matchNodeRecursively(Config a, Config b, ValueTreeNode aNode) {
+		if (aNode instanceof SectionTreeNode) {
+			((SectionTreeNode) aNode).iterator().forEachRemaining(innerANode -> {
+				if (innerANode instanceof SectionTreeNode) {
+					matchNodeRecursively(a, b, innerANode);
 				} else {
-					Object metadata = bNode.metadata().get(metadataEntry.getKey());
-					Assertions.assertEquals(metadata, metadataEntry.getValue(), String.format("Metadata mismatch on node %s!", aNode.key().toString()));
-					System.out.printf("Matched metadata of type '%s' on key '%s' (%s == %s)%n", metadataEntry.getKey().toString(), aNode.key().toString(), metadata, metadataEntry.getValue().toString());
+					matchNode(a, b, innerANode);
 				}
-			}
+			});
+		}
+	}
 
-			if (aNode instanceof TrackedValue<?>) {
-				TrackedValue<?> aValue = a.getValue(aNode.key());
-				TrackedValue<?> bValue = b.getValue(aNode.key());
+	private static void matchNode(Config a, Config b, ValueTreeNode aNode) {
+		ValueTreeNode bNode = b.getNode(aNode.key());
 
-				Assertions.assertEquals(aValue.value(), bValue.value(), String.format("Value mismatch on node %s!", aNode.key().toString()));
-				System.out.printf("Matched value on key '%s' (%s == %s)%n", aValue.key().toString(), aValue, bValue);
+		for (Map.Entry<MetadataType<?, ?>, Object> metadataEntry : aNode.metadata().entrySet()) {
+			if (!bNode.hasMetadata(metadataEntry.getKey())) {
+				throw new RuntimeException(String.format("Missing metadata of type '%s' on node '%s'!", metadataEntry.getKey(), aNode.key().toString()));
+			} else {
+				Object metadata = bNode.metadata().get(metadataEntry.getKey());
+				Assertions.assertEquals(metadata, metadataEntry.getValue(), String.format("Metadata mismatch on node %s!", aNode.key().toString()));
+				System.out.printf("Matched metadata of type '%s' on key '%s' (%s == %s)%n", metadataEntry.getKey().toString(), aNode.key().toString(), metadata, metadataEntry.getValue().toString());
 			}
+		}
+
+		if (aNode instanceof TrackedValue<?>) {
+			TrackedValue<?> aValue = a.getValue(aNode.key());
+			TrackedValue<?> bValue = b.getValue(aNode.key());
+
+			Assertions.assertEquals(aValue.value(), bValue.value(), String.format("Value mismatch on node %s!", aNode.key().toString()));
+			System.out.printf("Matched value on key '%s' (%s == %s)%n", aValue.key().toString(), aValue, bValue);
 		}
 	}
 }

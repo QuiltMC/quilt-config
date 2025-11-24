@@ -24,32 +24,32 @@ import org.quiltmc.config.implementor_api.ConfigEnvironment;
 import org.quiltmc.config.implementor_api.ConfigFactory;
 import org.quiltmc.config.reflective.input.TestConventionConfig;
 
-import java.io.IOException;
-
+/**
+ * Tests <a href="https://github.com/QuiltMC/quilt-config/pull/58">the JSON serializer failing to apply serialized names on section values</a>.
+ * Note: this is also tested by {@link ReadWriteCycleTest}, but this test is left in for increased granularity.
+ */
 public class SerializedConventionsTest extends AbstractConfigTest {
 	@Test
-	void testToml() throws IOException {
+	void testToml() {
 		test(TestUtil.TOML_ENV);
 	}
 
 	@Test
-	void testJson5() throws IOException {
+	void testJson5() {
 		test(TestUtil.JSON5_ENV);
 	}
 
 	@Test
-	void testJsonC() throws IOException {
+	void testJsonC() {
 		test(TestUtil.JSONC_ENV);
 	}
 
 	@Test
-	void testJson() throws IOException {
+	void testJson() {
 		test(TestUtil.JSON_ENV);
 	}
 
-	private static void test(ConfigEnvironment env) throws IOException {
-		ConfigsImpl.removeAll();
-
+	private static void test(ConfigEnvironment env) {
 		TestConventionConfig config = ConfigFactory.create(env, "testmod", "testConventionConfig", TestConventionConfig.class);
 		config.word.angryBee.setValue(50);
 		config.sectionWithALotOfWords.eclasticFieryGuarana.setValue(10);
