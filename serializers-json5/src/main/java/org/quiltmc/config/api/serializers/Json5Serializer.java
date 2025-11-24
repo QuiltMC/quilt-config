@@ -107,7 +107,7 @@ public final class Json5Serializer implements Serializer {
 		}
 
 		if (node instanceof ValueTreeNode.Section) {
-			writer.name(node.key().getLastComponent());
+			writer.name(SerializerUtils.getSerializedName(node));
 			writer.beginObject();
 
 			for (ValueTreeNode child : ((ValueTreeNode.Section) node)) {
