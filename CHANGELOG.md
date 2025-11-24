@@ -1,7 +1,7 @@
 # 1.3.3
 Setting a world record for new quickest release, this time we've fixed a major issue with JSON serialization.
 
-- fix JSON serializers not apply custom serialized names on sections
+- fix JSON serializers not properly applying custom serialized names on sections
 
 # 1.3.2
 Quilt Config `1.3.2` is an even quicker release than the last one.
