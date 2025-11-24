@@ -28,25 +28,25 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 /**
- * A default serializer that writes in the <a href="https://json5.org/">JSON5 format</a>.
+ * A default serializer that writes in the <a href="https://www.json.org/">JSON format</a>.
  */
-public final class Json5Serializer extends AbstractJsonSerializer implements Serializer {
-	public static final Json5Serializer INSTANCE = new Json5Serializer();
+public final class JsonSerializer extends AbstractJsonSerializer implements Serializer {
+	public static final JsonSerializer INSTANCE = new JsonSerializer();
 
-	private Json5Serializer() {}
+	private JsonSerializer() {}
 
 	@Override
 	public String getFileExtension() {
-		return "json5";
+		return "json";
 	}
 
 	@Override
 	public void serialize(Config config, OutputStream to) throws IOException {
-		this.serialize(config, JsonWriter.json5(new OutputStreamWriter(to)));
+		this.serialize(config, JsonWriter.json(new OutputStreamWriter(to)));
 	}
 
 	@Override
 	public void deserialize(Config config, InputStream from) {
-		this.deserialize(config, JsonReader.json5(new InputStreamReader(from)));
+		this.deserialize(config, JsonReader.json(new InputStreamReader(from)));
 	}
 }

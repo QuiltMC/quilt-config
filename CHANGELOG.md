@@ -1,3 +1,8 @@
+# 1.3.3
+Setting a world record for new quickest release, this time we've fixed a major issue with JSON serialization.
+
+- fix JSON serializers not properly applying custom serialized names on sections
+
 # 1.3.2
 Quilt Config `1.3.2` is an even quicker release than the last one.
 
@@ -19,7 +24,7 @@ Quilt Config 1.3.0 brings a veritable treasure trove of new annotations, bringin
     - contrary to `@SerializedName`, you do not manually define the names: instead, the annotation will automatically convert your fields' names to match your chosen convention. for example, if you choose `snake_case`, as is the recommendation for TOML, `veryCuteField` becomes `very_cute_field` when serialized. `@SerializedName` will always take priority over converted names!
     - the ideal way to use this is to apply it to your entire class via just one annotation!
 - add `@Alias` annotation
-    - can be applied to fields and sections 
+    - can be applied to fields and sections
     - defines a previous name for the field or section, allowing you to migrate old configs. for example, if you now want a config section to be named `GeorgeSection` after you remove `Joe` and add `George`, you can use `@Alias("JoeSection")` to automatically migrate old `Joe` configs to the new `George` name
 - add `@DisplayName` annotation
     - can be applied to configs, sections, and fields

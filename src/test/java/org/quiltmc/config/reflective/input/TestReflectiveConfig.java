@@ -96,6 +96,12 @@ public final class TestReflectiveConfig extends ReflectiveConfig {
 			ValueMap.builder(0).put("a", 1).put("b", 2).put("c", 3).put("d", 4).build()
 	);
 
+	@SerializedNameConvention(NamingSchemes.SNAKE_CASE)
+	public final DoubleNested doubleNestedNamingScheme = new DoubleNested();
+
+	@Comment("double nested!")
+	public final DoubleNested doubleNested = new DoubleNested();
+
 	public void processConfig(Config.Builder builder) {
 		System.out.println("Processing config!");
 	}
@@ -117,5 +123,15 @@ public final class TestReflectiveConfig extends ReflectiveConfig {
 		public final TrackedValue<Integer> c = this.value(2);
 		public final TrackedValue<Integer> d = this.value(3);
 		public final TrackedValue<Integer> hello_world = this.value(4);
+		public final TrackedValue<Integer> longName = this.value(5);
+	}
+
+	public static final class DoubleNested extends Section {
+		public final InnerNested innerNested = new InnerNested();
+		public final TrackedValue<Integer> innerInteger = this.value(0);
+
+		public static final class InnerNested extends Section {
+			public final TrackedValue<Integer> veryDeepInteger = this.value(0);
+		}
 	}
 }

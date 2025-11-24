@@ -47,4 +47,26 @@ public class TestSerializerEscaping extends AbstractConfigTest {
 		Assertions.assertTrue(content.contains("\"gaming.awesome\":"), "File contents did not contain proper string key (expected '\"gaming.awesome\":')!\ncontents:\n" + content);
 		Assertions.assertTrue(content.contains("\"cool.awesome@list[]neat\":"), "File contents did not contain proper list key (expected '\"cool.awesome@list[]neat\":')!\ncontents:\n" + content);
 	}
+
+	@Test
+	void testJsonCReadWriteCycle() throws IOException {
+		TestEscapingConfig config = ConfigFactory.create(TestUtil.JSONC_ENV, "testmod", "jsoncEscapingTestConfig", TestEscapingConfig.class);
+		config.save();
+
+		String content = new String(Files.readAllBytes(TestUtil.TEMP_DIR.resolve("testmod").resolve("jsoncEscapingTestConfig.jsonc")));
+		Assertions.assertTrue(content.contains("\"servers.server.served\":"), "File contents did not contain proper map key (expected '\"servers.server.served\":')!\ncontents:\n" + content);
+		Assertions.assertTrue(content.contains("\"gaming.awesome\":"), "File contents did not contain proper string key (expected '\"gaming.awesome\":')!\ncontents:\n" + content);
+		Assertions.assertTrue(content.contains("\"cool.awesome@list[]neat\":"), "File contents did not contain proper list key (expected '\"cool.awesome@list[]neat\":')!\ncontents:\n" + content);
+	}
+
+	@Test
+	void testJsonReadWriteCycle() throws IOException {
+		TestEscapingConfig config = ConfigFactory.create(TestUtil.JSON_ENV, "testmod", "jsonEscapingTestConfig", TestEscapingConfig.class);
+		config.save();
+
+		String content = new String(Files.readAllBytes(TestUtil.TEMP_DIR.resolve("testmod").resolve("jsonEscapingTestConfig.json")));
+		Assertions.assertTrue(content.contains("\"servers.server.served\":"), "File contents did not contain proper map key (expected '\"servers.server.served\":')!\ncontents:\n" + content);
+		Assertions.assertTrue(content.contains("\"gaming.awesome\":"), "File contents did not contain proper string key (expected '\"gaming.awesome\":')!\ncontents:\n" + content);
+		Assertions.assertTrue(content.contains("\"cool.awesome@list[]neat\":"), "File contents did not contain proper list key (expected '\"cool.awesome@list[]neat\":')!\ncontents:\n" + content);
+	}
 }

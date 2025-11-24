@@ -28,6 +28,8 @@ import org.quiltmc.config.api.exceptions.TrackedValueException;
 import org.quiltmc.config.api.metadata.Comments;
 import org.quiltmc.config.api.metadata.MetadataType;
 import org.quiltmc.config.api.serializers.Json5Serializer;
+import org.quiltmc.config.api.serializers.JsonCSerializer;
+import org.quiltmc.config.api.serializers.JsonSerializer;
 import org.quiltmc.config.api.serializers.TomlSerializer;
 import org.quiltmc.config.api.values.TrackedValue;
 import org.quiltmc.config.api.values.ValueList;
@@ -59,7 +61,7 @@ public class ConfigTest {
 
 	@BeforeAll
 	public static void initializeConfigDir() {
-		ENV = new ConfigEnvironment(TEMP, TomlSerializer.INSTANCE, Json5Serializer.INSTANCE);
+		ENV = new ConfigEnvironment(TEMP, TomlSerializer.INSTANCE, Json5Serializer.INSTANCE, JsonCSerializer.INSTANCE, JsonSerializer.INSTANCE);
 	}
 
 	@Test

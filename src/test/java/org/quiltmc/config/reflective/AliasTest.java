@@ -35,8 +35,18 @@ public class AliasTest extends AbstractConfigTest {
 	}
 
 	@Test
-	void testJson() throws IOException {
+	void testJson5() throws IOException {
 		test(TestUtil.JSON5_ENV);
+	}
+
+	@Test
+	void testJsonC() throws IOException {
+		test(TestUtil.JSONC_ENV);
+	}
+
+	@Test
+	void testJson() throws IOException {
+		test(TestUtil.JSON_ENV);
 	}
 
 	private static void test(ConfigEnvironment env) throws IOException {
