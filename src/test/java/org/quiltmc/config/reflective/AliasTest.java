@@ -50,8 +50,6 @@ public class AliasTest extends AbstractConfigTest {
 	}
 
 	private static void test(ConfigEnvironment env) throws IOException {
-		ConfigsImpl.removeAll();
-
 		// set "a" to some nonsense
 		TestReflectiveConfig config1 = ConfigFactory.create(env, "testmod", "testConfig", TestReflectiveConfig.class);
 		config1.a.setValue(3005);
