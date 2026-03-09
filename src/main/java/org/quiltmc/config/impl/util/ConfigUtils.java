@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 QuiltMC
+ * Copyright 2022-2026 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,16 @@ public final class ConfigUtils {
 			Boolean.class,
 			String.class
 	};
+
+	public static void warn(String warning) {
+		System.out.println("(Quilt Config) [WARNING] " + warning);
+	}
+
+	public static void error(String reason, Exception e) {
+		System.out.println("(Quilt Config) [ERROR] " + reason + ":");
+		e.printStackTrace();
+		System.out.println("(Quilt Config) [ERROR] Please report this at https://github.com/quiltmc/quilt-config/issues!");
+	}
 
 	public static void assertValueType(Object object) {
 		if (object == null) {

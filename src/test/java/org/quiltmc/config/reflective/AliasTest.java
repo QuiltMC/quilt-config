@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 QuiltMC
+ * Copyright 2024-2026 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,8 +50,6 @@ public class AliasTest extends AbstractConfigTest {
 	}
 
 	private static void test(ConfigEnvironment env) throws IOException {
-		ConfigsImpl.removeAll();
-
 		// set "a" to some nonsense
 		TestReflectiveConfig config1 = ConfigFactory.create(env, "testmod", "testConfig", TestReflectiveConfig.class);
 		config1.a.setValue(3005);

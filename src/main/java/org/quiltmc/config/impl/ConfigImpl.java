@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 QuiltMC
+ * Copyright 2022-2026 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.quiltmc.config.impl.builders.ConfigBuilderImpl;
 import org.quiltmc.config.impl.builders.ReflectiveConfigCreator;
 import org.quiltmc.config.impl.builders.WrappedConfigCreator;
 import org.quiltmc.config.impl.tree.Trie;
+import org.quiltmc.config.impl.util.ConfigUtils;
 import org.quiltmc.config.impl.util.ImmutableIterable;
 import org.quiltmc.config.implementor_api.ConfigEnvironment;
 
@@ -110,7 +111,7 @@ public final class ConfigImpl extends AbstractMetadataContainer implements Confi
 			Files.createDirectories(path.getParent());
 			this.environment.getSerializer(this.defaultFileType).serialize(this, Files.newOutputStream(path));
 		} catch (IOException e) {
-			e.printStackTrace();
+			ConfigUtils.error("Error saving config " + this.id(), e);
 		}
 	}
 

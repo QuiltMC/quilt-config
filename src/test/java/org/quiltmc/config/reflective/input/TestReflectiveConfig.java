@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2025 QuiltMC
+ * Copyright 2022-2026 QuiltMC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -115,7 +115,7 @@ public final class TestReflectiveConfig extends ReflectiveConfig {
 	}
 
 	@SerializedNameConvention(NamingSchemes.UPPER_CAMEL_CASE)
-	public static final class Nested extends Section {
+	public static final class Nested extends ReflectiveConfig.Section {
 		@SerializedName("custom_serialized_name_a")
 		public final TrackedValue<Integer> a = this.value(0);
 		public final TrackedValue<Integer> b = this.value(1);
@@ -126,11 +126,11 @@ public final class TestReflectiveConfig extends ReflectiveConfig {
 		public final TrackedValue<Integer> longName = this.value(5);
 	}
 
-	public static final class DoubleNested extends Section {
+	public static final class DoubleNested extends ReflectiveConfig.Section {
 		public final InnerNested innerNested = new InnerNested();
 		public final TrackedValue<Integer> innerInteger = this.value(0);
 
-		public static final class InnerNested extends Section {
+		public static final class InnerNested extends ReflectiveConfig.Section {
 			public final TrackedValue<Integer> veryDeepInteger = this.value(0);
 		}
 	}

@@ -23,6 +23,7 @@ import org.quiltmc.config.api.annotations.Comment;
 import org.quiltmc.config.api.exceptions.ConfigParseException;
 import org.quiltmc.config.api.values.*;
 import org.quiltmc.config.impl.tree.TrackedValueImpl;
+import org.quiltmc.config.impl.util.ConfigUtils;
 import org.quiltmc.config.impl.util.SerializerUtils;
 import org.quiltmc.parsers.json.JsonReader;
 import org.quiltmc.parsers.json.JsonToken;
@@ -162,7 +163,7 @@ public class AbstractJsonSerializer {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			ConfigUtils.error("Error deserializing JSON for config " + config.id(), e);
 		}
 	}
 
